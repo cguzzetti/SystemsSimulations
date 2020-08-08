@@ -11,7 +11,7 @@ import java.io.IOException;
 public class FileParser {
 
     private void createParticle(InputFile inputFile, String particleLine){
-        String[] particleArr = particleLine.split(" ");
+        String[] particleArr = particleLine.replaceAll(" +", " ").split(" ");
         Particle particle = new Particle(
                 Double.parseDouble(particleArr[0]),
                 Double.parseDouble(particleArr[1]),
@@ -28,6 +28,7 @@ public class FileParser {
         int linesRead = 0;
         InputFile inputFile = new InputFile();
         while((st = br.readLine()) != null){
+            st = st.trim();
             if(linesRead <=1){
                 if(linesRead == 0)
                     inputFile.setNumberOfParticles(Long.parseLong(st));
