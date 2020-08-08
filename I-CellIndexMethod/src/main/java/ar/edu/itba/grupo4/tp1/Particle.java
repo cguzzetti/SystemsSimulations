@@ -5,10 +5,24 @@ public class Particle {
     private double y;
     private int radius;
 
+    private final boolean hasVelocity;
+    private double velocityX;
+    private double velocityY;
+
     public Particle(double xPosition, double yPosition, int radius){
         this.x      = xPosition;
         this.y      = yPosition;
         this.radius = radius;
+        this.hasVelocity = false;
+    }
+
+    public Particle(double xPosition, double yPosition, double velocityX, double velocityY, int radius){
+        this.x      = xPosition;
+        this.y      = yPosition;
+        this.radius = radius;
+        this.hasVelocity = true;
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
     }
 
     public void setX(double x){
@@ -23,6 +37,14 @@ public class Particle {
         this.radius = radius;
     }
 
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY;
+    }
+
     public double getX(){
         return this.x;
     }
@@ -35,11 +57,29 @@ public class Particle {
         return this.radius;
     }
 
+    public double getVelocityX(){
+        return this.velocityX;
+    }
+    public double getVelocityY(){
+        return this.velocityY;
+    }
+
+    public boolean variesOverTime(){
+        return this.hasVelocity;
+    }
+
     @Override
     public String toString(){
+
+        if(!hasVelocity)
+            return String.format(
+                    "Particle: (x: %.3f, y: %.3f, radius: %d)",
+                    this.x, this.y, this.radius
+            );
+
         return String.format(
-                "Particle: (x: %.3f, y: %.3f, radius: %d)",
-                this.x, this.y, this.radius
+                "Particle (x: %.3f, y: %.3f, vx: %.3f, vy: %.3f, radius: %d)",
+                this.x, this.y, this.velocityX, this.velocityY, this.radius
         );
     }
 }
