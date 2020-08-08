@@ -12,7 +12,7 @@ public class DynamicFile extends InputFile {
         this.particlesOverTime = new ArrayList<>();
     }
 
-    public ArrayList<Particle[]> getParticles() {
+    public ArrayList<Particle[]> getParticles(){
         return particlesOverTime;
     }
 

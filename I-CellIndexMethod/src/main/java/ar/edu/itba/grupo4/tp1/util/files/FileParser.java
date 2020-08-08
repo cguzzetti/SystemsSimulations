@@ -5,10 +5,7 @@ import ar.edu.itba.grupo4.tp1.util.files.models.DynamicFile;
 import ar.edu.itba.grupo4.tp1.util.files.models.InputFile;
 import ar.edu.itba.grupo4.tp1.util.files.models.StaticFile;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 
 
@@ -26,7 +23,7 @@ public class FileParser {
 
     private void createParticle(DynamicFile dynamicFile, String particleLine, int lineNum){
         int particleIndex = (int) ((lineNum - 2) % (dynamicFile.getNumberOfParticles()+1));
-        
+
         if(particleIndex == 0){
             dynamicFile.addParticle(null, particleIndex);
         }else{
@@ -109,5 +106,29 @@ public class FileParser {
             System.out.println(Arrays.toString(particles));
             System.out.println(" ");
         });
+    }
+
+    public void printOutputToFile(DynamicFile file, final String filename) throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        writer.write(String.format("Number of particles: %s\n", file.getNumberOfParticles()));
+        writer.write(String.format("Length of area side: %s\n", file.getAreaSideLength()));
+        writer.write("Particles:\n");
+
+        for(Particle[] particles : file.getParticles()){
+            writer.write(Arrays.toString(particles));
+            writer.write(" \n");
+        }
+        writer.close();
+    }
+
+    public void printOutputToFile(StaticFile file, final String filename) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        writer.write(String.format("Number of particles: %s\n", file.getNumberOfParticles()));
+        writer.write(String.format("Length of area side: %s\n", file.getAreaSideLength()));
+        writer.write("Particles:\n");
+        for(Particle particle: file.getParticles()){
+            writer.write(String.format("%s\n",particle.toString()));
+        }
+        writer.close();
     }
 }
