@@ -2,8 +2,10 @@ package ar.edu.itba.grupo4.tp1.util;
 
 import ar.edu.itba.grupo4.tp1.Particle;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,48 +64,68 @@ public class CellIndexMethod {
         Particle p;
         Particle pNeighbor;
         double distance;
+        Set<Integer> neighborCells = new HashSet<>();
 
         // scan all cells
         for(int i = 0 ; i < M ; i++) {
             for(int j = 0 ; j < M ; j++) {
                 // calculate scalarCellIndex
                 c = (int) (i) + (int) (j) * M;
-                // scan the neighbor cells including itself
-                // we only check the upper 'L' neighbor cells
-                // to avoid checking twice
-                for(int x = i ; x < i+1 ; x++) {
-                    // check if x is out of the  area boundary and
-                    // if the case is we have to consider periodic
-                    // condition
-                    if( x < M || periodicCondition) {
-                        if(x >= M)
-                            x = 0;
-                        // same for y
-                        for(int y = j-1 ; y < j+1 ; y++) {
-                            if(y >= 0 || periodicCondition) {
-                                if(y < 0)
-                                    y = M-1;
-                                // calculate scalarCellIndex for neighbor cell
-                                cNeighbor = (x+M)%M + ((y+M)%M)*M;
-                                // scan particles in current cell
-                                p = this.head.get(c);
-                                while(p.getId() != -1) {
-                                    // scan particles in neighbor cells
-                                    pNeighbor = this.head.get(cNeighbor);
-                                    while(pNeighbor.getId() != -1) {
-                                        // calculate distance
-                                        distance = p.getPoint().distance(pNeighbor.getPoint());
-                                        if(Double.compare(distance, r) <= 0) {
-                                            p.addNeighbor(pNeighbor);
+                System.out.println("cell: "+c);
+
+                if(this.head.get(c).getId() != -1) {
+                    // scan the neighbor cells including itself
+                    // we only check the upper 'L' neighbor cells
+                    // to avoid checking twice
+                    for (int x = i; x < i + 2; x++) {
+                        // check if x is out of the  area boundary and
+                        // if the case is we have to consider periodic
+                        // condition
+                        if (x < M || periodicCondition) {
+                            if (x >= M)
+                                x = 0;
+                            // same for y
+                            for (int y = j - 1; y < j + 2; y++) {
+                                System.out.println(x+","+y);
+
+                                    if ((y >= 0 && y < M) || periodicCondition) {
+                                        if (y < 0)
+                                            y = M - 1;
+                                        if (y >= M)
+                                            y = 0;
+                                        if(!(x == i && y == j - 1)) {
+                                        // calculate scalarCellIndex for neighbor cell
+                                        cNeighbor = (x + M) % M + ((y + M) % M) * M;
+                                        System.out.println("cellNeighbor: " + cNeighbor);
+                                        System.out.println(neighborCells);
+                                        if(!neighborCells.contains(cNeighbor)) {
+                                            neighborCells.add(cNeighbor);
+                                            // scan particles in current cell
+                                            p = this.head.get(c);
+                                            while (p.getId() != -1) {
+                                                // scan particles in neighbor cells
+                                                pNeighbor = this.head.get(cNeighbor);
+                                                while (pNeighbor.getId() != -1) {
+                                                    // calculate distance
+                                                    if (p.getId() != pNeighbor.getId()) {
+                                                        distance = p.getPoint().distance(pNeighbor.getPoint());
+//                                                        System.out.println(p.getName() + pNeighbor.getName() + ": " + distance);
+                                                        if (Double.compare(distance, r) <= 0) {
+                                                            p.addNeighbor(pNeighbor);
+                                                        }
+                                                    }
+                                                    pNeighbor = list.get(pNeighbor.getId());
+                                                }
+                                                p = list.get(p.getId());
+                                            }
                                         }
-                                        pNeighbor = list.get(pNeighbor.getId());
                                     }
-                                    p = list.get(p.getId());
                                 }
                             }
                         }
                     }
                 }
+                neighborCells.clear();
             }
         }
         for(Particle part: particles) {
