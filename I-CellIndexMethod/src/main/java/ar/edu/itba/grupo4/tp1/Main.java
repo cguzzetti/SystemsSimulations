@@ -8,8 +8,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ar.edu.itba.grupo4.tp1.util.CellIndexMethod;
+import ar.edu.itba.grupo4.tp1.util.Config;
 import ar.edu.itba.grupo4.tp1.util.files.FileParser;
 import ar.edu.itba.grupo4.tp1.util.files.models.StaticFile;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 
 /**
@@ -19,7 +23,22 @@ import ar.edu.itba.grupo4.tp1.util.files.models.StaticFile;
 public class Main 
 {
     public static void main( String[] args ) {
+        Options options = new Options();
+        Config config = null;
+        try{
+            config = Config.parseArguments(args, options);
+        }catch(ParseException e){
+            System.out.println(e.getMessage());
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("CIMSimulator", options);
+            System.exit(1);
+        }catch(IllegalArgumentException e){
+            System.out.println(String.format("Error: %s", e.getMessage()));
+            System.exit(1);
+        }
 
+        System.out.println(config.toString());
+        System.out.println("\n");
 
         Particle p0 = new Particle(0.4, 0.3, 0, 0,"p0");
         Particle p1 = new Particle(0.6, 0.6, 0, 1,"p1");
