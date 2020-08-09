@@ -21,7 +21,13 @@ public class CellIndexMethod {
 
     private static final Particle emptyParticle = new Particle(-1,-1,-1,-1, "empty");
 
-    public CellIndexMethod(Integer N, Double L, Integer M, List<Particle> particles, boolean periodicCondition, double rc) {
+    public CellIndexMethod(Integer N, Double L, Integer M, List<Particle> particles, boolean periodicCondition, double rc)  throws IllegalArgumentException{
+        if(particles.isEmpty())
+            return;
+        double radius = particles.get(0).getRadius();
+        if(L/M - radius <= rc)
+            throw new IllegalArgumentException("rc must be smaller than L/M - radius");
+
         this.head = new LinkedList<>();
         this.list = new LinkedList<>();
 
@@ -118,7 +124,7 @@ public class CellIndexMethod {
                                                 while (pNeighbor.getId() != -1) {
                                                     // calculate distance
                                                     if (p.getId() != pNeighbor.getId()) {
-                                                        distance = p.getPoint().distance(pNeighbor.getPoint());
+                                                        distance = p.getPoint().distance(pNeighbor.getPoint()) - p.getRadius() - pNeighbor.getRadius();
 //                                                        System.out.println(p.getName() + pNeighbor.getName() + ": " + distance);
                                                         if (Double.compare(distance, rc) <= 0) {
                                                             p.addNeighbor(pNeighbor);

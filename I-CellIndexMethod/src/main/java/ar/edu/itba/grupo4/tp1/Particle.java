@@ -9,7 +9,7 @@ public class Particle {
     private double y;
     private int radius;
     private String name;
-    private int id;
+    private final int id;
     private Point2D.Double point;
     private Set<Particle> neighbors;
 
