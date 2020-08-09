@@ -31,10 +31,8 @@ public class Main
         Particle p6 = new Particle(0.8, 0.3, 0, 6, "p6");
         Particle p7 = new Particle(0.9, 0.9, 0, 7, "p7");
 
-        CellIndexMethod cim = new CellIndexMethod();
+        CellIndexMethod cim = new CellIndexMethod(8, (double) 1, 2, Stream.of(p0,p1,p2,p3,p4,p5,p6,p7).collect(Collectors.toList()), false, 0.4);
 
-        cim.generateLists(8, (double) 1, 2, Stream.of(p0,p1,p2,p3,p4,p5,p6,p7).collect(Collectors.toList()));
-        cim.calculateNeighbors(8, (double) 1, 2, Stream.of(p0,p1,p2,p3,p4,p5,p6,p7).collect(Collectors.toList()), false, 0.4);
 //        FileParser fp = new FileParser();
 //
 //        try{

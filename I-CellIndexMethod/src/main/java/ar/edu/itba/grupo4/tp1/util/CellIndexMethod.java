@@ -12,15 +12,31 @@ import java.util.stream.Stream;
 public class CellIndexMethod {
     private List<Particle> head;
     private List<Particle> list;
+    private Integer N;
+    private Double L;
+    private Integer M;
+    private double rc;
+    private List<Particle> particles;
+    private boolean periodicCondition;
 
     private static final Particle emptyParticle = new Particle(-1,-1,-1,-1, "empty");
 
-    public CellIndexMethod() {
+    public CellIndexMethod(Integer N, Double L, Integer M, List<Particle> particles, boolean periodicCondition, double rc) {
         this.head = new LinkedList<>();
         this.list = new LinkedList<>();
+
+        this.N = N;
+        this.L = L;
+        this.M = M;
+        this.rc = rc;
+        this.particles = particles;
+        this.periodicCondition = periodicCondition;
+
+        this.generateLists();
+        this.calculateNeighbors();
     }
 
-    public void generateLists(Integer N, Double L, Integer M, List<Particle> particles) {
+    public void generateLists() {
         double[] vecCellIndex = new double[2];
         int scalarCellIndex;
 
@@ -31,34 +47,29 @@ public class CellIndexMethod {
         System.out.println(particles.stream().map(Particle::getName).collect(Collectors.toList()));
 
         for(int i = 0 ; i < N ; i ++) {
-
             vecCellIndex[0] = particles.get(i).getX()/(L/M);
             vecCellIndex[1] = particles.get(i).getY()/(L/M);
-            System.out.println(i +" : "+vecCellIndex[0] + "," + vecCellIndex[1]);
+//            System.out.println(i +" : "+vecCellIndex[0] + "," + vecCellIndex[1]);
 
             scalarCellIndex = (int) (vecCellIndex[0]) + (int) (vecCellIndex[1]) * M;
-            System.out.println(scalarCellIndex);
-
+//            System.out.println(scalarCellIndex);
             list.add(i, head.get(scalarCellIndex));
-
             head.set(scalarCellIndex, particles.get(i));
-
         }
+//        System.out.println(head.stream().map(Particle::getName).collect(Collectors.toList()));
+//        System.out.println(list.stream().map(Particle::getName).collect(Collectors.toList()));
 
-        System.out.println(head.stream().map(Particle::getName).collect(Collectors.toList()));
-        System.out.println(list.stream().map(Particle::getName).collect(Collectors.toList()));
-
-        for (Particle p: head) {
-            String s = "";
-            while( p.getId() != -1){
-              s += p.getId();
-              p = list.get(p.getId());
-            }
-            System.out.println(s);
-        }
+//        for (Particle p: head) {
+//            String s = "";
+//            while( p.getId() != -1){
+//              s += p.getId();
+//              p = list.get(p.getId());
+//            }
+//            System.out.println(s);
+//        }
     }
 
-    public void calculateNeighbors(Integer N, Double L, Integer M, List<Particle> particles, boolean periodicCondition, double r) {
+    public void calculateNeighbors() {
         int c;
         int cNeighbor;
         Particle p;
@@ -71,13 +82,13 @@ public class CellIndexMethod {
             for(int j = 0 ; j < M ; j++) {
                 // calculate scalarCellIndex
                 c = (int) (i) + (int) (j) * M;
-                System.out.println("cell: "+c);
+//                System.out.println("cell: "+c);
 
                 if(this.head.get(c).getId() != -1) {
                     // scan the neighbor cells including itself
                     // we only check the upper 'L' neighbor cells
                     // to avoid checking twice
-                    for (int x = i; x < i + 2; x++) {
+                    for (int x = i, nx = 0; x < i + 2 && nx < 2; x++, nx++) {
                         // check if x is out of the  area boundary and
                         // if the case is we have to consider periodic
                         // condition
@@ -85,10 +96,9 @@ public class CellIndexMethod {
                             if (x >= M)
                                 x = 0;
                             // same for y
-                            for (int y = j - 1; y < j + 2; y++) {
-                                System.out.println(x+","+y);
-
-                                    if ((y >= 0 && y < M) || periodicCondition) {
+                            for (int y = j - 1, ny = 0; y < j + 2 && ny < 3 ; y=(y+1)%M, ny++) {
+//                                System.out.println(x+","+y);
+                                    if (!(x == i && y == j - 1) && ((y >= 0 && y < M) || periodicCondition)) {
                                         if (y < 0)
                                             y = M - 1;
                                         if (y >= M)
@@ -96,8 +106,8 @@ public class CellIndexMethod {
                                         if(!(x == i && y == j - 1)) {
                                         // calculate scalarCellIndex for neighbor cell
                                         cNeighbor = (x + M) % M + ((y + M) % M) * M;
-                                        System.out.println("cellNeighbor: " + cNeighbor);
-                                        System.out.println(neighborCells);
+//                                        System.out.println("cellNeighbor: " + cNeighbor);
+//                                        System.out.println(neighborCells);
                                         if(!neighborCells.contains(cNeighbor)) {
                                             neighborCells.add(cNeighbor);
                                             // scan particles in current cell
@@ -110,7 +120,7 @@ public class CellIndexMethod {
                                                     if (p.getId() != pNeighbor.getId()) {
                                                         distance = p.getPoint().distance(pNeighbor.getPoint());
 //                                                        System.out.println(p.getName() + pNeighbor.getName() + ": " + distance);
-                                                        if (Double.compare(distance, r) <= 0) {
+                                                        if (Double.compare(distance, rc) <= 0) {
                                                             p.addNeighbor(pNeighbor);
                                                         }
                                                     }
