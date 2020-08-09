@@ -3,15 +3,14 @@ package ar.edu.itba.grupo4.tp1;
 
 
 
-import ar.edu.itba.grupo4.tp1.util.CellIndexMethod;
-//import ar.edu.itba.grupo4.tp1.util.files.FileParser;
-import ar.edu.itba.grupo4.tp1.util.files.models.DynamicFile;
-import ar.edu.itba.grupo4.tp1.util.files.models.InputFile;
-
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import ar.edu.itba.grupo4.tp1.util.CellIndexMethod;
+import ar.edu.itba.grupo4.tp1.util.files.FileParser;
+import ar.edu.itba.grupo4.tp1.util.files.models.StaticFile;
+
 
 /**
  * Hello world!
@@ -20,7 +19,7 @@ import java.util.stream.Stream;
 public class Main 
 {
     public static void main( String[] args ) {
-        System.out.println( "Hello World!" );
+
 
         Particle p0 = new Particle(0.4, 0.3, 0, 0,"p0");
         Particle p1 = new Particle(0.6, 0.6, 0, 1,"p1");
@@ -33,13 +32,15 @@ public class Main
 
         CellIndexMethod cim = new CellIndexMethod(8, (double) 1, 2, Stream.of(p0,p1,p2,p3,p4,p5,p6,p7).collect(Collectors.toList()), false, 0.4);
 
-//        FileParser fp = new FileParser();
-//
-//        try{
-//            InputFile file = fp.readStaticInput("readme.txt");
-//            fp.printInputFileContent((DynamicFile) file);
-//        } catch (IOException notFound){
-//            System.out.println(String.format("Error: %s", notFound.getMessage()));
-//        }
+        FileParser fp = new FileParser();
+
+        try{
+            StaticFile file = fp.readStaticInput("readme_static.txt");
+            //DynamicFile file = fp.readDynamicInput("readme_dynamic.txt");
+            fp.printInputFileContent(file);
+            fp.printOutputToFile(file,"CIMOutput.txt");
+        } catch (IOException notFound){
+            System.out.println(String.format("Error: %s", notFound.getMessage()));
+        }
     }
 }

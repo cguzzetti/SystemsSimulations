@@ -32,6 +32,7 @@ public class Particle {
         this.hasVelocity = false;
         this.id = id;
         this.neighbors = new HashSet<>();
+        this.name = String.format("p%d", id);
     }
 
     public Particle(double xPosition, double yPosition, double velocityX, double velocityY, int radius, int id){
@@ -42,6 +43,7 @@ public class Particle {
         this.velocityY = velocityY;
         this.id = id;
         this.neighbors = new HashSet<>();
+        this.name = String.format("p%d", id);
     }
 
     public void setX(double x){
@@ -115,11 +117,14 @@ public class Particle {
     public String toString(){
 
         if(!hasVelocity)
-            return this.name;
+            return String.format(
+                    "Name: %s(x: %.3f, y: %.3f, radius: %d)",
+                    this.getName() ,this.point.getX(), this.point.getY(), this.radius
+            );
 
         return String.format(
-                "Particle (x: %.3f, y: %.3f, vx: %.3f, vy: %.3f, radius: %d)",
-                this.point.getX(), this.point.getY(), this.velocityX, this.velocityY, this.radius
+                "Name: %s (x: %.3f, y: %.3f, vx: %.3f, vy: %.3f, radius: %d)",
+                this.getName(),this.point.getX(), this.point.getY(), this.velocityX, this.velocityY, this.radius
         );
     }
 }

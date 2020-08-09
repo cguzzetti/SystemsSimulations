@@ -11,12 +11,14 @@ import java.util.Arrays;
 
 public class FileParser {
 
-    private void createParticle(StaticFile inputFile, String particleLine){
+    private void createParticle(StaticFile inputFile, String particleLine, int lineNum){
+        int particleIndex = (int) ((lineNum - 2) % (inputFile.getNumberOfParticles()+1));
         String[] particleArr = particleLine.replaceAll(" +", " ").split(" ");
         Particle particle = new Particle(
                 Double.parseDouble(particleArr[0]),
                 Double.parseDouble(particleArr[1]),
-                Integer.parseInt(particleArr[2]));
+                Integer.parseInt(particleArr[2]),
+                particleIndex);
 
         inputFile.addParticle(particle);
     }
@@ -33,7 +35,8 @@ public class FileParser {
                     Double.parseDouble(particleArr[1]),
                     Double.parseDouble(particleArr[2]),
                     Double.parseDouble(particleArr[3]),
-                    Integer.parseInt(particleArr[4])
+                    Integer.parseInt(particleArr[4]),
+                    particleIndex
             );
 
             dynamicFile.addParticle(particle, particleIndex);
@@ -62,7 +65,7 @@ public class FileParser {
                 else
                     inputFile.setAreaSideLength(Long.parseLong(st));
             }else{
-                this.createParticle(inputFile, st);
+                this.createParticle(inputFile, st, linesRead);
             }
             linesRead++;
         }
