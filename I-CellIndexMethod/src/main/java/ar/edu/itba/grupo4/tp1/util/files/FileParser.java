@@ -61,7 +61,7 @@ public class FileParser {
             st = st.trim();
             if(linesRead <=1){
                 if(linesRead == 0)
-                    inputFile.setNumberOfParticles(Long.parseLong(st));
+                    inputFile.setNumberOfParticles(Integer.parseInt(st));
                 else
                     inputFile.setAreaSideLength(Long.parseLong(st));
             }else{
@@ -82,7 +82,7 @@ public class FileParser {
             st = st.trim();
             if(linesRead<=1){
                 if(linesRead == 0)
-                    dynamicFile.setNumberOfParticles(Long.parseLong(st));
+                    dynamicFile.setNumberOfParticles(Integer.parseInt(st));
                 else
                     dynamicFile.setAreaSideLength(Long.parseLong(st));
             }else{
