@@ -34,7 +34,7 @@ public class Main
         CellIndexMethod cim = new CellIndexMethod();
 
         cim.generateLists(8, (double) 1, 2, Stream.of(p0,p1,p2,p3,p4,p5,p6,p7).collect(Collectors.toList()));
-
+        cim.calculateNeighbors(8, (double) 1, 2, Stream.of(p0,p1,p2,p3,p4,p5,p6,p7).collect(Collectors.toList()), false, 0.4);
 //        FileParser fp = new FileParser();
 //
 //        try{
