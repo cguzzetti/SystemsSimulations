@@ -8,6 +8,7 @@ import ar.edu.itba.grupo4.tp1.util.files.models.StaticFile;
 import java.io.*;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
 
 
 public class FileParser {
@@ -142,17 +143,17 @@ public class FileParser {
         writer.write(String.format("%d\n", numberOfParticles));
         writer.write(String.format("%d\n", (int)sideLength));
 
-        for(int i = 0; i<numberOfParticles; i++){
+        StringBuilder result = Stream.iterate(0, n -> n+1).limit(numberOfParticles).parallel().collect(StringBuilder::new, (sb, i)-> {
             // Every call to ThreadLocalRandom.current() is going to call
             // localInit which will generate a new seed.
             ThreadLocalRandom rand = ThreadLocalRandom.current();
             double x = rand.nextDouble(0, sideLength);
             double y = rand.nextDouble(0, sideLength);
-            int radius = rand.nextInt(0, 3);
-            System.out.println(String.format("%d; (x: %.3f, y: %.3f)",i, x, y));
-            writer.write(String.format("%.2f %.2f %d\n", x, y, radius));
-        }
-        System.out.println(filename);
+            int radius = 0;
+            sb.append(String.format("%.2f %.2f %d\n", x, y, radius));
+        }, StringBuilder::append);
+
+        writer.write(result.toString());
         writer.close();
     }
 }
