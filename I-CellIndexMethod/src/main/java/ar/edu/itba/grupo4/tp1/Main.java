@@ -1,7 +1,9 @@
 package ar.edu.itba.grupo4.tp1;
 
-
-
+import ar.edu.itba.grupo4.tp1.util.BruteForce;
+import ar.edu.itba.grupo4.tp1.util.CellIndexMethod;
+import ar.edu.itba.grupo4.tp1.util.files.models.DynamicFile;
+import ar.edu.itba.grupo4.tp1.util.files.models.InputFile;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -18,10 +20,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 
-/**
- * Hello world!
- *
- */
 public class Main 
 {
     public static void main( String[] args ) {
@@ -59,7 +57,8 @@ public class Main
         try{
             if(config.getInputType().equals(InputType.STATIC)) {
                 StaticFile file = fp.readStaticInput("readme_static.txt");
-                CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), 2, file.getParticles(), config.getPeriodic(), 0.4);
+//                CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), 2, file.getParticles(), config.getPeriodic(), 0.4);
+                BruteForce bf = new BruteForce(file.getParticles(), 0.4);
                 //DynamicFile file = fp.readDynamicInput("readme_dynamic.txt");
                 fp.printInputFileContent(file);
                 fp.printOutputToFile(file,"CIMOutput.txt");
