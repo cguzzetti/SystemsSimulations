@@ -127,9 +127,9 @@ public class FileParser {
 
     public void printOutputToFile(StaticFile file, final String filename) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write(String.format("Number of particles: %s\n", file.getNumberOfParticles()));
-        writer.write(String.format("Length of area side: %s\n", file.getAreaSideLength()));
-        writer.write("Particles:\n");
+        writer.write(String.format("%s\n", file.getNumberOfParticles()));
+//        writer.write(String.format("Length of area side: %s\n", file.getAreaSideLength()));
+//        writer.write("Particles:\n");
         for(Particle particle: file.getParticles()){
             writer.write(String.format("%s\n",particle.toString()));
         }

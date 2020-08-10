@@ -1,8 +1,10 @@
 package ar.edu.itba.grupo4.tp1;
 
 import java.awt.geom.Point2D;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Particle {
     private double x;
@@ -118,8 +120,8 @@ public class Particle {
 
         if(!hasVelocity)
             return String.format(
-                    "Name: %s(x: %.3f, y: %.3f, radius: %d)",
-                    this.getName() ,this.point.getX(), this.point.getY(), this.radius
+                    "%d %.3f %.3f %d %s",
+                    this.getId() ,this.point.getX(), this.point.getY(), this.radius, this.neighbors.stream().map(Particle::getId).collect(Collectors.toList()).stream().map(String::valueOf).collect(Collectors.joining(","))
             );
 
         return String.format(
