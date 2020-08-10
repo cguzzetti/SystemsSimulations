@@ -40,7 +40,10 @@ public class Main
         //TODO: Refactor L to double. Why is it double tho?
         try{
             if(config.getInputType().equals(InputType.STATIC)) {
-                StaticFile file = fp.readStaticInput("readme_static.txt");
+                if (config.isExperiment())
+                    fp.createExperimentFile(config.getInputFileName());
+
+                StaticFile file = fp.readStaticInput(config.getInputFileName());
 //                CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), 2, file.getParticles(), config.getPeriodic(), 0.4);
                 BruteForce bf = new BruteForce(file.getParticles(), 0.4);
                 fp.printInputFileContent(file);

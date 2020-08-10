@@ -9,8 +9,9 @@ public class Config {
     final private String inputFileName;
     final private String outputFileName;
     final private Boolean isPeriodic;
+    final private Boolean isExperiment;
 
-    public Config(String inputType, String inputFileName, String outputFileName, Boolean isPeriodic) throws IllegalArgumentException{
+    public Config(String inputType, String inputFileName, String outputFileName, Boolean isPeriodic, Boolean isExperiment) throws IllegalArgumentException{
         if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
             throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
         }
@@ -18,24 +19,9 @@ public class Config {
         this.inputFileName = inputFileName;
         this.outputFileName = outputFileName;
         this.isPeriodic = isPeriodic;
+        this.isExperiment = isExperiment;
     }
 
-
-    public InputType getInputType() {
-        return inputType;
-    }
-
-    public String getInputFileName() {
-        return inputFileName;
-    }
-
-    public String getOutputFileName() {
-        return outputFileName;
-    }
-
-    public Boolean getPeriodic() {
-        return isPeriodic;
-    }
 
     public static Config parseArguments(String[] args, Options options) throws ParseException {
 
@@ -51,6 +37,9 @@ public class Config {
         Option periodic = new Option("p", "periodic", false, "Periodic mode");
         periodic.setRequired(false);
         options.addOption(periodic);
+        Option experiment = new Option("e", "experiment", false, "Create random particles in file");
+        experiment.setRequired(false);
+        options.addOption(experiment);
 
         CommandLineParser parser = new DefaultParser();
 
@@ -64,8 +53,9 @@ public class Config {
             outputNameValue = "CIMOutput.txt";
 
         Boolean isPeriodic = cmd.hasOption("p");
+        Boolean isExperiment = cmd.hasOption("e");
 
-        return new Config(fileTypeValue.toUpperCase(), inputNameValue, outputNameValue, isPeriodic);
+        return new Config(fileTypeValue.toUpperCase(), inputNameValue, outputNameValue, isPeriodic, isExperiment);
     }
 
     @Override
@@ -73,5 +63,25 @@ public class Config {
         return String.format("Filetype: %s \nInputName: %s \nOutputName: %s \nisPeriodic: %s\n",
                 this.inputType, this.inputFileName, this.outputFileName, this.isPeriodic
         );
+    }
+
+    public Boolean isExperiment() {
+        return isExperiment;
+    }
+
+    public InputType getInputType() {
+        return inputType;
+    }
+
+    public String getInputFileName() {
+        return inputFileName;
+    }
+
+    public String getOutputFileName() {
+        return outputFileName;
+    }
+
+    public Boolean isPeriodic() {
+        return isPeriodic;
     }
 }

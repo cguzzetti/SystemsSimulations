@@ -7,6 +7,7 @@ import ar.edu.itba.grupo4.tp1.util.files.models.StaticFile;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class FileParser {
@@ -51,7 +52,6 @@ public class FileParser {
     }
 
     public StaticFile readStaticInput(final String fileName) throws IOException {
-
         BufferedReader br = this.bufferedReaderFromFilename(fileName);
 
         String st;
@@ -132,6 +132,27 @@ public class FileParser {
         for(Particle particle: file.getParticles()){
             writer.write(String.format("%s\n",particle.toString()));
         }
+        writer.close();
+    }
+
+    public void createExperimentFile(final String filename) throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+        long numberOfParticles = 100;
+        double sideLength = 10;
+        writer.write(String.format("%d\n", numberOfParticles));
+        writer.write(String.format("%d\n", (int)sideLength));
+
+        for(int i = 0; i<numberOfParticles; i++){
+            // Every call to ThreadLocalRandom.current() is going to call
+            // localInit which will generate a new seed.
+            ThreadLocalRandom rand = ThreadLocalRandom.current();
+            double x = rand.nextDouble(0, sideLength);
+            double y = rand.nextDouble(0, sideLength);
+            int radius = rand.nextInt(0, 3);
+            System.out.println(String.format("%d; (x: %.3f, y: %.3f)",i, x, y));
+            writer.write(String.format("%.2f %.2f %d\n", x, y, radius));
+        }
+        System.out.println(filename);
         writer.close();
     }
 }
