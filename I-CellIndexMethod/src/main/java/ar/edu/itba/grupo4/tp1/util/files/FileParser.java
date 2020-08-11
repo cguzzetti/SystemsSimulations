@@ -127,9 +127,7 @@ public class FileParser {
 
     public void printOutputToFile(StaticFile file, final String filename) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write(String.format("%s\n", file.getNumberOfParticles()));
-//        writer.write(String.format("Length of area side: %s\n", file.getAreaSideLength()));
-//        writer.write("Particles:\n");
+        writer.write(String.format("%s %s %s %s\n", file.getNumberOfParticles(), file.getAreaSideLength(), 0.9, true));//TODO: 0.9 must be rc and true must be boolean of periodic condition
         for(Particle particle: file.getParticles()){
             writer.write(String.format("%s\n",particle.toString()));
         }
