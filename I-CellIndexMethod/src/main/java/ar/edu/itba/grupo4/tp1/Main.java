@@ -44,8 +44,8 @@ public class Main
                     fp.createExperimentFile(config.getInputFileName());
 
                 StaticFile file = fp.readStaticInput(config.getInputFileName());
-//                CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), 2, file.getParticles(), config.getPeriodic(), 0.4);
-                BruteForce bf = new BruteForce(file.getParticles(), 1);
+                CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), 10, file.getParticles(), config.isPeriodic(), 0.9);
+//                BruteForce bf = new BruteForce(file.getParticles2(), 1);
                 fp.printInputFileContent(file);
                 fp.printOutputToFile(file,"CIMOutput.txt");
 

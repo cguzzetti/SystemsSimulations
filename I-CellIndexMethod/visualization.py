@@ -15,7 +15,7 @@ radius = np.zeros(N)
 values = np.zeros(N)
 
 # Selected particle
-id = 17
+id = 54
 neighbors = []
 if len(lines[id+1].split()) == 5:
     neighbors = list(map(int,lines[id+1].split()[4].split(',')))
