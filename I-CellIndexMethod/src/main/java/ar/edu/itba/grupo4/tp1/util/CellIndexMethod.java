@@ -79,18 +79,14 @@ public class CellIndexMethod {
             head.add(c, emptyParticle);
         }
 
-//        System.out.println(particles.stream().map(Particle::getName).collect(Collectors.toList()));
-
         // Scan particles to build head and list
         for(int i = 0 ; i < N ; i ++) {
             // Vector cell index to which this particle belongs
             vecCellIndex[0] = particles.get(i).getX()/(L/M);
             vecCellIndex[1] = particles.get(i).getY()/(L/M);
-//            System.out.println(i +" : "+vecCellIndex[0] + "," + vecCellIndex[1]);
 
             // Translate the vector cell index to a scalar cell index
             scalarCellIndex = (int) (vecCellIndex[0]) + (int) (vecCellIndex[1]) * M;
-//            System.out.println(scalarCellIndex);
 
             // Link to the previous occupant (or EMPTY if you're the 1st)
             list.add(i, head.get(scalarCellIndex));
@@ -98,26 +94,12 @@ public class CellIndexMethod {
             // The last one goes to the header
             head.set(scalarCellIndex, particles.get(i));
         }
-//        System.out.println(head.stream().map(Particle::getName).collect(Collectors.toList()));
-//        System.out.println(list.stream().map(Particle::getName).collect(Collectors.toList()));
-
-//        for (Particle p: head) {
-//            String s = "";
-//            while( p.getId() != -1){
-//              s += p.getId();
-//              p = list.get(p.getId());
-//            }
-//            System.out.println(s);
-//        }
     }
 
     // For every particle it checks its neighbor cells and looks for potential neighbor particles to match
     public void calculateNeighbors() {
         int c;
         int cNeighbor;
-        Particle p;
-        Particle pNeighbor;
-        double distance;
         Set<Integer> neighborCells = new HashSet<>();
         Point2D.Double rshift = new Point2D.Double();
 
@@ -126,55 +108,23 @@ public class CellIndexMethod {
             for(int j = 0 ; j < M ; j++) {
                 // Calculate scalarCellIndex
                 c = (int) (i) + (int) (j) * M;
-//                System.out.println("cell: "+c);
+
                 if(this.head.get(c).getId() != -1) {
                     // Scan the neighbor cells including itself
                     // we only check the upper 'L' neighbor cells
                     // to avoid checking twice
                     for (int x = i; x < i + 2; x++) {
                         for (int y = j - 1; y < j + 2; y++) {
-//                                System.out.println(x+","+y);
                             if (!(x == i && y == j - 1) && ((y >= 0 && y < M) || periodicCondition)) {
                                 // Periodic boundary condition by shifting coordinates
-                                if(periodicCondition) {
-                                    if(x >= M)
-                                        rshift.x = L;
-                                    else
-                                        rshift.x = 0.0;
+                                if(periodicCondition)
+                                    shiftRegion(x, y, M, rshift);
 
-                                    if(y >= M)
-                                        rshift.y = L;
-                                    else if(y < 0)
-                                        rshift.y = -L;
-                                    else
-                                        rshift.y = 0.0;
-                                }
                                 // Calculate scalarCellIndex for neighbor cell
                                 cNeighbor = (x + M) % M + ((y + M) % M) * M;
-//                                        System.out.println("cellNeighbor: " + cNeighbor);
-//                                        System.out.println(neighborCells);
 
-                                if(!neighborCells.contains(cNeighbor)) {
-                                    neighborCells.add(cNeighbor);
-                                    // Scan particles in current cell
-                                    p = this.head.get(c);
-                                    while (p.getId() != -1) {
-                                        // Scan particles in neighbor cells
-                                        pNeighbor = this.head.get(cNeighbor);
-                                        while (pNeighbor.getId() != -1) {
-                                            // Calculate distance
-                                            if (p.getId() != pNeighbor.getId()) {
-                                                distance = p.getPoint().distance(new Point2D.Double(pNeighbor.getPoint().getX()+rshift.getX(),pNeighbor.getPoint().getY()+rshift.getY())) - p.getRadius() - pNeighbor.getRadius();
-//                                                        System.out.println(p.getName() + pNeighbor.getName() + ": " + distance);
-                                                if (Double.compare(distance, rc) <= 0) {
-                                                    p.addNeighbor(pNeighbor);
-                                                }
-                                            }
-                                            pNeighbor = list.get(pNeighbor.getId());
-                                        }
-                                        p = list.get(p.getId());
-                                    }
-                                }
+                                // Evaluate particles from neighbor cell
+                                checkNeighborCell(neighborCells, c, cNeighbor, rshift);
                             }
                         }
                     }
@@ -182,8 +132,49 @@ public class CellIndexMethod {
                 neighborCells.clear();
             }
         }
-        for(Particle part: particles) {
-            System.out.println(part.getName() + ": " + part.getNeighbors().stream().map(Particle::getName).collect(Collectors.toList()));
+    }
+
+    private void calculateDistanceAndAddNeighbor(Particle p, Particle pNeighbor, Point2D.Double rshift) {
+        double distance;
+        if (p.getId() != pNeighbor.getId()) {
+            distance = p.getPoint().distance(new Point2D.Double(pNeighbor.getPoint().getX()+rshift.getX(),pNeighbor.getPoint().getY()+rshift.getY())) - p.getRadius() - pNeighbor.getRadius();
+            if (Double.compare(distance, rc) <= 0) {
+                p.addNeighbor(pNeighbor);
+            }
         }
+    }
+
+    private void checkNeighborCell(Set<Integer> neighborCells, int c, int cNeighbor, Point2D.Double rshift) {
+        Particle p;
+        Particle pNeighbor;
+        if(!neighborCells.contains(cNeighbor)) {
+            neighborCells.add(cNeighbor);
+            // Scan particles in current cell
+            p = this.head.get(c);
+            while (p.getId() != -1) {
+                // Scan particles in neighbor cells
+                pNeighbor = this.head.get(cNeighbor);
+                while (pNeighbor.getId() != -1) {
+                    // Calculate distance and add neighbor correspondingly
+                    calculateDistanceAndAddNeighbor(p, pNeighbor, rshift);
+                    pNeighbor = list.get(pNeighbor.getId());
+                }
+                p = list.get(p.getId());
+            }
+        }
+    }
+
+    private void shiftRegion(int x, int y, Integer M, Point2D.Double rshift) {
+        if(x >= M)
+            rshift.x = L;
+        else
+            rshift.x = 0.0;
+
+        if(y >= M)
+            rshift.y = L;
+        else if(y < 0)
+            rshift.y = -L;
+        else
+            rshift.y = 0.0;
     }
 }

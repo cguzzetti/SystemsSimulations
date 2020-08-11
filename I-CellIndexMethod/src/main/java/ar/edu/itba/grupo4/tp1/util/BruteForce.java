@@ -16,16 +16,11 @@ public class BruteForce {
                 while (it.hasNext()) {
                     Particle curr = it.next();
                     distance = p.getPoint().distance(curr.getPoint()) - p.getRadius() - curr.getRadius();
-//                    System.out.println(p.getName() + curr.getName() + ": " + distance);
                     if (Double.compare(distance, rc) <= 0) {
                         p.addNeighbor(curr);
                     }
                 }
             }
-        }
-
-        for(Particle part: particles) {
-            System.out.println(part.getName() + ": " + part.getNeighbors().stream().map(Particle::getName).collect(Collectors.toList()));
         }
     }
 }
