@@ -16,10 +16,12 @@ public class FileParser {
     private void createParticle(StaticFile inputFile, String particleLine, int lineNum){
         int particleIndex = (int) ((lineNum - 2) % (inputFile.getNumberOfParticles()+1));
         String[] particleArr = particleLine.replaceAll(" +", " ").split(" ");
+        int radius = Integer.parseInt(particleArr[2]);
+        inputFile.updateMaxRadius(radius);
         Particle particle = new Particle(
                 Double.parseDouble(particleArr[0]),
                 Double.parseDouble(particleArr[1]),
-                Integer.parseInt(particleArr[2]),
+                radius,
                 particleIndex);
 
         inputFile.addParticle(particle);
