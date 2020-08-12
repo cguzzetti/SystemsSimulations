@@ -50,7 +50,7 @@ public class Main
 //                BruteForce bf = new BruteForce(file.getParticles2(), 1);
 
                 fp.printInputFileContent(file);
-                fp.printOutputToFile(file,"CIMOutput.txt");
+                fp.printOutputToFile(file,config.getOutputFileName());
 
             }else {
                 // How do things vary with Dynamic File?

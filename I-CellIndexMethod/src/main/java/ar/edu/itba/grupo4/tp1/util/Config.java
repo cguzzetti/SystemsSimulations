@@ -17,7 +17,7 @@ public class Config {
         }
         this.inputType = InputType.valueOf(inputType);
         this.inputFileName = inputFileName;
-        this.outputFileName = outputFileName;
+        this.outputFileName = String.format("visualization/%s",outputFileName);
         this.isPeriodic = isPeriodic;
         this.isExperiment = isExperiment;
     }
