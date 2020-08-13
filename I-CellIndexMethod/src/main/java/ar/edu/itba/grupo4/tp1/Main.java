@@ -43,13 +43,14 @@ public class Main
                 StaticFile file = fp.readStaticInput(config.getInputFileName());
                 final Integer optimalM = file.getOptimalM(config, file);
                 System.out.println(String.format("Optimal M: %d", optimalM));
+                long currentTime;
                 if(config.getRunMode().equals(RunMode.CIM)) {
                     CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), optimalM, file.getParticles(), config.isPeriodic(), config.getRc());
                 }else {
                     System.out.println("Running in Brute Force Mode");
                     BruteForce bf = new BruteForce(file.getParticles(), 1);
                 }
-                fp.printInputFileContent(file);
+               // fp.printInputFileContent(file);
                 fp.printOutputToFile(file, config);
 
             }else {

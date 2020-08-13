@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 from matplotlib.colors import ListedColormap
 import matplotlib.collections
 import sys
@@ -45,6 +46,32 @@ def check_out_of_bounds_and_plot(L, x, y, radius, color_id, x_periodic, y_period
             create_mark(x-L, y-L, radius, color_id, x_periodic, y_periodic, radius_periodic, values_periodic)
         
         return
+
+# Time calculated in Microseconds
+def visualize_R():
+    file = open("inputM.txt", "r")
+    maxTime = 0
+    times = []
+    errors = []
+    for line in file.readlines():
+        avg_time, err = line.split()
+        avg_time = int(avg_time)
+        err = int(err)
+        if(avg_time > maxTime):
+            maxTime = avg_time
+        times.append(avg_time)
+        errors.append(err)
+    
+    fig, ax = plt.subplots()
+    ax.set_xlim(0, len(times) + 1)
+    ax.set_ylim(0, maxTime + 100)
+    ax.set_aspect('auto')
+
+    plt.scatter(range(1, len(times)+1), times)
+    plt.errorbar(range(1, len(times)+1), times, yerr=err, fmt='b', ecolor='red')
+    ax.set_xlabel('Valores de M')
+    ax.set_ylabel('Tiempo [μs]')
+    plt.show()
 
 # Read from file
 file = open("CIMOutput.txt","r")
@@ -112,5 +139,3 @@ for xi,yi,value,rad in zip(x_periodic,y_periodic,values_periodic,radius_periodic
     ax.add_patch(c)
 
 plt.show()
-
-

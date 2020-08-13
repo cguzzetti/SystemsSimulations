@@ -1,10 +1,7 @@
 package ar.edu.itba.grupo4.tp1.util;
 
 import ar.edu.itba.grupo4.tp1.Particle;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -43,7 +40,7 @@ public class BenchmarkRunner {
         long L = 10;
         boolean periodic = false;
         double rc = 0.9;
-        Integer M = 2;
+        Integer M=9;
         ArrayList<Particle> particles = new ArrayList<>();
 
         for(int i =0; i< 100; i++){
