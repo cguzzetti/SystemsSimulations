@@ -2,6 +2,8 @@ package ar.edu.itba.grupo4.tp1.util;
 
 import org.apache.commons.cli.*;
 
+import java.util.Optional;
+
 
 public class Config {
     final private InputType inputType;
@@ -13,13 +15,15 @@ public class Config {
     final private Double rc;
     final private Long sideAreaLength;
     final private Integer numberOfParticles;
+    final private Integer M;
 
     public Config(String inputType,
                   String inputFileName,
                   String outputFileName,
                   Boolean isPeriodic,
                   String mode,
-                  String rc) throws IllegalArgumentException{
+                  String rc,
+                  String M) throws IllegalArgumentException{
         if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
             throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
         }
@@ -34,6 +38,7 @@ public class Config {
         this.rc = Double.parseDouble(rc);
         this.sideAreaLength = null;
         this.numberOfParticles = null;
+        this.M = (M != null)? Integer.parseInt(M): null;
 
     }
 
@@ -44,7 +49,8 @@ public class Config {
                   String mode,
                   String rc,
                   String L,
-                  String N) throws IllegalArgumentException{
+                  String N,
+                  String M) throws IllegalArgumentException{
         if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
             throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
         }
@@ -59,6 +65,7 @@ public class Config {
         this.rc = Double.parseDouble(rc);
         this.sideAreaLength = Long.parseLong(L);
         this.numberOfParticles = Integer.parseInt(N);
+        this.M = (M != null)? Integer.parseInt(M): null;
 
     }
 
@@ -91,6 +98,9 @@ public class Config {
         Option mode = new Option("m", "mode", true, "Run mode (BRUTE|CIM)");
         mode.setRequired(true);
         options.addOption(mode);
+        Option M = new Option("M", "mode", true, "Run mode (BRUTE|CIM)");
+        M.setRequired(false);
+        options.addOption(M);
 
         CommandLineParser parser = new DefaultParser();
 
@@ -128,7 +138,8 @@ public class Config {
                     cmd.getOptionValue("mode").toUpperCase(),
                     rcValue,
                     cmd.getOptionValue("L"),
-                    cmd.getOptionValue("N")
+                    cmd.getOptionValue("N"),
+                    cmd.getOptionValue("M")
             );
         }
 
@@ -138,7 +149,8 @@ public class Config {
                 outputNameValue,
                 isPeriodic,
                 cmd.getOptionValue("mode").toUpperCase(),
-                rcValue
+                rcValue,
+                cmd.getOptionValue("M")
         );
     }
 
@@ -183,5 +195,9 @@ public class Config {
 
     public Integer getNumberOfParticles() {
         return numberOfParticles;
+    }
+
+    public Integer getM() {
+        return M;
     }
 }

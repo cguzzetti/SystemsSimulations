@@ -26,6 +26,10 @@ public class StaticFile extends InputFile{
     }
 
     public Integer getOptimalM(Config config, StaticFile file){
+        // Avoid calculation if it was given as a parameter.
+        if(config.getM() != null)
+            return config.getM();
+
         final double L = file.getAreaSideLength();
         final double rc = config.getRc();
         final double maxR1 = file.getFirstMaxRadius(), maxR2 = file.getSecondMaxRadius();
