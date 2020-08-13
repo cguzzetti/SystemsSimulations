@@ -1,12 +1,9 @@
 package ar.edu.itba.grupo4.tp1;
 
-import ar.edu.itba.grupo4.tp1.util.BruteForce;
+import ar.edu.itba.grupo4.tp1.util.*;
 
 import java.io.IOException;
 
-import ar.edu.itba.grupo4.tp1.util.CellIndexMethod;
-import ar.edu.itba.grupo4.tp1.util.Config;
-import ar.edu.itba.grupo4.tp1.util.InputType;
 import ar.edu.itba.grupo4.tp1.util.files.FileParser;
 import ar.edu.itba.grupo4.tp1.util.files.models.DynamicFile;
 import ar.edu.itba.grupo4.tp1.util.files.models.StaticFile;
@@ -41,16 +38,19 @@ public class Main
         try{
             if(config.getInputType().equals(InputType.STATIC)) {
                 if (config.isExperiment())
-                    fp.createExperimentFile(config.getInputFileName());
+                    fp.createExperimentFile(config);
 
                 StaticFile file = fp.readStaticInput(config.getInputFileName());
-                final Integer optimalM = file.getOptimalM();
+                final Integer optimalM = file.getOptimalM(config, file);
                 System.out.println(String.format("Optimal M: %d", optimalM));
-                CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), optimalM, file.getParticles(), config.isPeriodic(), 0.9);
-//                BruteForce bf = new BruteForce(file.getParticles2(), 1);
-
+                if(config.getRunMode().equals(RunMode.CIM)) {
+                    CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), optimalM, file.getParticles(), config.isPeriodic(), config.getRc());
+                }else {
+                    System.out.println("Running in Brute Force Mode");
+                    BruteForce bf = new BruteForce(file.getParticles(), 1);
+                }
                 fp.printInputFileContent(file);
-                fp.printOutputToFile(file,config.getOutputFileName());
+                fp.printOutputToFile(file, config);
 
             }else {
                 // How do things vary with Dynamic File?

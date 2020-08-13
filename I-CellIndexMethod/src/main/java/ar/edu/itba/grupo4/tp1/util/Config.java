@@ -2,7 +2,6 @@ package ar.edu.itba.grupo4.tp1.util;
 
 import org.apache.commons.cli.*;
 
-import java.util.Arrays;
 
 public class Config {
     final private InputType inputType;
@@ -10,8 +9,17 @@ public class Config {
     final private String outputFileName;
     final private Boolean isPeriodic;
     final private Boolean isExperiment;
+    final private RunMode runMode;
+    final private Double rc;
+    final private Long sideAreaLength;
+    final private Integer numberOfParticles;
 
-    public Config(String inputType, String inputFileName, String outputFileName, Boolean isPeriodic, Boolean isExperiment) throws IllegalArgumentException{
+    public Config(String inputType,
+                  String inputFileName,
+                  String outputFileName,
+                  Boolean isPeriodic,
+                  String mode,
+                  String rc) throws IllegalArgumentException{
         if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
             throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
         }
@@ -19,9 +27,40 @@ public class Config {
         this.inputFileName = inputFileName;
         this.outputFileName = String.format("visualization/%s",outputFileName);
         this.isPeriodic = isPeriodic;
-        this.isExperiment = isExperiment;
+        this.isExperiment = false;
+        if(!(mode.equals(RunMode.FORCE.toString()) || mode.equals(RunMode.CIM.toString())))
+            throw new IllegalArgumentException(String.format("%s is not a valid mode", mode));
+        this.runMode = RunMode.valueOf(mode);
+        this.rc = Double.parseDouble(rc);
+        this.sideAreaLength = null;
+        this.numberOfParticles = null;
+
     }
 
+    public Config(String inputType,
+                  String inputFileName,
+                  String outputFileName,
+                  Boolean isPeriodic,
+                  String mode,
+                  String rc,
+                  String L,
+                  String N) throws IllegalArgumentException{
+        if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
+            throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
+        }
+        this.inputType = InputType.valueOf(inputType);
+        this.inputFileName = inputFileName;
+        this.outputFileName = String.format("visualization/%s",outputFileName);
+        this.isPeriodic = isPeriodic;
+        this.isExperiment = true;
+        if(!(mode.equals(RunMode.FORCE.toString()) || mode.equals(RunMode.CIM.toString())))
+            throw new IllegalArgumentException(String.format("%s is not a valid mode", mode));
+        this.runMode = RunMode.valueOf(mode);
+        this.rc = Double.parseDouble(rc);
+        this.sideAreaLength = Long.parseLong(L);
+        this.numberOfParticles = Integer.parseInt(N);
+
+    }
 
     public static Config parseArguments(String[] args, Options options) throws ParseException {
 
@@ -40,6 +79,18 @@ public class Config {
         Option experiment = new Option("e", "experiment", false, "Create random particles in file");
         experiment.setRequired(false);
         options.addOption(experiment);
+        Option sideValue = new Option("L", true, "Length of the side of the grid");
+        sideValue.setRequired(false);
+        options.addOption(sideValue);
+        Option rc = new Option("rc", true, "Interaction radius");
+        rc.setRequired(false);
+        options.addOption(rc);
+        Option numberOfParticles = new Option("N", "particles-number", true, "Number of particles");
+        numberOfParticles.setRequired(false);
+        options.addOption(numberOfParticles);
+        Option mode = new Option("m", "mode", true, "Run mode (BRUTE|CIM)");
+        mode.setRequired(true);
+        options.addOption(mode);
 
         CommandLineParser parser = new DefaultParser();
 
@@ -55,7 +106,40 @@ public class Config {
         Boolean isPeriodic = cmd.hasOption("p");
         Boolean isExperiment = cmd.hasOption("e");
 
-        return new Config(fileTypeValue.toUpperCase(), inputNameValue, outputNameValue, isPeriodic, isExperiment);
+
+        String rcValue;
+        if(!cmd.hasOption("rc")){
+            if(cmd.getOptionValue("mode").toUpperCase().equals("CIM"))
+                rcValue = "0.9";
+            else
+                rcValue = "1.0";
+        }else{
+            rcValue = cmd.getOptionValue("rc");
+        }
+
+        if(isExperiment){
+            if(!(cmd.hasOption("L") && cmd.hasOption("N")))
+                throw new ParseException("N and L must be specified in Experiment mode");
+            return new Config(
+                    fileTypeValue.toUpperCase(),
+                    inputNameValue,
+                    outputNameValue,
+                    isPeriodic,
+                    cmd.getOptionValue("mode").toUpperCase(),
+                    rcValue,
+                    cmd.getOptionValue("L"),
+                    cmd.getOptionValue("N")
+            );
+        }
+
+        return new Config(
+                fileTypeValue.toUpperCase(),
+                inputNameValue,
+                outputNameValue,
+                isPeriodic,
+                cmd.getOptionValue("mode").toUpperCase(),
+                rcValue
+        );
     }
 
     @Override
@@ -83,5 +167,21 @@ public class Config {
 
     public Boolean isPeriodic() {
         return isPeriodic;
+    }
+
+    public RunMode getRunMode() {
+        return runMode;
+    }
+
+    public Double getRc() {
+        return rc;
+    }
+
+    public Long getSideAreaLength() {
+        return sideAreaLength;
+    }
+
+    public Integer getNumberOfParticles() {
+        return numberOfParticles;
     }
 }

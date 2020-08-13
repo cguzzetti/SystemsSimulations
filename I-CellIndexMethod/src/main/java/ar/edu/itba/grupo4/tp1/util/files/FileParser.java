@@ -1,8 +1,8 @@
 package ar.edu.itba.grupo4.tp1.util.files;
 
 import ar.edu.itba.grupo4.tp1.Particle;
+import ar.edu.itba.grupo4.tp1.util.Config;
 import ar.edu.itba.grupo4.tp1.util.files.models.DynamicFile;
-import ar.edu.itba.grupo4.tp1.util.files.models.InputFile;
 import ar.edu.itba.grupo4.tp1.util.files.models.StaticFile;
 
 import java.io.*;
@@ -16,7 +16,7 @@ public class FileParser {
     private void createParticle(StaticFile inputFile, String particleLine, int lineNum){
         int particleIndex = (int) ((lineNum - 2) % (inputFile.getNumberOfParticles()+1));
         String[] particleArr = particleLine.replaceAll(" +", " ").split(" ");
-        int radius = Integer.parseInt(particleArr[2]);
+        double radius = Double.parseDouble(particleArr[2]);
         inputFile.updateMaxRadius(radius);
         Particle particle = new Particle(
                 Double.parseDouble(particleArr[0]),
@@ -127,19 +127,24 @@ public class FileParser {
         writer.close();
     }
 
-    public void printOutputToFile(StaticFile file, final String filename) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        writer.write(String.format("%s %s %s %s\n", file.getNumberOfParticles(), file.getAreaSideLength(), 0.9, true));//TODO: 0.9 must be rc and true must be boolean of periodic condition
+    public void printOutputToFile(StaticFile file, final Config config) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(config.getOutputFileName()));
+        writer.write(String.format("%s %s %s %s\n",
+                file.getNumberOfParticles(),
+                file.getAreaSideLength(),
+                config.getRc(),
+                config.isPeriodic())
+        );
         for(Particle particle: file.getParticles()){
             writer.write(String.format("%s\n",particle.toString()));
         }
         writer.close();
     }
 
-    public void createExperimentFile(final String filename) throws IOException{
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-        long numberOfParticles = 100;
-        double sideLength = 10;
+    public void createExperimentFile(final Config config) throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter(config.getInputFileName()));
+        long numberOfParticles = config.getNumberOfParticles();
+        double sideLength = config.getSideAreaLength();
         writer.write(String.format("%d\n", numberOfParticles));
         writer.write(String.format("%d\n", (int)sideLength));
 
@@ -149,8 +154,9 @@ public class FileParser {
             ThreadLocalRandom rand = ThreadLocalRandom.current();
             double x = rand.nextDouble(0, sideLength);
             double y = rand.nextDouble(0, sideLength);
-            int radius = 0;
-            sb.append(String.format("%.2f %.2f %d\n", x, y, radius));
+            // double radius = rand.nextDouble(0, 1);
+            double radius = 0.0;
+            sb.append(String.format("%.2f %.2f %.2f\n", x, y, radius));
         }, StringBuilder::append);
 
         writer.write(result.toString());

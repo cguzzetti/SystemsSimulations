@@ -1,17 +1,20 @@
 package ar.edu.itba.grupo4.tp1.util.files.models;
 
 import ar.edu.itba.grupo4.tp1.Particle;
+import ar.edu.itba.grupo4.tp1.util.Config;
 
 import java.util.ArrayList;
 
 public class StaticFile extends InputFile{
 
     private ArrayList<Particle> particles;
-    private Integer maxRadius;
+    private Double firstMaxRadius;
+    private Double secondMaxRadius;
 
     public StaticFile(){
         this.particles = new ArrayList<>();
-        this.maxRadius = -1;
+        this.firstMaxRadius  = 0.0;
+        this.secondMaxRadius = 0.0;
     }
 
     public void addParticle(Particle particle){
@@ -22,21 +25,34 @@ public class StaticFile extends InputFile{
         return this.particles;
     }
 
-    public Integer getOptimalM(){
-        final double L = this.getAreaSideLength();
-        final double rc = 0.9;
-        final double bound = L /(rc + 2*this.maxRadius);
-        final double M = Math.floor(bound);
-        return (int) Math.max(1, (M < bound? M: M-1 ));
+    public Integer getOptimalM(Config config, StaticFile file){
+        final double L = file.getAreaSideLength();
+        final double rc = config.getRc();
+        final double maxR1 = file.getFirstMaxRadius(), maxR2 = file.getSecondMaxRadius();
+        int M = 1;
+        boolean foundM = false;
+        while(!foundM){
+            if(rc > (L/(M - maxR1 - maxR2)))
+                foundM = true;
+            else
+                M++;
+        }
+        return M-1;
     }
 
 
-    public Integer getMaxRadius() {
-        return maxRadius;
+    public Double getFirstMaxRadius() {
+        return this.firstMaxRadius;
     }
 
-    public void updateMaxRadius(Integer maybeNewRadius){
-        if(maybeNewRadius > this.maxRadius)
-            this.maxRadius = maybeNewRadius;
+    public Double getSecondMaxRadius() {
+        return this.secondMaxRadius;
+    }
+
+    public void updateMaxRadius(double maybeNewRadius){
+        if(maybeNewRadius > this.firstMaxRadius)
+            this.firstMaxRadius = maybeNewRadius;
+        else if (maybeNewRadius > this.secondMaxRadius)
+            this.secondMaxRadius = maybeNewRadius;
     }
 }

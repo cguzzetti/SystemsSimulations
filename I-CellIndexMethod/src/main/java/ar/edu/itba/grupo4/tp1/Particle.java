@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class Particle {
     private double x;
     private double y;
-    private int radius;
+    private double radius;
     private String name;
     private final int id;
     private Point2D.Double point;
@@ -19,7 +19,7 @@ public class Particle {
     private double velocityX;
     private double velocityY;
 
-    public Particle(double xPosition, double yPosition, int radius, int id, String name){
+    public Particle(double xPosition, double yPosition, double radius, int id, String name){
         this.point = new Point2D.Double(xPosition, yPosition);
         this.radius = radius;
         this.hasVelocity = false;
@@ -28,7 +28,7 @@ public class Particle {
         this.neighbors = new HashSet<>();
     }
 
-    public Particle(double xPosition, double yPosition, int radius, int id){
+    public Particle(double xPosition, double yPosition, double radius, int id){
         this.point = new Point2D.Double(xPosition, yPosition);
         this.radius = radius;
         this.hasVelocity = false;
@@ -37,7 +37,7 @@ public class Particle {
         this.name = String.format("p%d", id);
     }
 
-    public Particle(double xPosition, double yPosition, double velocityX, double velocityY, int radius, int id){
+    public Particle(double xPosition, double yPosition, double velocityX, double velocityY, double radius, int id){
         this.point = new Point2D.Double(xPosition, yPosition);
         this.radius = radius;
         this.hasVelocity = true;
@@ -84,7 +84,7 @@ public class Particle {
         return this.point.getY();
     }
 
-    public int getRadius(){
+    public double getRadius(){
         return this.radius;
     }
 
@@ -120,12 +120,12 @@ public class Particle {
 
         if(!hasVelocity)
             return String.format(
-                    "%d %.3f %.3f %d %s",
+                    "%d %.3f %.3f %.3f %s",
                     this.getId() ,this.point.getX(), this.point.getY(), this.radius, this.neighbors.stream().map(Particle::getId).collect(Collectors.toList()).stream().map(String::valueOf).collect(Collectors.joining(","))
             );
 
         return String.format(
-                "Name: %s (x: %.3f, y: %.3f, vx: %.3f, vy: %.3f, radius: %d)",
+                "Name: %s (x: %.3f, y: %.3f, vx: %.3f, vy: %.3f, radius: %.3f)",
                 this.getName(),this.point.getX(), this.point.getY(), this.velocityX, this.velocityY, this.radius
         );
     }
