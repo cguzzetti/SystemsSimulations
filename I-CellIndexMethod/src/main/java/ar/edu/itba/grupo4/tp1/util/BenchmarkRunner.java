@@ -20,6 +20,8 @@ public class BenchmarkRunner {
     @Benchmark
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     @BenchmarkMode(Mode.AverageTime)
+    @Warmup(iterations = 5)
+    @Measurement(iterations = 5)
     public void bruteForce(Blackhole blackhole){
         ArrayList<Particle> particles = new ArrayList<>();
 
@@ -37,8 +39,8 @@ public class BenchmarkRunner {
         blackhole.consume(bf);
 
     }
-*/
 
+*/
 
     @Benchmark
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -46,14 +48,14 @@ public class BenchmarkRunner {
     @Warmup(iterations = 5)
     @Measurement(iterations = 5)
     public void cellIndexMethod(Blackhole blackhole){
-        int N = 100;
+        int N = 600;
         long L = 20;
         boolean periodic = false;
         double rc = 1;
-        Integer M=9;
+        Integer M=1;
         ArrayList<Particle> particles = new ArrayList<>();
 
-        for(int i =0; i< 100; i++){
+        for(int i =0; i< N; i++){
             ThreadLocalRandom rnd = ThreadLocalRandom.current();
             particles.add(new Particle(
                     rnd.nextDouble(0, L),

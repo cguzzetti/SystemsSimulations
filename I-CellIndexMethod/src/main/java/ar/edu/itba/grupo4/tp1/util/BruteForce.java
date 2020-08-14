@@ -11,7 +11,7 @@ public class BruteForce {
     public BruteForce(List<Particle> particles, double rc) {
         double distance;
         for(Particle p: particles) {
-            System.out.println(p.getId());
+            //System.out.println(p.getId());
             if (particles.indexOf(p) < particles.size() - 1) {
                 Iterator<Particle> it = particles.listIterator(particles.indexOf(p) + 1);
                 while (it.hasNext()) {

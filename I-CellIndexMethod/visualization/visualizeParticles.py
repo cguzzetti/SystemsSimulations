@@ -102,15 +102,14 @@ for xi,yi,value,rad in zip(x,y,values,radius):
     c = plt.Circle((xi,yi), radius=rad, facecolor=value, edgecolor='black' if value == 'none' else value)
     ax.add_patch(c)
 
-# Radius for rc
-c_rad = plt.Circle((x[id], y[id]), rc, color='r', fill=False)
+c_rad = plt.Circle((x[id], y[id]), rc +0.25 , color='r', fill=False)
 ax.add_patch(c_rad)
 if periodic:
-        check_out_of_bounds_and_plot(L, x[id], y[id], rc, 'r', x_periodic, y_periodic, radius_periodic, values_periodic)
+        check_out_of_bounds_and_plot(L, x[id], y[id], rc + 0.25, 'r', x_periodic, y_periodic, radius_periodic, values_periodic)
 
 # Duplicates for infinite boundaries
 for xi,yi,value,rad in zip(x_periodic,y_periodic,values_periodic,radius_periodic):
-    c = plt.Circle((xi,yi), radius=rad, facecolor=value if rad!=rc else 'none', edgecolor='black' if value == 'none' else value)
+    c = plt.Circle((xi,yi), radius=rad, facecolor=value if rad!= (rc + 0.25) else 'none', edgecolor='black' if value == 'none' else value)
     ax.add_patch(c)
 
 plt.show()
