@@ -65,7 +65,7 @@ public class BenchmarkRunner {
                     String.format("p%d", i)
             ));
         }
-        CellIndexMethod cim = new CellIndexMethod(N, (double) L, M, particles, periodic, rc);
+        CellIndexMethod cim = new CellIndexMethod(N, (double) L, M, particles, periodic, rc, 0.25, 0.25);
         blackhole.consume(cim);
     }
 

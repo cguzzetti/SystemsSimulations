@@ -57,6 +57,8 @@ N = int(lines[0].split()[0])
 L = float(lines[0].split()[1])
 rc = float(lines[0].split()[2])
 periodic = True if lines[0].split()[3] == 'true' else False
+maxRadius1 = float(lines[0].split()[4])
+maxRadius2 = float(lines[0].split()[5])
 x = np.zeros(N)
 y = np.zeros(N)
 radius = np.zeros(N)
@@ -83,7 +85,7 @@ for i in range(1,N+1):
     else:
         values[i-1] = 'none'
     x[i-1] = lines[i].split()[1]
-    y[i-1] = lines[i].split()[2]
+    y[i-1] = lines[i].split()[2]    
     if float(lines[i].split()[3]) > 0:
         radius[i-1] = lines[i].split()[3]
     else:
@@ -102,14 +104,16 @@ for xi,yi,value,rad in zip(x,y,values,radius):
     c = plt.Circle((xi,yi), radius=rad, facecolor=value, edgecolor='black' if value == 'none' else value)
     ax.add_patch(c)
 
-c_rad = plt.Circle((x[id], y[id]), rc +0.25 , color='r', fill=False)
-ax.add_patch(c_rad)
-if periodic:
-        check_out_of_bounds_and_plot(L, x[id], y[id], rc + 0.25, 'r', x_periodic, y_periodic, radius_periodic, values_periodic)
+# Radius for rc
+if id != -1:
+    c_rad = plt.Circle((x[id], y[id]), rc + radius[id], color='r', fill=False)
+    ax.add_patch(c_rad)
+    if periodic:
+            check_out_of_bounds_and_plot(L, x[id], y[id], rc + radius[id], 'r', x_periodic, y_periodic, radius_periodic, values_periodic)
 
 # Duplicates for infinite boundaries
 for xi,yi,value,rad in zip(x_periodic,y_periodic,values_periodic,radius_periodic):
-    c = plt.Circle((xi,yi), radius=rad, facecolor=value if rad!= (rc + 0.25) else 'none', edgecolor='black' if value == 'none' else value)
+    c = plt.Circle((xi,yi), radius=rad, facecolor=value if rad!=(rc + radius[id]) else 'none', edgecolor='black' if value == 'none' else value)
     ax.add_patch(c)
 
 plt.show()

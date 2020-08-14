@@ -129,11 +129,13 @@ public class FileParser {
 
     public void printOutputToFile(StaticFile file, final Config config) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(config.getOutputFileName()));
-        writer.write(String.format("%s %s %s %s\n",
+        writer.write(String.format("%s %s %s %s %s %s\n",
                 file.getNumberOfParticles(),
                 file.getAreaSideLength(),
                 config.getRc(),
-                config.isPeriodic())
+                config.isPeriodic(),
+                file.getFirstMaxRadius(),
+                file.getSecondMaxRadius())
         );
         for(Particle particle: file.getParticles()){
             writer.write(String.format("%s\n",particle.toString()));

@@ -44,7 +44,7 @@ public class Main
                 System.out.println(String.format("Optimal M: %d", optimalM));
                 long currentTime;
                 if(config.getRunMode().equals(RunMode.CIM)) {
-                    CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), optimalM, file.getParticles(), config.isPeriodic(), config.getRc());
+                    CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), optimalM, file.getParticles(), config.isPeriodic(), config.getRc(), file.getFirstMaxRadius(), file.getSecondMaxRadius());
                 }else {
                     System.out.println("Running in Brute Force Mode");
                     BruteForce bf = new BruteForce(file.getParticles(), 1);

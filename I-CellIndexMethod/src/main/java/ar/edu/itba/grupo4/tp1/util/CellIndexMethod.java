@@ -32,24 +32,11 @@ public class CellIndexMethod {
 
     private static final Particle emptyParticle = new Particle(-1,-1,-1,-1, "empty");
 
-    public CellIndexMethod(Integer N, Double L, Integer M, List<Particle> particles, boolean periodicCondition, double rc)  throws IllegalArgumentException{
+    public CellIndexMethod(Integer N, Double L, Integer M, List<Particle> particles, boolean periodicCondition, double rc, double maxRadius1, double maxRadius2)  throws IllegalArgumentException{
         if(particles.isEmpty())
             return;
         if(particles.size() != N)
             throw new IllegalArgumentException("N is different from the amount of particles");
-
-        // Calculate top 2 max radius for criteria check
-        double maxRadius1 = 0;
-        double maxRadius2 = 0;
-        for(Particle p: particles) {
-            if(p.getRadius() > maxRadius1) {
-                maxRadius2 = maxRadius1;
-                maxRadius1 = p.getRadius();
-            }
-            else if(p.getRadius() > maxRadius2) {
-                maxRadius2 = p.getRadius();
-            }
-        }
 
         // Validating criteria for interaction radius
         if(L/M - maxRadius1 - maxRadius2 <= rc)
