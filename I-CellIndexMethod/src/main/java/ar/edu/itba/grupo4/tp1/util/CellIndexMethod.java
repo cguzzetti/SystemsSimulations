@@ -73,7 +73,7 @@ public class CellIndexMethod {
             vecCellIndex[1] = particles.get(i).getY()/(L/M);
 
             // Translate the vector cell index to a scalar cell index
-            scalarCellIndex = (int) (vecCellIndex[0]) + (int) (vecCellIndex[1]) * M;
+            scalarCellIndex = (int) (vecCellIndex[0]) + ((int) (vecCellIndex[1])) * M;
 
             // Link to the previous occupant (or EMPTY if you're the 1st)
             list.add(i, head.get(scalarCellIndex));
