@@ -26,7 +26,7 @@ def visualize_R():
     ax.set_aspect('auto')
 
     plt.errorbar(range(1, len(times)+1), times, yerr=err, fmt='b', ecolor='red')
-    plt.plot(range(1, len(times)+1), [279]*(len(times)))
+    plt.plot(range(1, len(times)+1), [882]*(len(times)))
     ax.set_xlabel('Valores de M')
     ax.set_ylabel('Tiempo [μs]')
     plt.title("Tiempos de ejecución con N = 100; L = 10; rc = 0.9")
