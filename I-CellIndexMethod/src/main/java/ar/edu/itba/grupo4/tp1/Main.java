@@ -44,10 +44,13 @@ public class Main
                 System.out.println(String.format("Optimal M: %d", optimalM));
                 long currentTime;
                 if(config.getRunMode().equals(RunMode.CIM)) {
+                    long init = System.nanoTime();
                     CellIndexMethod cim = new CellIndexMethod(file.getNumberOfParticles(), (double) file.getAreaSideLength(), optimalM, file.getParticles(), config.isPeriodic(), config.getRc(), file.getFirstMaxRadius(), file.getSecondMaxRadius());
+                    System.out.println(System.nanoTime()-init);
                 }else {
-                    System.out.println("Running in Brute Force Mode");
-                    BruteForce bf = new BruteForce(file.getParticles(), 1);
+                    long init = System.nanoTime();
+                    BruteForce bf = new BruteForce(file.getParticles(), config.getRc());
+                    System.out.println(System.nanoTime()-init);
                 }
                 fp.printInputFileContent(file);
                 fp.printOutputToFile(file, config);

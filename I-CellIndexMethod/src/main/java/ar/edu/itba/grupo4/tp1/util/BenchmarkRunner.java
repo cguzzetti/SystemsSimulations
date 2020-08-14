@@ -16,7 +16,7 @@ public class BenchmarkRunner {
         org.openjdk.jmh.Main.main(args);
     }
 
-/*
+
     @Benchmark
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     @BenchmarkMode(Mode.AverageTime)
@@ -25,34 +25,40 @@ public class BenchmarkRunner {
     public void bruteForce(Blackhole blackhole){
         ArrayList<Particle> particles = new ArrayList<>();
 
-        for(int i =0; i< 100; i++){
+        int N = 5000;
+        double r = 0.25;
+        double rc = 1;
+        long L = 20;
+
+        for(int i =0; i < N; i++){
             ThreadLocalRandom rnd = ThreadLocalRandom.current();
             particles.add(new Particle(
-                    rnd.nextDouble(0, 20),
-                    rnd.nextDouble(0, 20),
-                    0.25,
+                    rnd.nextDouble(0, L),
+                    rnd.nextDouble(0, L),
+                    r,
                     i,
                     String.format("p%d", i)
             ));
         }
-        BruteForce bf = new BruteForce(particles, 1);
+        BruteForce bf = new BruteForce(particles, rc);
         blackhole.consume(bf);
 
     }
 
-*/
 
+/*
     @Benchmark
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     @BenchmarkMode(Mode.AverageTime)
     @Warmup(iterations = 5)
     @Measurement(iterations = 5)
     public void cellIndexMethod(Blackhole blackhole){
-        int N = 600;
+        int N = 5000;
         long L = 20;
-        boolean periodic = false;
+        boolean periodic = true;
         double rc = 1;
-        Integer M=1;
+        double r = 0.25;
+        Integer M = 13;
         ArrayList<Particle> particles = new ArrayList<>();
 
         for(int i =0; i< N; i++){
@@ -60,14 +66,14 @@ public class BenchmarkRunner {
             particles.add(new Particle(
                     rnd.nextDouble(0, L),
                     rnd.nextDouble(0, L),
-                    0.25,
+                    r,
                     i,
                     String.format("p%d", i)
             ));
         }
-        CellIndexMethod cim = new CellIndexMethod(N, (double) L, M, particles, periodic, rc, 0.25, 0.25);
+        CellIndexMethod cim = new CellIndexMethod(N, (double) L, M, particles, periodic, rc, r, r);
         blackhole.consume(cim);
     }
 
-
+*/
 }

@@ -68,9 +68,10 @@ public class CellIndexMethod {
 
         // Scan particles to build head and list
         for(int i = 0 ; i < N ; i ++) {
+            Particle p = particles.get(i);
             // Vector cell index to which this particle belongs
-            vecCellIndex[0] = particles.get(i).getX()/(L/M);
-            vecCellIndex[1] = particles.get(i).getY()/(L/M);
+            vecCellIndex[0] = p.getX()/(L/M);
+            vecCellIndex[1] = p.getY()/(L/M);
 
             // Translate the vector cell index to a scalar cell index
             scalarCellIndex = (int) (vecCellIndex[0]) + ((int) (vecCellIndex[1])) * M;
@@ -79,7 +80,7 @@ public class CellIndexMethod {
             list.add(i, head.get(scalarCellIndex));
 
             // The last one goes to the header
-            head.set(scalarCellIndex, particles.get(i));
+            head.set(scalarCellIndex, p);
         }
     }
 
