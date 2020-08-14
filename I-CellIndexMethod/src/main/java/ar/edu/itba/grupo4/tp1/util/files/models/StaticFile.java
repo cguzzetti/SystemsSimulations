@@ -36,7 +36,7 @@ public class StaticFile extends InputFile{
         int M = 1;
         boolean foundM = false;
         while(!foundM){
-            if(rc > (L/(M - maxR1 - maxR2)))
+            if(rc > (L/M - maxR1 - maxR2))
                 foundM = true;
             else
                 M++;

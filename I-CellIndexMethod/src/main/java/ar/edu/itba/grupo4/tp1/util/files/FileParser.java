@@ -155,7 +155,7 @@ public class FileParser {
             double x = rand.nextDouble(0, sideLength);
             double y = rand.nextDouble(0, sideLength);
             // double radius = rand.nextDouble(0, 1);
-            double radius = 0.0;
+            double radius = 0.25;
             sb.append(String.format("%.2f %.2f %.2f\n", x, y, radius));
         }, StringBuilder::append);
 
