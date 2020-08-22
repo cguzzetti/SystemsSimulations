@@ -11,6 +11,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.grupo9.tp1.util.files.FileParser.createLatticeExperimentFile;
 
@@ -50,24 +51,25 @@ public class Main {
         LatticeInput input = parseInputFile(config);
         if(input == null) System.exit(1);
 
-        ArrayList<Particle> particles = new ArrayList<>();
 
-        int N= 100;
-        int L = 20;
-        int M = 13;
-        for(int i =0; i < N; i++){
-            ThreadLocalRandom rnd = ThreadLocalRandom.current();
-            particles.add(new Particle(
-                    rnd.nextDouble(0, L),
-                    rnd.nextDouble(0, L),
-                    0.03,
-                    rnd.nextDouble(0, 2*Math.PI),
-                    0,
-                    i
-            ));
-        }
+        int N = input.getNumberOfParticles();
 
-        OffLatticeAutomata ola = new OffLatticeAutomata(5, 2, 1, N,(double) L, M, particles,1,0,0);
+
+        ArrayList<Particle> particles = input.getParticles();
+        OffLatticeAutomata ola = new OffLatticeAutomata(
+                5,
+                2,
+                1,
+                N,
+                (double)input.getAreaSideLength(),
+                input.getOptimalM(config, input),
+                particles,
+                config.getRc(),
+                input.getFirstMaxRadius(),
+                input.getSecondMaxRadius(),
+                config,
+                input);
+
 
     }
 }
