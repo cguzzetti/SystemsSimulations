@@ -16,8 +16,8 @@ public class Particle {
     private Set<Particle> neighbors;
 
     private final boolean hasVelocity;
-    private double velocityX;
-    private double velocityY;
+    private double speed;
+    private double direction;
 
     public Particle(double xPosition, double yPosition, double radius, int id, String name){
         this.point = new Point2D.Double(xPosition, yPosition);
@@ -37,12 +37,12 @@ public class Particle {
         this.name = String.format("p%d", id);
     }
 
-    public Particle(double xPosition, double yPosition, double velocityX, double velocityY, double radius, int id){
+    public Particle(double xPosition, double yPosition, double speed, double direction, double radius, int id){
         this.point = new Point2D.Double(xPosition, yPosition);
         this.radius = radius;
         this.hasVelocity = true;
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
+        this.direction = direction;
+        this.speed = speed;
         this.id = id;
         this.neighbors = new HashSet<>();
         this.name = String.format("p%d", id);
@@ -58,14 +58,6 @@ public class Particle {
 
     public void setRadius(int radius){
         this.radius = radius;
-    }
-
-    public void setVelocityX(double velocityX) {
-        this.velocityX = velocityX;
-    }
-
-    public void setVelocityY(double velocityY) {
-        this.velocityY = velocityY;
     }
 
     public String getName() {
@@ -92,11 +84,19 @@ public class Particle {
         return this.id;
     }
 
-    public double getVelocityX(){
-        return this.velocityX;
+    public double getDirection() {
+        return this.direction;
     }
-    public double getVelocityY(){
-        return this.velocityY;
+    public double getSpeed() {
+        return this.speed;
+    }
+
+    public void setDirection(double direction) {
+        this.direction = direction;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
     public boolean variesOverTime(){
@@ -126,7 +126,7 @@ public class Particle {
 
         return String.format(
                 "Name: %s (x: %.3f, y: %.3f, vx: %.3f, vy: %.3f, radius: %.3f)",
-                this.getName(),this.point.getX(), this.point.getY(), this.velocityX, this.velocityY, this.radius
+                this.getName(),this.point.getX(), this.point.getY(), this.speed, this.direction, this.radius
         );
     }
 }

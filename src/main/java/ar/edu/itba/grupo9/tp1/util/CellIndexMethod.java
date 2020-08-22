@@ -56,6 +56,17 @@ public class CellIndexMethod {
         this.calculateNeighbors();
     }
 
+    public void CellIndexMethodRun(List<Particle> particles) {
+        if(particles.isEmpty())
+            return;
+        if(particles.size() != this.N)
+            throw new IllegalArgumentException("N is different from the amount of particles");
+
+        this.particles = particles;
+        this.generateLists();
+        this.calculateNeighbors();
+    }
+
     // Defines the cells and both list and head lists sorting the particles in their corresponding cells
     public void generateLists() {
         double[] vecCellIndex = new double[2];
