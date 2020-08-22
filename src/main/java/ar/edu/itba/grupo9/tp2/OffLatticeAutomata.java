@@ -39,7 +39,8 @@ public class OffLatticeAutomata {
         for(Particle p: this.particles) {
             ThreadLocalRandom rnd = ThreadLocalRandom.current();
             double noise = rnd.nextDouble(-this.eta/2, this.eta/2);
-            double direction = calculateDirectionWithNeighbors(p) + noise;
+            double atan2 = calculateDirectionWithNeighbors(p);
+            double direction = (atan2 + noise) > 0 ? ((atan2 + noise) < 2*Math.PI ? (atan2 + noise) : (atan2 + noise) - 2*Math.PI) : (atan2 + noise) + 2*Math.PI;
             p.setDirection(direction);
             p.setX(p.getX() + p.getSpeed() * Math.cos(direction) * this.deltaT);
             p.setY(p.getY() + p.getSpeed() * Math.sin(direction) * this.deltaT);
