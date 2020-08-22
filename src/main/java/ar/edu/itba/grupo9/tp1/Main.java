@@ -4,12 +4,13 @@ import ar.edu.itba.grupo9.tp1.util.*;
 
 import java.io.IOException;
 
-import ar.edu.itba.grupo9.tp1.util.files.FileParser;
 import ar.edu.itba.grupo9.tp1.util.files.models.DynamicFile;
 import ar.edu.itba.grupo9.tp1.util.files.models.StaticFile;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
+import static ar.edu.itba.grupo9.tp1.util.files.FileParser.*;
 
 
 public class Main 
@@ -32,14 +33,13 @@ public class Main
         System.out.println(config.toString());
         System.out.println("\n");
 
-        FileParser fp = new FileParser();
 
         try{
             if(config.getInputType().equals(InputType.STATIC)) {
                 if (config.isExperiment())
-                    fp.createExperimentFile(config);
+                    createExperimentFile(config);
 
-                StaticFile file = fp.readStaticInput(config.getInputFileName());
+                StaticFile file = readStaticInput(config.getInputFileName());
                 final Integer optimalM = file.getOptimalM(config, file);
                 System.out.println(String.format("Optimal M: %d", optimalM));
                 long currentTime;
@@ -52,12 +52,12 @@ public class Main
                     BruteForce bf = new BruteForce(file.getParticles(), config.getRc());
                     System.out.println(System.nanoTime()-init);
                 }
-                fp.printInputFileContent(file);
-                fp.printOutputToFile(file, config);
+                printInputFileContent(file);
+                printOutputToFile(file, config);
 
             }else {
                 // How do things vary with Dynamic File?
-                DynamicFile file = fp.readDynamicInput("readme_dynamic.txt");
+                DynamicFile file = readDynamicInput("readme_dynamic.txt");
             }
         } catch (IOException notFound){
             System.out.println(String.format("Error: %s", notFound.getMessage()));

@@ -4,6 +4,7 @@ import ar.edu.itba.grupo9.tp1.Particle;
 import ar.edu.itba.grupo9.tp1.util.Config;
 import ar.edu.itba.grupo9.tp1.util.files.models.DynamicFile;
 import ar.edu.itba.grupo9.tp1.util.files.models.StaticFile;
+import ar.edu.itba.grupo9.tp2.LatticeInput;
 
 import java.io.*;
 import java.util.Arrays;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 
 public class FileParser {
 
-    private void createParticle(StaticFile inputFile, String particleLine, int lineNum){
+    private static void createParticle(StaticFile inputFile, String particleLine, int lineNum){
         int particleIndex = (int) ((lineNum - 2) % (inputFile.getNumberOfParticles()+1));
         String[] particleArr = particleLine.replaceAll(" +", " ").split(" ");
         double radius = Double.parseDouble(particleArr[2]);
@@ -27,7 +28,7 @@ public class FileParser {
         inputFile.addParticle(particle);
     }
 
-    private void createParticle(DynamicFile dynamicFile, String particleLine, int lineNum){
+    private static void createParticle(DynamicFile dynamicFile, String particleLine, int lineNum){
         int particleIndex = (int) ((lineNum - 2) % (dynamicFile.getNumberOfParticles()+1));
 
         if(particleIndex == 0){
@@ -48,14 +49,33 @@ public class FileParser {
 
     }
 
-    private BufferedReader bufferedReaderFromFilename(final String fileName) throws IOException{
+    private static void createParticle(LatticeInput inputFile, String particleLine, int lineNum){
+        int particleIndex = (int) ((lineNum - 2) % (inputFile.getNumberOfParticles()+1));
+        String[] particleArr = particleLine.replaceAll(" +", " ").split(" ");
+
+        double velocity = Double.parseDouble(particleArr[2]);
+        double direction = Double.parseDouble(particleArr[3]);
+        double radius = Double.parseDouble(particleArr[4]);
+        inputFile.updateMaxRadius(radius);
+        Particle particle = new Particle(
+                Double.parseDouble(particleArr[0]),
+                Double.parseDouble(particleArr[1]),
+                velocity,
+                direction,
+                radius,
+                particleIndex);
+
+        inputFile.addParticle(particle);
+    }
+
+    private static BufferedReader bufferedReaderFromFilename(final String fileName) throws IOException{
         File file = new File(fileName);
 
         return new BufferedReader(new FileReader(file));
     }
 
-    public StaticFile readStaticInput(final String fileName) throws IOException {
-        BufferedReader br = this.bufferedReaderFromFilename(fileName);
+    public static StaticFile readStaticInput(final String fileName) throws IOException {
+        BufferedReader br = bufferedReaderFromFilename(fileName);
 
         String st;
         int linesRead = 0;
@@ -68,7 +88,7 @@ public class FileParser {
                 else
                     inputFile.setAreaSideLength(Long.parseLong(st));
             }else{
-                this.createParticle(inputFile, st, linesRead);
+                createParticle(inputFile, st, linesRead);
             }
             linesRead++;
         }
@@ -76,8 +96,8 @@ public class FileParser {
         return inputFile;
     }
 
-    public DynamicFile readDynamicInput(final String filename) throws IOException{
-        BufferedReader br = this.bufferedReaderFromFilename(filename);
+    public static DynamicFile readDynamicInput(final String filename) throws IOException{
+        BufferedReader br = bufferedReaderFromFilename(filename);
         String st;
         int linesRead = 0;
         DynamicFile dynamicFile = new DynamicFile();
@@ -89,7 +109,7 @@ public class FileParser {
                 else
                     dynamicFile.setAreaSideLength(Long.parseLong(st));
             }else{
-                this.createParticle(dynamicFile, st, linesRead);
+                createParticle(dynamicFile, st, linesRead);
             }
             linesRead++;
         }
@@ -97,14 +117,38 @@ public class FileParser {
         return dynamicFile;
     }
 
-    public void printInputFileContent(StaticFile file){
+    public static LatticeInput readLatticeInput(final String fileName) throws IOException {
+        BufferedReader br = bufferedReaderFromFilename(fileName);
+
+        String st;
+        int linesRead = 0;
+        LatticeInput inputFile = new LatticeInput();
+        while((st = br.readLine()) != null){
+            st = st.trim();
+            if(linesRead <=1){
+                if(linesRead == 0)
+                    inputFile.setNumberOfParticles(Integer.parseInt(st));
+                else
+                    inputFile.setAreaSideLength(Long.parseLong(st));
+            }else{
+                createParticle(inputFile, st, linesRead);
+            }
+            linesRead++;
+        }
+
+        return inputFile;
+    }
+
+
+
+    public static void printInputFileContent(StaticFile file){
         System.out.println(String.format("Number of particles: %s", file.getNumberOfParticles()));
         System.out.println(String.format("Length of area side: %s", file.getAreaSideLength()));
         System.out.println("Particles:");
         file.getParticles().forEach(System.out::println);
     }
 
-    public void printInputFileContent(DynamicFile file){
+    public static void printInputFileContent(DynamicFile file){
         System.out.println(String.format("Number of particles: %s", file.getNumberOfParticles()));
         System.out.println(String.format("Length of area side: %s", file.getAreaSideLength()));
         System.out.println("Particles:");
@@ -114,7 +158,7 @@ public class FileParser {
         });
     }
 
-    public void printOutputToFile(DynamicFile file, final String filename) throws IOException{
+    public static void printOutputToFile(DynamicFile file, final String filename) throws IOException{
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
         writer.write(String.format("Number of particles: %s\n", file.getNumberOfParticles()));
         writer.write(String.format("Length of area side: %s\n", file.getAreaSideLength()));
@@ -127,7 +171,7 @@ public class FileParser {
         writer.close();
     }
 
-    public void printOutputToFile(StaticFile file, final Config config) throws IOException {
+    public static void printOutputToFile(StaticFile file, final Config config) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(config.getOutputFileName()));
         writer.write(String.format("%s %s %s %s %s %s\n",
                 file.getNumberOfParticles(),
@@ -143,7 +187,7 @@ public class FileParser {
         writer.close();
     }
 
-    public void createExperimentFile(final Config config) throws IOException{
+    public static void createExperimentFile(final Config config) throws IOException{
         BufferedWriter writer = new BufferedWriter(new FileWriter(config.getInputFileName()));
         long numberOfParticles = config.getNumberOfParticles();
         double sideLength = config.getSideAreaLength();

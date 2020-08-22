@@ -125,7 +125,7 @@ public class Particle {
             );
 
         return String.format(
-                "Name: %s (x: %.3f, y: %.3f, vx: %.3f, vy: %.3f, radius: %.3f)",
+                "Name: %s (x: %.3f, y: %.3f, v: %.3f, direction: %.3f, radius: %.3f)",
                 this.getName(),this.point.getX(), this.point.getY(), this.speed, this.direction, this.radius
         );
     }
