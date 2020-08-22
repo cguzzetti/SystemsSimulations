@@ -4,4 +4,4 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 cd ..
-mvn archetype:generate -DgroupId=ar.edu.itba.grupo4.$1 -DartifactId=$1 -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
+mvn archetype:generate -DgroupId=ar.edu.itba.grupo9.$1 -DartifactId=SystemsSimulations -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
