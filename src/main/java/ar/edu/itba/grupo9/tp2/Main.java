@@ -12,33 +12,30 @@ import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
 
+import static ar.edu.itba.grupo9.tp1.util.files.FileParser.createLatticeExperimentFile;
+
 
 public class Main {
 
     private static Config parseCLIArguments(String[] args){
         Options options = new Options();
-        Config config = null;
         try{
-            config = Config.parseArguments(args, options);
+            return Config.parseArguments(args, options);
         }catch(ParseException e){
             System.out.println(e.getMessage());
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("CIMSimulator", options);
-            System.exit(1);
+            return null;
         }catch(IllegalArgumentException e){
             System.out.println(String.format("Error: %s", e.getMessage()));
-            System.exit(1);
+            return null;
         }
-
-        return config;
 
     }
 
     private static LatticeInput parseInputFile(Config config){
         try {
-            LatticeInput input = FileParser.readLatticeInput(config.getInputFileName());
-            System.out.println(input.getParticles());
-           return input;
+            return FileParser.readLatticeInput(config.getInputFileName());
 
         }catch (IOException ex){
             ex.printStackTrace();
@@ -47,9 +44,11 @@ public class Main {
     }
     public static void main(String[] args){
         Config config = parseCLIArguments(args);
+        if(config == null) System.exit(1);
+        if(config.isExperiment()) createLatticeExperimentFile(config);
 
         LatticeInput input = parseInputFile(config);
-
+        if(input == null) System.exit(1);
 
         ArrayList<Particle> particles = new ArrayList<>();
 
