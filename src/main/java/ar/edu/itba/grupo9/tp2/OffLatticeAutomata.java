@@ -3,9 +3,11 @@ package ar.edu.itba.grupo9.tp2;
 import ar.edu.itba.grupo9.tp1.Particle;
 import ar.edu.itba.grupo9.tp1.util.CellIndexMethod;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +34,7 @@ public class OffLatticeAutomata {
             updateParticles();
             cim.CellIndexMethodRun(this.particles);
             System.out.println(particles);
+            //TODO: fill output file
         }
     }
 
@@ -48,7 +51,7 @@ public class OffLatticeAutomata {
     }
 
     private double calculateDirectionWithNeighbors(Particle p) {
-        Set<Particle> neighborsWithParticle = p.getNeighbors();
+        Set<Particle> neighborsWithParticle = new HashSet<>(p.getNeighbors());
         neighborsWithParticle.add(p);
         double avgSin = neighborsWithParticle.stream().collect(Collectors.averagingDouble((particle -> Math.sin(particle.getDirection()))));
         double avgCos = neighborsWithParticle.stream().collect(Collectors.averagingDouble((particle -> Math.cos(particle.getDirection()))));
