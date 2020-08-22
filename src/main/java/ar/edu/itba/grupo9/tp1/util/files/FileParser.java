@@ -187,6 +187,29 @@ public class FileParser {
         writer.close();
     }
 
+    public static void printHeadertoFile(LatticeInput file, final Config config, BufferedWriter writer){
+        try {
+            writer.write(String.format("%s %s %s %s %s %s\n",
+                    file.getNumberOfParticles(),
+                    file.getAreaSideLength(),
+                    config.getRc(),
+                    config.isPeriodic(),
+                    file.getFirstMaxRadius(),
+                    file.getSecondMaxRadius())
+            );
+        }catch (IOException ex){
+            ex.printStackTrace();
+            System.exit(1);
+        }
+    }
+    public static void printParticlesInTimeToFile(LatticeInput file, final Config config, int time, BufferedWriter writer) throws IOException{
+        StringBuilder builder= new StringBuilder();;
+        for (Particle particle : file.getParticles()) {
+            builder.append(String.format("%s\n", particle.toString()));
+        }
+        writer.write(String.format("%d\n%s", time, builder.toString()));
+    }
+
     public static void createExperimentFile(final Config config) throws IOException{
         BufferedWriter writer = new BufferedWriter(new FileWriter(config.getInputFileName()));
         long numberOfParticles = config.getNumberOfParticles();
