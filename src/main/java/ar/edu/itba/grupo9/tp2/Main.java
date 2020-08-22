@@ -52,18 +52,22 @@ public class Main {
 
         ArrayList<Particle> particles = new ArrayList<>();
 
-        for(int i =0; i < 10; i++){
+        int N= 100;
+        int L = 20;
+        int M = 13;
+        for(int i =0; i < N; i++){
             ThreadLocalRandom rnd = ThreadLocalRandom.current();
             particles.add(new Particle(
-                    rnd.nextDouble(0, 10),
-                    rnd.nextDouble(0, 10),
+                    rnd.nextDouble(0, L),
+                    rnd.nextDouble(0, L),
+                    0.03,
+                    rnd.nextDouble(0, 2*Math.PI),
                     0,
-                    i,
-                    String.format("p%d", i)
+                    i
             ));
         }
 
-        OffLatticeAutomata ola = new OffLatticeAutomata(5,10,(double) 10,5, particles,1,0,0);
+        OffLatticeAutomata ola = new OffLatticeAutomata(5, 2, 1, N,(double) L, M, particles,1,0,0);
 
     }
 }

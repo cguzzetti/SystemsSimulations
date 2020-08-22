@@ -125,8 +125,8 @@ public class Particle {
             );
 
         return String.format(
-                "Name: %s (x: %.3f, y: %.3f, v: %.3f, direction: %.3f, radius: %.3f)",
-                this.getName(),this.point.getX(), this.point.getY(), this.speed, this.direction, this.radius
+                "%d %.3f %.3f %.3f %.3f %.3f %s",
+                this.getId(),this.point.getX(), this.point.getY(), this.speed, this.direction, this.radius, this.neighbors.stream().map(Particle::getId).collect(Collectors.toList()).stream().map(String::valueOf).collect(Collectors.joining(","))
         );
     }
 }
