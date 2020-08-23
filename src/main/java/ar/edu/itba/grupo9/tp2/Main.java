@@ -54,6 +54,7 @@ public class Main {
 
         int N = input.getNumberOfParticles();
 
+        System.out.println(input.getOptimalM(config, input));
 
         ArrayList<Particle> particles = input.getParticles();
         OffLatticeAutomata ola = new OffLatticeAutomata(

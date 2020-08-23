@@ -33,14 +33,17 @@ public class StaticFile extends InputFile{
         final double L = file.getAreaSideLength();
         final double rc = config.getRc();
         final double maxR1 = file.getFirstMaxRadius(), maxR2 = file.getSecondMaxRadius();
+        System.out.println(L);
+        System.out.println(rc);
         int M = 1;
         boolean foundM = false;
         while(!foundM){
-            if(rc > (L/M - maxR1 - maxR2))
+            if(rc >= (L/M - maxR1 - maxR2))
                 foundM = true;
             else
                 M++;
         }
+        System.out.println(M-1);
         return M-1;
     }
 
