@@ -49,7 +49,7 @@ def check_out_of_bounds_and_plot(L, x, y, radius, color_id, x_periodic, y_period
 
 
 # Read from file
-file = open("../CIMOutput.txt","r")
+file = open("CIMOutput.txt","r")
 lines = file.readlines()
 
 # Create data

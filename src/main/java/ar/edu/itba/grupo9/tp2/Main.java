@@ -57,7 +57,7 @@ public class Main {
 
         ArrayList<Particle> particles = input.getParticles();
         OffLatticeAutomata ola = new OffLatticeAutomata(
-                5,
+                250,
                 2,
                 1,
                 N,
