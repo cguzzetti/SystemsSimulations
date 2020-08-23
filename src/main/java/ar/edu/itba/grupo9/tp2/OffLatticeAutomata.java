@@ -37,7 +37,7 @@ public class OffLatticeAutomata {
         cim.CellIndexMethodRun(this.particles);
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(config.getOutputFileName()));
-            printHeadertoFile(input, config, writer);
+            printHeadertoFile(input, config, writer, timeLapse);
             for (int i = 1; i <= timeLapse; i++) {
                 updateParticles();
                 cim.CellIndexMethodRun(this.particles);

@@ -187,13 +187,13 @@ public class FileParser {
         writer.close();
     }
 
-    public static void printHeadertoFile(LatticeInput file, final Config config, BufferedWriter writer){
+    public static void printHeadertoFile(LatticeInput file, final Config config, BufferedWriter writer, Integer timelapse){
         try {
-            writer.write(String.format("%s %s %s %s %s %s\n",
+            writer.write(String.format("%s %s %d %s %s %s\n",
                     file.getNumberOfParticles(),
                     file.getAreaSideLength(),
+                    timelapse,
                     config.getRc(),
-                    config.isPeriodic(),
                     file.getFirstMaxRadius(),
                     file.getSecondMaxRadius())
             );
