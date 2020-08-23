@@ -10,7 +10,7 @@ if __name__ == '__main__':
     for i in range(t_max):
         show_x = x_values[i]
         show_y = y_values[i]
-        plt.scatter(x=show_x, y=show_y, c="red")
+        plt.scatter(x=show_x, y=show_y, c="black", marker='.', s=15)
         camera.snap()
     anim = camera.animate(blit=True)
     anim.save('scatter.gif')
