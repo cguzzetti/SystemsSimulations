@@ -7,7 +7,7 @@ import sys
 
 # Time calculated in Microseconds
 def visualize_R():
-    file = open("inputM.txt", "r")
+    file = open("../inputM.txt", "r")
     maxTime = 0
     times = []
     errors = []
