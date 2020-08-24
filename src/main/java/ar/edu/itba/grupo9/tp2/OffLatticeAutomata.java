@@ -38,10 +38,11 @@ public class OffLatticeAutomata {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(config.getOutputFileName()));
             printHeadertoFile(input, config, writer, timeLapse);
+            printParticlesInTimeToFile(input, config, 0, writer);
             for (int i = 1; i <= timeLapse; i++) {
                 updateParticles();
                 cim.CellIndexMethodRun(this.particles);
-                System.out.println(particles);
+                printHeadertoFile(input, config, writer, timeLapse);
                 printParticlesInTimeToFile(input, config, i, writer);
             }
             writer.close();
@@ -52,14 +53,25 @@ public class OffLatticeAutomata {
     }
 
     private void updateParticles() {
+        double x, y, noise, atan2, direction;
         for(Particle p: this.particles) {
             ThreadLocalRandom rnd = ThreadLocalRandom.current();
-            double noise = rnd.nextDouble(-this.eta/2, this.eta/2);
-            double atan2 = calculateDirectionWithNeighbors(p);
-            double direction = (atan2 + noise) > 0 ? ((atan2 + noise) < 2*Math.PI ? (atan2 + noise) : (atan2 + noise) - 2*Math.PI) : (atan2 + noise) + 2*Math.PI;
+            noise = rnd.nextDouble(-this.eta/2, this.eta/2);
+            atan2 = calculateDirectionWithNeighbors(p);
+            direction = (atan2 + noise) > 0 ? ((atan2 + noise) < 2*Math.PI ? (atan2 + noise) : (atan2 + noise) - 2*Math.PI) : (atan2 + noise) + 2*Math.PI;
             p.setDirection(direction);
-            p.setX(p.getX() + p.getSpeed() * Math.cos(direction) * this.deltaT);
-            p.setY(p.getY() + p.getSpeed() * Math.sin(direction) * this.deltaT);
+            x = p.getX() + p.getSpeed() * Math.cos(direction) * this.deltaT;
+            if(x<0)
+                x = x+L;
+            if(x>L)
+                x = x%L;
+            y = p.getY() + p.getSpeed() * Math.sin(direction) * this.deltaT;
+            if(y<0)
+                y = y+L;
+            if(y>L)
+                y = y%L;
+            p.setX(x);
+            p.setY(y);
         }
     }
 

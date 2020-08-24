@@ -189,13 +189,8 @@ public class FileParser {
 
     public static void printHeadertoFile(LatticeInput file, final Config config, BufferedWriter writer, Integer timelapse){
         try {
-            writer.write(String.format("%s %s %d %s %s %s\n",
-                    file.getNumberOfParticles(),
-                    file.getAreaSideLength(),
-                    timelapse,
-                    config.getRc(),
-                    file.getFirstMaxRadius(),
-                    file.getSecondMaxRadius())
+            writer.write(String.format("%s\n",
+                    file.getNumberOfParticles())
             );
         }catch (IOException ex){
             ex.printStackTrace();
@@ -203,7 +198,7 @@ public class FileParser {
         }
     }
     public static void printParticlesInTimeToFile(LatticeInput file, final Config config, int time, BufferedWriter writer) throws IOException{
-        StringBuilder builder= new StringBuilder();;
+        StringBuilder builder = new StringBuilder();;
         for (Particle particle : file.getParticles()) {
             builder.append(String.format("%s\n", particle.toString()));
         }
