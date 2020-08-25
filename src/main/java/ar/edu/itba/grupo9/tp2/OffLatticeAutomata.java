@@ -58,18 +58,18 @@ public class OffLatticeAutomata {
             ThreadLocalRandom rnd = ThreadLocalRandom.current();
             noise = rnd.nextDouble(-this.eta/2, this.eta/2);
             atan2 = calculateDirectionWithNeighbors(p);
-            direction = (atan2 + noise) > 0 ? ((atan2 + noise) < 2*Math.PI ? (atan2 + noise) : (atan2 + noise) - 2*Math.PI) : (atan2 + noise) + 2*Math.PI;
+            direction = atan2 + noise;
             p.setDirection(direction);
             x = p.getX() + p.getSpeed() * Math.cos(direction) * this.deltaT;
             if(x<0)
                 x = x+L;
             if(x>L)
-                x = x%L;
+                x = x-L;
             y = p.getY() + p.getSpeed() * Math.sin(direction) * this.deltaT;
             if(y<0)
                 y = y+L;
             if(y>L)
-                y = y%L;
+                y = y-L;
             p.setX(x);
             p.setY(y);
         }
@@ -81,8 +81,7 @@ public class OffLatticeAutomata {
         double avgSin = neighborsWithParticle.stream().collect(Collectors.averagingDouble((particle -> Math.sin(particle.getDirection()))));
         double avgCos = neighborsWithParticle.stream().collect(Collectors.averagingDouble((particle -> Math.cos(particle.getDirection()))));
         double atan2 = Math.atan2(avgSin, avgCos);
-        //System.out.println(atan2 > 0? atan2 : atan2 + 2*Math.PI);
-        return atan2 > 0 ? atan2 : atan2 + 2*Math.PI;
+        return atan2;
     }
 
 }

@@ -126,7 +126,7 @@ public class Particle {
 
         return String.format(
                 "%d %.3f %.3f %.3f %.3f %.3f",
-                this.getId(),this.point.getX(), this.point.getY(), this.speed, this.direction, this.radius
+                this.getId(),this.point.getX(), this.point.getY(), this.speed*Math.cos(this.direction), this.speed*Math.sin(this.direction), this.direction
         );
     }
 }

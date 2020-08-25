@@ -58,8 +58,8 @@ public class Main {
 
         ArrayList<Particle> particles = input.getParticles();
         OffLatticeAutomata ola = new OffLatticeAutomata(
-                100,
-                2,
+                600,
+                0.1,
                 1,
                 N,
                 (double)input.getAreaSideLength(),
