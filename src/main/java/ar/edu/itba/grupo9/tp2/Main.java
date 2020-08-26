@@ -58,12 +58,13 @@ public class Main {
 
         ArrayList<Particle> particles = input.getParticles();
         OffLatticeAutomata ola = new OffLatticeAutomata(
-                600,
-                0.1,
+                500,
+                2,
                 1,
                 N,
                 (double)input.getAreaSideLength(),
                 input.getOptimalM(config, input),
+                0.03,
                 particles,
                 config.getRc(),
                 input.getFirstMaxRadius(),

@@ -242,7 +242,7 @@ public class FileParser {
                 double x = rand.nextDouble(0, sideLength);
                 double y = rand.nextDouble(0, sideLength);
                 double velocity = 0.03;
-                double direction = rand.nextDouble(0, 2 * Math.PI);
+                double direction = rand.nextDouble(-Math.PI, Math.PI);
                 // double radius = rand.nextDouble(0, 1);
                 double radius = 0;
                 sb.append(String.format("%.2f %.2f %.2f %.2f %.2f\n", x, y, velocity, direction, radius));

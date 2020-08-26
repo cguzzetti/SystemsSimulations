@@ -24,13 +24,15 @@ public class OffLatticeAutomata {
     private double deltaT;
     private Integer N;
     private Double L;
+    private Double v;
 
-    public OffLatticeAutomata(Integer timeLapse, double eta, double deltaT, Integer N, Double L, Integer M, List<Particle> particles, double rc, double maxRadius1, double maxRadius2, Config config, LatticeInput input) {
+    public OffLatticeAutomata(Integer timeLapse, double eta, double deltaT, Integer N, Double L, Integer M, Double v, List<Particle> particles, double rc, double maxRadius1, double maxRadius2, Config config, LatticeInput input) {
         this.particles = particles;
         this.eta = eta;
         this.deltaT = deltaT;
         this.N = N;
         this.L = L;
+        this.v = v;
 
         CellIndexMethod cim = new CellIndexMethod(N, L, M, this.particles, true, rc, maxRadius1, maxRadius2);
 
@@ -39,11 +41,13 @@ public class OffLatticeAutomata {
             BufferedWriter writer = new BufferedWriter(new FileWriter(config.getOutputFileName()));
             printHeadertoFile(input, config, writer, timeLapse);
             printParticlesInTimeToFile(input, config, 0, writer);
+            System.out.println(calculateVa());
             for (int i = 1; i <= timeLapse; i++) {
                 updateParticles();
                 cim.CellIndexMethodRun(this.particles);
                 printHeadertoFile(input, config, writer, timeLapse);
                 printParticlesInTimeToFile(input, config, i, writer);
+                System.out.println(calculateVa());
             }
             writer.close();
         }catch (IOException ex){
@@ -59,17 +63,21 @@ public class OffLatticeAutomata {
             noise = rnd.nextDouble(-this.eta/2, this.eta/2);
             atan2 = calculateDirectionWithNeighbors(p);
             direction = atan2 + noise;
+            if(direction < -Math.PI)
+                direction += 2*Math.PI;
+            if(direction > Math.PI)
+                direction -= 2*Math.PI;
             p.setDirection(direction);
             x = p.getX() + p.getSpeed() * Math.cos(direction) * this.deltaT;
             if(x<0)
-                x = x+L;
+                x += L;
             if(x>L)
-                x = x-L;
+                x -= L;
             y = p.getY() + p.getSpeed() * Math.sin(direction) * this.deltaT;
             if(y<0)
-                y = y+L;
+                y +=L;
             if(y>L)
-                y = y-L;
+                y -= L;
             p.setX(x);
             p.setY(y);
         }
@@ -82,6 +90,10 @@ public class OffLatticeAutomata {
         double avgCos = neighborsWithParticle.stream().collect(Collectors.averagingDouble((particle -> Math.cos(particle.getDirection()))));
         double atan2 = Math.atan2(avgSin, avgCos);
         return atan2;
+    }
+
+    private double calculateVa() {
+        return Math.hypot(this.particles.stream().collect(Collectors.summingDouble(particle -> particle.getVx())),this.particles.stream().collect(Collectors.summingDouble(particle -> particle.getVy()))) / (this.N*this.v);
     }
 
 }

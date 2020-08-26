@@ -87,6 +87,9 @@ public class CellIndexMethod {
             // Translate the vector cell index to a scalar cell index
             scalarCellIndex = (int) (vecCellIndex[0]) + ((int) (vecCellIndex[1])) * M;
 
+            if(scalarCellIndex < 0 || scalarCellIndex >= M*M)
+                System.out.println("Particle with error: "+p);
+
             // Link to the previous occupant (or EMPTY if you're the 1st)
             list.add(i, head.get(scalarCellIndex));
 
