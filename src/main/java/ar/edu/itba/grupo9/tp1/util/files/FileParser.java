@@ -205,14 +205,8 @@ public class FileParser {
         writer.write(String.format("%d\n%s", time, builder.toString()));
     }
 
-    public static void createExperimentFile(final Config config) throws IOException{
-        BufferedWriter writer = new BufferedWriter(new FileWriter(config.getInputFileName()));
-        long numberOfParticles = config.getNumberOfParticles();
-        double sideLength = config.getSideAreaLength();
-        writer.write(String.format("%d\n", numberOfParticles));
-        writer.write(String.format("%d\n", (int)sideLength));
-
-        StringBuilder result = Stream.iterate(0, n -> n+1).limit(numberOfParticles).parallel().collect(StringBuilder::new, (sb, i)-> {
+    public static StringBuilder generateRandomParticles(long numberOfParticles, double sideLength){
+        return Stream.iterate(0, n -> n+1).limit(numberOfParticles).parallel().collect(StringBuilder::new, (sb, i)-> {
             // Every call to ThreadLocalRandom.current() is going to call
             // localInit which will generate a new seed.
             ThreadLocalRandom rand = ThreadLocalRandom.current();
@@ -222,6 +216,16 @@ public class FileParser {
             double radius = 0.25;
             sb.append(String.format("%.2f %.2f %.2f\n", x, y, radius));
         }, StringBuilder::append);
+    }
+
+    public static void createExperimentFile(final Config config) throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter(config.getInputFileName()));
+        long numberOfParticles = config.getNumberOfParticles();
+        double sideLength = config.getSideAreaLength();
+        writer.write(String.format("%d\n", numberOfParticles));
+        writer.write(String.format("%d\n", (int)sideLength));
+
+        StringBuilder result = generateRandomParticles(numberOfParticles, sideLength);
 
         writer.write(result.toString());
         writer.close();

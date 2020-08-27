@@ -4,11 +4,14 @@ import ar.edu.itba.grupo9.tp1.Particle;
 import ar.edu.itba.grupo9.tp1.util.CellIndexMethod;
 import ar.edu.itba.grupo9.tp1.util.Config;
 
+import javax.swing.text.html.Option;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collector;
@@ -17,7 +20,7 @@ import java.util.stream.Stream;
 
 import static ar.edu.itba.grupo9.tp1.util.files.FileParser.*;
 
-public class OffLatticeAutomata {
+public class OffLatticeAutomata<T> {
 
     private List<Particle> particles;
     private double eta;
@@ -25,8 +28,16 @@ public class OffLatticeAutomata {
     private Integer N;
     private Double L;
     private Double v;
+    private final Optional<BufferedWriter> experimentWriter;
 
-    public OffLatticeAutomata(Integer timeLapse, double eta, double deltaT, Integer N, Double L, Integer M, Double v, List<Particle> particles, double rc, double maxRadius1, double maxRadius2, Config config, LatticeInput input) {
+    public OffLatticeAutomata(){
+        this.experimentWriter = Optional.empty();
+    }
+    public OffLatticeAutomata(BufferedWriter writer){
+        this.experimentWriter = Optional.of(writer);
+    }
+
+    public void runSimulation(Integer timeLapse, double eta, double deltaT, Integer N, Double L, Integer M, Double v, List<Particle> particles, double rc, double maxRadius1, double maxRadius2, Config config, LatticeInput input) throws IOException{
         this.particles = particles;
         this.eta = eta;
         this.deltaT = deltaT;
@@ -47,7 +58,7 @@ public class OffLatticeAutomata {
                 cim.CellIndexMethodRun(this.particles);
                 printHeadertoFile(input, config, writer, timeLapse);
                 printParticlesInTimeToFile(input, config, i, writer);
-                System.out.println(calculateVa());
+                this.updateExperimentFile(calculateVa());
             }
             writer.close();
         }catch (IOException ex){
@@ -93,7 +104,13 @@ public class OffLatticeAutomata {
     }
 
     private double calculateVa() {
-        return Math.hypot(this.particles.stream().collect(Collectors.summingDouble(particle -> particle.getVx())),this.particles.stream().collect(Collectors.summingDouble(particle -> particle.getVy()))) / (this.N*this.v);
+        return Math.hypot(this.particles.stream().mapToDouble(Particle::getVx).sum(), this.particles.stream().mapToDouble(Particle::getVy).sum()) / (this.N*this.v);
+    }
+
+    private void updateExperimentFile(Double va) throws IOException{
+        if(!this.experimentWriter.isPresent())
+            return;
+        this.experimentWriter.get().write(String.format("%.3f\n", va));
     }
 
 }
