@@ -74,7 +74,7 @@ public class Main {
 
     private static void runBenchmarkMode(Integer repetitions) throws IOException{
         double expectedOutput = 0;
-        int numberOfRepetitions = 3;
+        int numberOfRepetitions = repetitions;
         Config config = initializeConfig();
         Integer timeLapse = 300;
         Double eta = 0.1;
@@ -147,7 +147,7 @@ public class Main {
 
     }
     public static void main(String[] args) {
-        boolean BENCHMARK_MODE = false;
+        boolean BENCHMARK_MODE = true;
         Integer repsForBenchmark = 10;
         try {
             if (BENCHMARK_MODE) {
