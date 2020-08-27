@@ -76,19 +76,17 @@ public class Main {
         double expectedOutput = 0;
         int numberOfRepetitions = repetitions;
         Config config = initializeConfig();
-        Integer timeLapse = 300;
+        Integer timeLapse = 600;
         Double eta = 0.1;
         BufferedWriter resultWriter = new BufferedWriter(new FileWriter("experimentResult.txt"));
         resultWriter.write(String.format("Running %d times with %s as variable varying %s", numberOfRepetitions, "Va", "eta"));
+        createLatticeExperimentFile(config);
         while(numberOfRepetitions >=0){
-            createLatticeExperimentFile(config);
 
             LatticeInput input = parseInputFile(config);
             if(input == null) System.exit(1);
 
             int N = input.getNumberOfParticles();
-
-            System.out.println(input.getOptimalM(config, input));
 
             ArrayList<Particle> particles = input.getParticles();
             OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter);
