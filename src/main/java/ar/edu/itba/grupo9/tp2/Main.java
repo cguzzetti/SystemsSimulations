@@ -54,7 +54,7 @@ public class Main {
         Integer timeLapse = config.getTimeLapse();
         BufferedWriter resultWriter = new BufferedWriter(new FileWriter("experimentResult.txt"));
         //resultWriter.write(String.format("Running %d times with %s as variable varying %s\n", numberOfRepetitions, "Va", "eta"));
-        resultWriter.write(String.format("%d\n", timeLapse));
+        resultWriter.write(String.format("%d %d %f %f %d\n", timeLapse, numberOfRepetitions, config.getSideAreaLength(), config.getEta(), config.getNumberOfParticles()));
         createLatticeExperimentFile(config);
         while(numberOfRepetitions >=0){
 
@@ -102,7 +102,7 @@ public class Main {
 
         OffLatticeAutomata ola = new OffLatticeAutomata();
 
-        ola.runSimulation(500,
+        ola.runSimulation(config.getTimeLapse(),
                 config.getEta(),
                 1,
                 N,
@@ -121,7 +121,7 @@ public class Main {
     }
     public static void main(String[] args) {
         boolean BENCHMARK_MODE = true;
-        Integer repsForBenchmark = 0;
+        Integer repsForBenchmark = 5;
         try {
             if (BENCHMARK_MODE) {
                 runBenchmarkMode(repsForBenchmark, args);

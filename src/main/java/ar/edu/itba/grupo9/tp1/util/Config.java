@@ -13,7 +13,7 @@ public class Config {
     final private Boolean isExperiment;
     final private RunMode runMode;
     final private Double rc;
-    final private Long sideAreaLength;
+    final private Double sideAreaLength;
     final private Integer numberOfParticles;
     final private Integer M;
     final private Double eta;
@@ -75,7 +75,7 @@ public class Config {
             throw new IllegalArgumentException(String.format("%s is not a valid mode", mode));
         this.runMode = RunMode.valueOf(mode);
         this.rc = Double.parseDouble(rc);
-        this.sideAreaLength = Long.parseLong(L);
+        this.sideAreaLength = Double.parseDouble(L);
         this.numberOfParticles = Integer.parseInt(N);
         this.M = (M != null)? Integer.parseInt(M): null;
         this.eta = Double.parseDouble(eta);
@@ -255,7 +255,7 @@ public class Config {
         return rc;
     }
 
-    public Long getSideAreaLength() {
+    public Double getSideAreaLength() {
         return sideAreaLength;
     }
 

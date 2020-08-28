@@ -1,19 +1,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Read from file
-file = open("../../experimentResult.txt","r")
-lines = file.readlines()
+def visualize_va_against_t():
+    # Read from file
+    file = open("../../experimentResult.txt","r")
+    lines = file.readlines()
 
-# Create data
-N = int(lines[0].split()[0])
-print(N)
-x = np.zeros(N)
-y = np.zeros(N)
+    # Create data
+    t = int(lines[0].split()[0])
+    repetitions = int(lines[0].split()[1])
+    L = float(lines[0].split()[2])
+    eta = float(lines[0].split()[3])
+    N = int(lines[0].split()[4])
+    x = np.zeros(t)
+    y = np.zeros(t)
 
-for i in range(1,N+1):
-    x[i-1] = i-1
-    y[i-1] = lines[i].split()[0]   
+    fig, ax = plt.subplots()
+    ax.set_xlabel('t')
+    ax.set_ylabel('Va')
+    ax.set_title('Observable con N='+str(N)+', L='+str(L)+', eta='+str(eta))
 
-plt.plot(x, y)
-plt.show()
+    for j in range(0, repetitions+1):
+        for i in range(0, t):
+            x[i] = i
+            y[i] = lines[1+j*t+i].split()[0]   
+        plt.plot(x, y)
+
+    plt.show()
+
+visualize_va_against_t()
+characteristic_t = input("Enter characteristic t:")
+print(characteristic_t)
