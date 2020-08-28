@@ -52,7 +52,6 @@ public class OffLatticeAutomata {
             BufferedWriter writer = new BufferedWriter(new FileWriter(config.getOutputFileName()));
             printHeadertoFile(input, config, writer, timeLapse);
             printParticlesInTimeToFile(input, config, 0, writer);
-            System.out.println(calculateVa());
             for (int i = 1; i <= timeLapse; i++) {
                 updateParticles();
                 cim.CellIndexMethodRun(this.particles);
@@ -83,7 +82,7 @@ public class OffLatticeAutomata {
             x = p.getX() + p.getSpeed() * Math.cos(direction) * this.deltaT;
             if(x<0)
                 x += L;
-            if(x>L)
+            if(x>=L)
                 x -= L;
             y = p.getY() + p.getSpeed() * Math.sin(direction) * this.deltaT;
             if(y<0)
