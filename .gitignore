@@ -30,6 +30,8 @@
 .idea/**/libraries
 
 .idea/**
+**/.vscode/**
+**/__pycache__/**
 *.txt
 **/*.iml
 target/**
