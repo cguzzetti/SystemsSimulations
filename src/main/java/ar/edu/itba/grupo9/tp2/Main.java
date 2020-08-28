@@ -47,37 +47,11 @@ public class Main {
         }
     }
 
-    // -t static -f latticeInput.txt -N 400 -L 20 -e -p -m CIM -rc 1
-    public static Config initializeConfig(){
-        String inputType = "STATIC";
-        String inputFileName = "latticeInput.txt";
-        String outputFileName = "CIMOutput.txt";
-        boolean isPeriodic = true;
-        String mode = "CIM";
-        String rc = "1";
-        String L = "20";
-        String N = "400";
-        String M = "13";
-
-        return new Config(
-                inputType,
-                inputFileName,
-                outputFileName,
-                isPeriodic,
-                mode,
-                rc,
-                L,
-                N,
-                M
-        );
-    }
-
-    private static void runBenchmarkMode(Integer repetitions) throws IOException{
+    private static void runBenchmarkMode(Integer repetitions, String[] args) throws IOException{
         double expectedOutput = 0;
         int numberOfRepetitions = repetitions;
-        Config config = initializeConfig();
+        Config config = parseCLIArguments(args);
         Integer timeLapse = 600;
-        Double eta = 0.1;
         BufferedWriter resultWriter = new BufferedWriter(new FileWriter("experimentResult.txt"));
         resultWriter.write(String.format("Running %d times with %s as variable varying %s", numberOfRepetitions, "Va", "eta"));
         createLatticeExperimentFile(config);
@@ -92,12 +66,12 @@ public class Main {
             OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter);
             ola.runSimulation(
                     timeLapse,
-                    eta,
+                    config.getEta(),
                     1,
                     N,
                     (double)input.getAreaSideLength(),
                     input.getOptimalM(config, input),
-                    0.03,
+                    config.getV(),
                     particles,
                     config.getRc(),
                     input.getFirstMaxRadius(),
@@ -145,11 +119,11 @@ public class Main {
 
     }
     public static void main(String[] args) {
-        boolean BENCHMARK_MODE = false;
+        boolean BENCHMARK_MODE = true;
         Integer repsForBenchmark = 50;
         try {
             if (BENCHMARK_MODE) {
-                runBenchmarkMode(repsForBenchmark);
+                runBenchmarkMode(repsForBenchmark, args);
             } else {
                 runNormalMode(args);
             }

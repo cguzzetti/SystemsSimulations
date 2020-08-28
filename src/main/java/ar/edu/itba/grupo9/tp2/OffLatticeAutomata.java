@@ -85,7 +85,7 @@ public class OffLatticeAutomata {
             y = p.getY() + p.getSpeed() * Math.sin(direction) * this.deltaT;
             if(y<0)
                 y +=L;
-            if(y>L)
+            if(y>=L)
                 y -= L;
             p.setX(x);
             p.setY(y);

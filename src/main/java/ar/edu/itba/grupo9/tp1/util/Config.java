@@ -18,6 +18,7 @@ public class Config {
     final private Integer M;
     final private Double eta;
     final private Double v;
+    final private Integer timelapse;
 
     public Config(String inputType,
                   String inputFileName,
@@ -27,7 +28,8 @@ public class Config {
                   String rc,
                   String M,
                   String eta,
-                  String velocity) throws IllegalArgumentException{
+                  String velocity,
+                  String time) throws IllegalArgumentException{
         if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
             throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
         }
@@ -45,6 +47,7 @@ public class Config {
         this.M = (M != null)? Integer.parseInt(M): null;
         this.eta = Double.parseDouble(eta);
         this.v = Double.parseDouble(velocity);
+        this.timelapse = Integer.parseInt(time);
 
     }
 
@@ -58,7 +61,8 @@ public class Config {
                   String N,
                   String M,
                   String eta,
-                  String velocity) throws IllegalArgumentException{
+                  String velocity,
+                  String time) throws IllegalArgumentException{
         if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
             throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
         }
@@ -76,6 +80,7 @@ public class Config {
         this.M = (M != null)? Integer.parseInt(M): null;
         this.eta = Double.parseDouble(eta);
         this.v = Double.parseDouble(velocity);
+        this.timelapse = Integer.parseInt(time);
 
     }
 
@@ -117,6 +122,10 @@ public class Config {
         Option velocity = new Option("v", "velocity", true, "Initial v of the particles");
         velocity.setRequired(false);
         options.addOption(velocity);
+        Option timelapse = new Option("tl", "timelapse", true, "Time the simulation should run");
+        timelapse.setRequired(false);
+        options.addOption(timelapse);
+
 
         CommandLineParser parser = new DefaultParser();
 
@@ -151,6 +160,14 @@ public class Config {
             velocityValue = cmd.getOptionValue("v");
         }
 
+        String timelapseValue;
+        if(!cmd.hasOption("timelapse")){
+            System.out.println("timelapse value not defined. Initializing with t = 600 (if you are on TP2, initialize it correctly please)");
+            timelapseValue = "600";
+        }else{
+            timelapseValue = cmd.getOptionValue("timelapse");
+        }
+
 
         String rcValue;
         if(!cmd.hasOption("rc")){
@@ -176,7 +193,8 @@ public class Config {
                     cmd.getOptionValue("N"),
                     cmd.getOptionValue("M"),
                     etaValue,
-                    velocityValue
+                    velocityValue,
+                    timelapseValue
             );
         }
 
@@ -189,7 +207,8 @@ public class Config {
                 rcValue,
                 cmd.getOptionValue("M"),
                 etaValue,
-                velocityValue
+                velocityValue,
+                timelapseValue
         );
     }
 
