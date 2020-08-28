@@ -128,12 +128,12 @@ public class Main {
         OffLatticeAutomata ola = new OffLatticeAutomata();
 
         ola.runSimulation(500,
-                2,
+                config.getEta(),
                 1,
                 N,
                 (double)input.getAreaSideLength(),
                 input.getOptimalM(config, input),
-                0.03,
+                config.getV(),
                 particles,
                 config.getRc(),
                 input.getFirstMaxRadius(),
@@ -145,8 +145,8 @@ public class Main {
 
     }
     public static void main(String[] args) {
-        boolean BENCHMARK_MODE = true;
-        Integer repsForBenchmark = 10;
+        boolean BENCHMARK_MODE = false;
+        Integer repsForBenchmark = 50;
         try {
             if (BENCHMARK_MODE) {
                 runBenchmarkMode(repsForBenchmark);

@@ -16,6 +16,8 @@ public class Config {
     final private Long sideAreaLength;
     final private Integer numberOfParticles;
     final private Integer M;
+    final private Double eta;
+    final private Double v;
 
     public Config(String inputType,
                   String inputFileName,
@@ -23,7 +25,9 @@ public class Config {
                   Boolean isPeriodic,
                   String mode,
                   String rc,
-                  String M) throws IllegalArgumentException{
+                  String M,
+                  String eta,
+                  String velocity) throws IllegalArgumentException{
         if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
             throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
         }
@@ -39,6 +43,8 @@ public class Config {
         this.sideAreaLength = null;
         this.numberOfParticles = null;
         this.M = (M != null)? Integer.parseInt(M): null;
+        this.eta = Double.parseDouble(eta);
+        this.v = Double.parseDouble(velocity);
 
     }
 
@@ -50,7 +56,9 @@ public class Config {
                   String rc,
                   String L,
                   String N,
-                  String M) throws IllegalArgumentException{
+                  String M,
+                  String eta,
+                  String velocity) throws IllegalArgumentException{
         if(!(inputType.equals("DYNAMIC") || inputType.equals("STATIC"))){
             throw new IllegalArgumentException(String.format("%s is not a valid file type", inputType));
         }
@@ -66,6 +74,8 @@ public class Config {
         this.sideAreaLength = Long.parseLong(L);
         this.numberOfParticles = Integer.parseInt(N);
         this.M = (M != null)? Integer.parseInt(M): null;
+        this.eta = Double.parseDouble(eta);
+        this.v = Double.parseDouble(velocity);
 
     }
 
@@ -101,6 +111,12 @@ public class Config {
         Option M = new Option("M", "mode", true, "Run mode (BRUTE|CIM)");
         M.setRequired(false);
         options.addOption(M);
+        Option eta = new Option("eta", "eta", true, "Noise added to random direction");
+        eta.setRequired(true);
+        options.addOption(eta);
+        Option velocity = new Option("v", "velocity", true, "Initial v of the particles");
+        velocity.setRequired(true);
+        options.addOption(velocity);
 
         CommandLineParser parser = new DefaultParser();
 
@@ -139,7 +155,9 @@ public class Config {
                     rcValue,
                     cmd.getOptionValue("L"),
                     cmd.getOptionValue("N"),
-                    cmd.getOptionValue("M")
+                    cmd.getOptionValue("M"),
+                    cmd.getOptionValue("eta"),
+                    cmd.getOptionValue("velocity")
             );
         }
 
@@ -150,7 +168,9 @@ public class Config {
                 isPeriodic,
                 cmd.getOptionValue("mode").toUpperCase(),
                 rcValue,
-                cmd.getOptionValue("M")
+                cmd.getOptionValue("M"),
+                cmd.getOptionValue("eta"),
+                cmd.getOptionValue("velocity")
         );
     }
 
@@ -199,5 +219,13 @@ public class Config {
 
     public Integer getM() {
         return M;
+    }
+
+    public Double getEta() {
+        return eta;
+    }
+
+    public Double getV() {
+        return v;
     }
 }
