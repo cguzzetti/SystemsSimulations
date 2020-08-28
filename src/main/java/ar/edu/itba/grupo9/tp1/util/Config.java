@@ -112,10 +112,10 @@ public class Config {
         M.setRequired(false);
         options.addOption(M);
         Option eta = new Option("eta", "eta", true, "Noise added to random direction");
-        eta.setRequired(true);
+        eta.setRequired(false);
         options.addOption(eta);
         Option velocity = new Option("v", "velocity", true, "Initial v of the particles");
-        velocity.setRequired(true);
+        velocity.setRequired(false);
         options.addOption(velocity);
 
         CommandLineParser parser = new DefaultParser();
@@ -131,6 +131,25 @@ public class Config {
 
         Boolean isPeriodic = cmd.hasOption("p");
         Boolean isExperiment = cmd.hasOption("e");
+
+        // To maintain backward compatibility with TP1 we can't set eta and v as required.
+        // Therefore, we initialize it with a specific value if not defined
+        // (I know this is awful, don't judge. I'll make it prettier in a future refactor)
+        String etaValue;
+        if(!cmd.hasOption("eta")){
+            System.out.println("ETA value not defined. Initializing with eta:2 (if you are on TP2, initialize it correctly please)");
+            etaValue = "2";
+        }else{
+            etaValue = cmd.getOptionValue("eta");
+        }
+
+        String velocityValue;
+        if(!cmd.hasOption("v")){
+            System.out.println("v value not defined. Initializing with v=0.03 (if you are on TP2, initialize it correctly please)");
+            velocityValue = "0.03";
+        }else{
+            velocityValue = cmd.getOptionValue("v");
+        }
 
 
         String rcValue;
@@ -156,8 +175,8 @@ public class Config {
                     cmd.getOptionValue("L"),
                     cmd.getOptionValue("N"),
                     cmd.getOptionValue("M"),
-                    cmd.getOptionValue("eta"),
-                    cmd.getOptionValue("velocity")
+                    etaValue,
+                    velocityValue
             );
         }
 
@@ -169,8 +188,8 @@ public class Config {
                 cmd.getOptionValue("mode").toUpperCase(),
                 rcValue,
                 cmd.getOptionValue("M"),
-                cmd.getOptionValue("eta"),
-                cmd.getOptionValue("velocity")
+                etaValue,
+                velocityValue
         );
     }
 
