@@ -111,7 +111,7 @@ public class Config {
         numberOfParticles.setRequired(false);
         options.addOption(numberOfParticles);
         Option mode = new Option("m", "mode", true, "Run mode (BRUTE|CIM)");
-        mode.setRequired(true);
+        mode.setRequired(false);
         options.addOption(mode);
         Option M = new Option("M", "mode", true, "Run mode (BRUTE|CIM)");
         M.setRequired(false);
@@ -168,6 +168,14 @@ public class Config {
             timelapseValue = cmd.getOptionValue("timelapse");
         }
 
+        String modeValue;
+        if(!cmd.hasOption("mode")){
+            System.out.println("Mode value not defined. Initializing with m = CIM (if you are on TP1, initialize it correctly please)");
+            modeValue = "CIM";
+        }else{
+            modeValue = cmd.getOptionValue("mode").toUpperCase();
+        }
+
 
         String rcValue;
         if(!cmd.hasOption("rc")){
@@ -187,7 +195,7 @@ public class Config {
                     inputNameValue,
                     outputNameValue,
                     isPeriodic,
-                    cmd.getOptionValue("mode").toUpperCase(),
+                    modeValue,
                     rcValue,
                     cmd.getOptionValue("L"),
                     cmd.getOptionValue("N"),
@@ -203,7 +211,7 @@ public class Config {
                 inputNameValue,
                 outputNameValue,
                 isPeriodic,
-                cmd.getOptionValue("mode").toUpperCase(),
+                modeValue,
                 rcValue,
                 cmd.getOptionValue("M"),
                 etaValue,
