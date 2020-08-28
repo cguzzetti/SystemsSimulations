@@ -247,9 +247,8 @@ public class FileParser {
                 double y = rand.nextDouble(0, sideLength);
                 double velocity = 0.03;
                 double direction = rand.nextDouble(-Math.PI, Math.PI);
-                // double radius = rand.nextDouble(0, 1);
                 double radius = 0;
-                sb.append(String.format("%.2f %.2f %.2f %.2f %.2f\n", x, y, velocity, direction, radius));
+                sb.append(String.format("%f %f %f %f %f\n", x, y, velocity, direction, radius));
             }, StringBuilder::append);
 
             writer.write(result.toString());

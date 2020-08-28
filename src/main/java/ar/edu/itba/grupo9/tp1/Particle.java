@@ -133,7 +133,7 @@ public class Particle {
             );
 
         return String.format(
-                "%d %.3f %.3f %.3f %.3f %.3f",
+                "%d %f %f %f %f %f",
                 this.getId(),this.point.getX(), this.point.getY(), this.getVx(), this.getVy(), this.direction
         );
     }

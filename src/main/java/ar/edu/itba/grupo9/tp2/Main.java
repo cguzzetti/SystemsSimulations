@@ -51,9 +51,10 @@ public class Main {
         double expectedOutput = 0;
         int numberOfRepetitions = repetitions;
         Config config = parseCLIArguments(args);
-        Integer timeLapse = 600;
+        Integer timeLapse = config.getTimeLapse();
         BufferedWriter resultWriter = new BufferedWriter(new FileWriter("experimentResult.txt"));
-        resultWriter.write(String.format("Running %d times with %s as variable varying %s", numberOfRepetitions, "Va", "eta"));
+        //resultWriter.write(String.format("Running %d times with %s as variable varying %s\n", numberOfRepetitions, "Va", "eta"));
+        resultWriter.write(String.format("%d\n", timeLapse));
         createLatticeExperimentFile(config);
         while(numberOfRepetitions >=0){
 
@@ -120,7 +121,7 @@ public class Main {
     }
     public static void main(String[] args) {
         boolean BENCHMARK_MODE = true;
-        Integer repsForBenchmark = 50;
+        Integer repsForBenchmark = 0;
         try {
             if (BENCHMARK_MODE) {
                 runBenchmarkMode(repsForBenchmark, args);

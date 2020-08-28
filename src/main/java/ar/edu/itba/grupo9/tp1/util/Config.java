@@ -274,4 +274,6 @@ public class Config {
     public Double getV() {
         return v;
     }
+
+    public Integer getTimeLapse() { return timelapse;}
 }
