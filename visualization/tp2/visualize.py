@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import re
 
 def visualize_va_against_t():
     # Read from file
@@ -29,6 +30,30 @@ def visualize_va_against_t():
 
     plt.show()
 
-visualize_va_against_t()
-#characteristic_t = input("Enter characteristic t:")
+def visualize_noise_against_va():
+    # Read from file
+    file = open("../../experimentResult.txt","r")
+    lines = file.readlines()
 
+    # Create data
+    x_eta = np.zeros(len(lines))
+    y_vp = np.zeros(len(lines))
+    index = 0
+    for line in lines[1:]:
+        line = line.split()
+        x_eta[index] = float(line[0])
+        y_vp[index] = float(line[1])
+    
+    fig, ax = plt.subplots()
+    ax.set_xlabel('noise')
+    ax.set_ylabel('va')
+    ax.set_title('Noise vs VA')
+     
+    plt.plot(x_eta, y_vp)
+
+    plt.show()
+
+#visualize_va_against_t()
+#characteristic_t = input("Enter characteristic t:")
+#print(characteristic_t)
+visualize_noise_against_va()
