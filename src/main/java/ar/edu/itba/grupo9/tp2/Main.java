@@ -6,7 +6,6 @@ import ar.edu.itba.grupo9.tp1.Particle;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 import ar.edu.itba.grupo9.tp1.util.Config;
 import ar.edu.itba.grupo9.tp1.util.files.FileParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -14,9 +13,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.grupo9.tp1.util.files.FileParser.createLatticeExperimentFile;
+import static ar.edu.itba.grupo9.tp2.ExperimentType.NOISE;
 
 
 public class Main {
@@ -56,6 +55,7 @@ public class Main {
         //resultWriter.write(String.format("Running %d times with %s as variable varying %s\n", numberOfRepetitions, "Va", "eta"));
         resultWriter.write(String.format("%d %d %f %f %d\n", timeLapse, numberOfRepetitions, config.getSideAreaLength(), config.getEta(), config.getNumberOfParticles()));
         createLatticeExperimentFile(config);
+        Double eta = 0.0;
         while(numberOfRepetitions >=0){
 
             LatticeInput input = parseInputFile(config);
@@ -64,10 +64,10 @@ public class Main {
             int N = input.getNumberOfParticles();
 
             ArrayList<Particle> particles = input.getParticles();
-            OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter);
+            OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter, NOISE);
             ola.runSimulation(
                     timeLapse,
-                    config.getEta(),
+                    eta,
                     1,
                     N,
                     (double)input.getAreaSideLength(),
@@ -79,7 +79,7 @@ public class Main {
                     input.getSecondMaxRadius(),
                     config,
                     input);
-
+            eta+=0.5;
             numberOfRepetitions--;
         }
         resultWriter.close();
@@ -121,7 +121,7 @@ public class Main {
     }
     public static void main(String[] args) {
         boolean BENCHMARK_MODE = true;
-        Integer repsForBenchmark = 5;
+        Integer repsForBenchmark = 10;
         try {
             if (BENCHMARK_MODE) {
                 runBenchmarkMode(repsForBenchmark, args);
