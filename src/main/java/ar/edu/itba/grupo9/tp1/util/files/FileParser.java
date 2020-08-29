@@ -259,4 +259,32 @@ public class FileParser {
         }
     }
 
+    public static void createLatticeExperimentFile(final Config config, int N){
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(config.getInputFileName()));
+            long numberOfParticles = N;
+            double sideLength = config.getSideAreaLength();
+            writer.write(String.format("%d\n", numberOfParticles));
+            writer.write(String.format("%d\n", (int) sideLength));
+
+            StringBuilder result = Stream.iterate(0, n -> n + 1).limit(numberOfParticles).parallel().collect(StringBuilder::new, (sb, i) -> {
+                // Every call to ThreadLocalRandom.current() is going to call
+                // localInit which will generate a new seed.
+                ThreadLocalRandom rand = ThreadLocalRandom.current();
+                double x = rand.nextDouble(0, sideLength);
+                double y = rand.nextDouble(0, sideLength);
+                double velocity = 0.03;
+                double direction = rand.nextDouble(-Math.PI, Math.PI);
+                double radius = 0;
+                sb.append(String.format("%f %f %f %f %f\n", x, y, velocity, direction, radius));
+            }, StringBuilder::append);
+
+            writer.write(result.toString());
+            writer.close();
+        }catch (IOException ex){
+            ex.printStackTrace();
+            System.exit(1);
+        }
+    }
+
 }
