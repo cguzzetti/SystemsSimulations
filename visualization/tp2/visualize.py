@@ -19,6 +19,7 @@ def visualize_va_against_t():
     ax.set_xlabel('t')
     ax.set_ylabel('Va')
     ax.set_title('Observable con N='+str(N)+', L='+str(L)+', eta='+str(eta))
+    ax.set_ylim(0, 1)
 
     for j in range(0, repetitions+1):
         for i in range(0, t):
@@ -29,5 +30,5 @@ def visualize_va_against_t():
     plt.show()
 
 visualize_va_against_t()
-characteristic_t = input("Enter characteristic t:")
-print(characteristic_t)
+#characteristic_t = input("Enter characteristic t:")
+
