@@ -15,8 +15,7 @@ import org.apache.commons.cli.ParseException;
 import java.io.IOException;
 
 import static ar.edu.itba.grupo9.tp1.util.files.FileParser.createLatticeExperimentFile;
-import static ar.edu.itba.grupo9.tp2.ExperimentType.DENSITY;
-import static ar.edu.itba.grupo9.tp2.ExperimentType.NOISE;
+import static ar.edu.itba.grupo9.tp2.ExperimentType.*;
 
 
 public class Main {
@@ -48,7 +47,7 @@ public class Main {
     }
 
     private static void runBenchmarkMode(Integer numberOfRepetitions, String[] args) throws IOException{
-        ExperimentType experimentType = DENSITY;
+        ExperimentType experimentType = TIME;
         Config config = parseCLIArguments(args);
         Integer timeLapse = config.getTimeLapse();
         BufferedWriter resultWriter = new BufferedWriter(new FileWriter("experimentResult.txt"));
@@ -85,12 +84,10 @@ public class Main {
         }
         else if(experimentType == DENSITY) {
             while(numberOfRepetitions >=0){
-                int N = numberOfRepetitions == 0? 40:numberOfRepetitions*20*20;
-
+                int N = numberOfRepetitions == 0? 40:(int) (numberOfRepetitions/2.0*20*20);
                 createLatticeExperimentFile(config,N);
                 LatticeInput input = parseInputFile(config);
                 if(input == null) System.exit(1);
-
                 ArrayList<Particle> particles = input.getParticles();
                 OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter, DENSITY);
                 ola.runSimulation(
@@ -119,7 +116,7 @@ public class Main {
                 int N = input.getNumberOfParticles();
 
                 ArrayList<Particle> particles = input.getParticles();
-                OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter, NOISE);
+                OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter, TIME);
                 ola.runSimulation(
                         timeLapse,
                         config.getEta(),
@@ -176,7 +173,8 @@ public class Main {
     }
     public static void main(String[] args) {
         boolean BENCHMARK_MODE = true;
-        Integer repsForBenchmark = 10;
+        Integer repsForBenchmark = 0;
+        long start = System.nanoTime();
         try {
             if (BENCHMARK_MODE) {
                 runBenchmarkMode(repsForBenchmark, args);
@@ -187,6 +185,7 @@ public class Main {
             ex.printStackTrace();
         }finally {
             System.out.println("Exiting program...");
+            System.out.println(System.nanoTime()-start);
         }
 
     }

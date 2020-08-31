@@ -136,7 +136,7 @@ public class Config {
         String inputNameValue = cmd.getOptionValue("input");
         String outputNameValue = cmd.getOptionValue("output");
         if (outputNameValue == null)
-            outputNameValue = "CIMOutput.txt";
+            outputNameValue = "simulationOutput.xyz";
 
         Boolean isPeriodic = cmd.hasOption("p");
         Boolean isExperiment = cmd.hasOption("e");
