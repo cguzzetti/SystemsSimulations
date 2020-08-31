@@ -46,38 +46,50 @@ public class Main {
         }
     }
 
-    private static void runBenchmarkMode(Integer numberOfRepetitions, String[] args) throws IOException{
-        ExperimentType experimentType = TIME;
+    private static VaOutput parseVaOutput(Config config, Integer repetitionNumber){
+        try {
+            return FileParser.readVaInput(config.getOutputFileName()+"Va"+repetitionNumber+".txt");
+        }catch (IOException ex){
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    private static void cratateOffLaticeAutomataAndRunSimulation(Config config, LatticeInput input, Integer N, Double L, Double eta, Integer repetitionNumber) throws IOException {
+        ArrayList<Particle> particles = input.getParticles();
+        OffLatticeAutomata ola = new OffLatticeAutomata();
+        ola.runSimulation(
+                config.getTimeLapse(),
+                eta,
+                1,
+                N,
+                L,
+                input.getOptimalM(config, input),
+                config.getV(),
+                particles,
+                config.getRc(),
+                input.getFirstMaxRadius(),
+                input.getSecondMaxRadius(),
+                config,
+                input,
+                repetitionNumber);
+    }
+
+    private static void runBenchmarkMode(Integer numberOfRepetitions, String[] args, ExperimentType experimentType) throws IOException{
         Config config = parseCLIArguments(args);
         Integer timeLapse = config.getTimeLapse();
+        Integer totalRepetitions = numberOfRepetitions;
+
         BufferedWriter resultWriter = new BufferedWriter(new FileWriter("experimentResult.txt"));
         resultWriter.write(String.format("%d %d %f %f %d\n", timeLapse, numberOfRepetitions, config.getSideAreaLength(), config.getEta(), config.getNumberOfParticles()));
+
         if(experimentType == NOISE) {
             createLatticeExperimentFile(config);
             Double eta = 0.0;
             while(numberOfRepetitions >=0){
-
                 LatticeInput input = parseInputFile(config);
                 if(input == null) System.exit(1);
-
-                int N = input.getNumberOfParticles();
-
-                ArrayList<Particle> particles = input.getParticles();
-                OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter, NOISE);
-                ola.runSimulation(
-                        timeLapse,
-                        eta,
-                        1,
-                        N,
-                        (double)input.getAreaSideLength(),
-                        input.getOptimalM(config, input),
-                        config.getV(),
-                        particles,
-                        config.getRc(),
-                        input.getFirstMaxRadius(),
-                        input.getSecondMaxRadius(),
-                        config,
-                        input);
+                cratateOffLaticeAutomataAndRunSimulation(config, input, input.getNumberOfParticles(), (double)input.getAreaSideLength(), eta, numberOfRepetitions);
                 eta+=0.5;
                 numberOfRepetitions--;
             }
@@ -85,55 +97,29 @@ public class Main {
         else if(experimentType == DENSITY) {
             while(numberOfRepetitions >=0){
                 int N = numberOfRepetitions == 0? 40:(int) (numberOfRepetitions/2.0*20*20);
+                double L = 20.0;
                 createLatticeExperimentFile(config,N);
                 LatticeInput input = parseInputFile(config);
                 if(input == null) System.exit(1);
-                ArrayList<Particle> particles = input.getParticles();
-                OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter, DENSITY);
-                ola.runSimulation(
-                        timeLapse,
-                        config.getEta(),
-                        1,
-                        N,
-                        20.0,
-                        input.getOptimalM(config, input),
-                        config.getV(),
-                        particles,
-                        config.getRc(),
-                        input.getFirstMaxRadius(),
-                        input.getSecondMaxRadius(),
-                        config,
-                        input);
+                cratateOffLaticeAutomataAndRunSimulation(config, input, N, L, config.getEta(), numberOfRepetitions);
                 numberOfRepetitions--;
             }
         }else {
             createLatticeExperimentFile(config);
             while(numberOfRepetitions >=0){
-
                 LatticeInput input = parseInputFile(config);
                 if(input == null) System.exit(1);
-
-                int N = input.getNumberOfParticles();
-
-                ArrayList<Particle> particles = input.getParticles();
-                OffLatticeAutomata ola = new OffLatticeAutomata(resultWriter, TIME);
-                ola.runSimulation(
-                        timeLapse,
-                        config.getEta(),
-                        1,
-                        N,
-                        (double)input.getAreaSideLength(),
-                        input.getOptimalM(config, input),
-                        config.getV(),
-                        particles,
-                        config.getRc(),
-                        input.getFirstMaxRadius(),
-                        input.getSecondMaxRadius(),
-                        config,
-                        input);
+                cratateOffLaticeAutomataAndRunSimulation(config, input, input.getNumberOfParticles(), (double)input.getAreaSideLength(), config.getEta(), numberOfRepetitions);
                 numberOfRepetitions--;
             }
         }
+
+        MetricsEngine metricsEngine = new MetricsEngine(resultWriter, experimentType);
+        for(int i = totalRepetitions; i >=0 ; i--) {
+            VaOutput vaOutput = parseVaOutput(config,i);
+            metricsEngine.printStatisticsToExperimentFile(vaOutput);
+        }
+
         resultWriter.close();
     }
 
@@ -144,7 +130,6 @@ public class Main {
 
         LatticeInput input = parseInputFile(config);
         if(input == null) System.exit(1);
-
 
         int N = input.getNumberOfParticles();
 
@@ -166,18 +151,20 @@ public class Main {
                 input.getFirstMaxRadius(),
                 input.getSecondMaxRadius(),
                 config,
-                input
+                input,
+                0
         );
 
 
     }
     public static void main(String[] args) {
         boolean BENCHMARK_MODE = true;
-        Integer repsForBenchmark = 0;
+        Integer repsForBenchmark = 20;
+        ExperimentType experimentType = DENSITY;
         long start = System.nanoTime();
         try {
             if (BENCHMARK_MODE) {
-                runBenchmarkMode(repsForBenchmark, args);
+                runBenchmarkMode(repsForBenchmark, args, experimentType);
             } else {
                 runNormalMode(args);
             }
@@ -187,6 +174,5 @@ public class Main {
             System.out.println("Exiting program...");
             System.out.println(System.nanoTime()-start);
         }
-
     }
 }

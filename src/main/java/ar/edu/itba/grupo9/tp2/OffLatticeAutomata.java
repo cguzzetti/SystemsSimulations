@@ -25,21 +25,10 @@ public class OffLatticeAutomata {
     private Integer N;
     private Double L;
     private Double v;
-    private final Optional<BufferedWriter> experimentWriter;
-    private final ExperimentType experimentType;
-    private List<Double> dataAccumulator;
 
-    public OffLatticeAutomata(){
-        this.experimentWriter = Optional.empty();
-        this.experimentType = ExperimentType.NONE;
-    }
-    public OffLatticeAutomata(BufferedWriter writer, ExperimentType type){
-        this.experimentWriter = Optional.of(writer);
-        this.dataAccumulator = new ArrayList<>();
-        this.experimentType = type;
-    }
+    public OffLatticeAutomata(){ }
 
-    public void runSimulation(Integer timeLapse, double eta, double deltaT, Integer N, Double L, Integer M, Double v, List<Particle> particles, double rc, double maxRadius1, double maxRadius2, Config config, LatticeInput input) throws IOException{
+    public void runSimulation(Integer timeLapse, double eta, double deltaT, Integer N, Double L, Integer M, Double v, List<Particle> particles, double rc, double maxRadius1, double maxRadius2, Config config, LatticeInput input, Integer repetitionNumber) throws IOException{
         this.particles = particles;
         this.eta = eta;
         this.deltaT = deltaT;
@@ -51,18 +40,23 @@ public class OffLatticeAutomata {
 
         cim.CellIndexMethodRun(this.particles);
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(config.getOutputFileName()));
-            printHeadertoFile(input, config, writer, timeLapse);
-            printParticlesInTimeToFile(input, config, 0, writer);
+            BufferedWriter writerStates = new BufferedWriter(new FileWriter(config.getOutputFileName()+"States"+repetitionNumber+".xyz"));
+            BufferedWriter writerVa = new BufferedWriter(new FileWriter(config.getOutputFileName()+"Va"+repetitionNumber+".txt"));
+            printHeadertoFile(input, config, writerStates, timeLapse);
+            printHeadertoVaFile(writerVa, timeLapse, N, L, eta);
+            printParticlesInTimeToFile(input, config, 0, writerStates);
+            printVaInTimeToFile(calculateVa(), writerVa);
             for (int i = 1; i <= timeLapse; i++) {
                 updateParticles();
                 cim.CellIndexMethodRun(this.particles);
-                printHeadertoFile(input, config, writer, timeLapse);
-                printParticlesInTimeToFile(input, config, i, writer);
-                this.updateExperimentFileData(i);
+                printHeadertoFile(input, config, writerStates, timeLapse);
+                printParticlesInTimeToFile(input, config, i, writerStates);
+                printVaInTimeToFile(calculateVa(), writerVa);
+              //  this.updateExperimentFileData(i);
             }
-            this.printStatisticsToExperimentFile();
-            writer.close();
+            //this.printStatisticsToExperimentFile();
+            writerVa.close();
+            writerStates.close();
         }catch (IOException ex){
             ex.printStackTrace();
             System.exit(1);
@@ -107,58 +101,6 @@ public class OffLatticeAutomata {
 
     private double calculateVa() {
         return Math.hypot(this.particles.stream().mapToDouble(Particle::getVx).sum(), this.particles.stream().mapToDouble(Particle::getVy).sum()) / (this.N*this.v);
-    }
-
-    private void updateExperimentFileData(int currentTime) {
-        switch(this.experimentType){
-            case NOISE:
-                if(currentTime>= 1500)
-                    this.dataAccumulator.add(calculateVa());
-                break;
-            case DENSITY:
-                if(currentTime >= 0)
-                    this.dataAccumulator.add(calculateVa());
-                break;
-            case TIME:
-                this.dataAccumulator.add(calculateVa());
-            case NONE:
-            default:
-                break;
-
-        }
-    }
-
-    private void printStatisticsToExperimentFile() throws IOException{
-        if(this.experimentType == ExperimentType.NONE)
-            return;
-
-        System.out.println(this.N + ": " +this.dataAccumulator);
-
-        double average = this.dataAccumulator.stream().mapToDouble(Double::doubleValue).average().orElse(-1);
-        if(average == -1){
-            System.out.println("Oops, average == -1");
-            return;
-        }
-
-        double variance = this.dataAccumulator.stream().map(i -> i - average).map(i -> i*i).mapToDouble(Double::doubleValue).average().orElse(-1);
-
-        if(average == -1){
-            System.out.println("Oops, variance == -1");
-            return;
-        }
-        if(this.experimentType.equals(ExperimentType.NOISE)){
-            this.experimentWriter.get().write(String.format(
-                    "%.2f %.3f %.3f\n", this.eta, average, Math.sqrt(variance)
-            ));
-        }else if(this.experimentType.equals(ExperimentType.DENSITY)){
-            this.experimentWriter.get().write(String.format(
-                    "%.2f %.3f %.3f\n", this.N/(this.L*this.L), average, Math.sqrt(variance)
-            ));
-        }else if(this.experimentType.equals(ExperimentType.TIME)) {
-            StringBuilder sb = new StringBuilder();
-            this.dataAccumulator.stream().mapToDouble(Double::doubleValue).forEach(va -> sb.append(String.format("%f\n", va)));
-            this.experimentWriter.get().write(String.valueOf(sb));
-        }
     }
 
 }

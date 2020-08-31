@@ -5,6 +5,8 @@ import ar.edu.itba.grupo9.tp1.util.Config;
 import ar.edu.itba.grupo9.tp1.util.files.models.DynamicFile;
 import ar.edu.itba.grupo9.tp1.util.files.models.StaticFile;
 import ar.edu.itba.grupo9.tp2.LatticeInput;
+import ar.edu.itba.grupo9.tp2.MetricsEngine;
+import ar.edu.itba.grupo9.tp2.VaOutput;
 
 import java.io.*;
 import java.util.Arrays;
@@ -66,6 +68,20 @@ public class FileParser {
                 particleIndex);
 
         inputFile.addParticle(particle);
+    }
+
+    private static void parseVaOutputHeaders(VaOutput vaOutput, String line){
+        String[] lineArr = line.replaceAll(" +", " ").split(" ");
+
+        int timeLapse = Integer.parseInt((lineArr[0]));
+        int N = Integer.parseInt(lineArr[1]);
+        double L = Double.parseDouble(lineArr[2]);
+        double eta = Double.parseDouble(lineArr[3]);
+
+        vaOutput.setTimeLapse(timeLapse);
+        vaOutput.setN(N);
+        vaOutput.setL(L);
+        vaOutput.setEta(eta);
     }
 
     private static BufferedReader bufferedReaderFromFilename(final String fileName) throws IOException{
@@ -139,6 +155,24 @@ public class FileParser {
         return inputFile;
     }
 
+    public static VaOutput readVaInput(final String fileName) throws IOException {
+        BufferedReader br = bufferedReaderFromFilename(fileName);
+
+        String st;
+        int linesRead = 0;
+        VaOutput vaOutput = new VaOutput();
+        while((st = br.readLine()) != null){
+            st = st.trim();
+            if(linesRead == 0){
+                parseVaOutputHeaders(vaOutput,st);
+            }else{
+                vaOutput.addEtaValue(Double.parseDouble(st));
+            }
+            linesRead++;
+        }
+        return vaOutput;
+    }
+
 
 
     public static void printInputFileContent(StaticFile file){
@@ -197,6 +231,17 @@ public class FileParser {
             System.exit(1);
         }
     }
+
+    public static void printHeadertoVaFile(BufferedWriter writer, Integer timelapse, Integer N, Double L, Double eta){
+        try {
+            writer.write(String.format("%d %d %f %f\n", timelapse, N, L, eta)
+            );
+        }catch (IOException ex){
+            ex.printStackTrace();
+            System.exit(1);
+        }
+    }
+
     public static void printParticlesInTimeToFile(LatticeInput file, final Config config, int time, BufferedWriter writer) throws IOException{
         StringBuilder builder = new StringBuilder();;
         for (Particle particle : file.getParticles()) {
@@ -204,6 +249,12 @@ public class FileParser {
         }
         writer.write(String.format("%d\n%s", time, builder.toString()));
     }
+
+    public static void printVaInTimeToFile(Double va, BufferedWriter writer) throws IOException{
+        writer.write(String.format("%f\n", va));
+    }
+
+
 
     public static StringBuilder generateRandomParticles(long numberOfParticles, double sideLength){
         return Stream.iterate(0, n -> n+1).limit(numberOfParticles).parallel().collect(StringBuilder::new, (sb, i)-> {

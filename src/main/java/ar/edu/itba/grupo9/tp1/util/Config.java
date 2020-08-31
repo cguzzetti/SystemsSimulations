@@ -136,7 +136,7 @@ public class Config {
         String inputNameValue = cmd.getOptionValue("input");
         String outputNameValue = cmd.getOptionValue("output");
         if (outputNameValue == null)
-            outputNameValue = "simulationOutput.xyz";
+            outputNameValue = "simulationOutput";
 
         Boolean isPeriodic = cmd.hasOption("p");
         Boolean isExperiment = cmd.hasOption("e");
