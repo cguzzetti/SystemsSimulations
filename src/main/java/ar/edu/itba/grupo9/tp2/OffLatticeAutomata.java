@@ -52,9 +52,7 @@ public class OffLatticeAutomata {
                 printHeadertoFile(input, config, writerStates, timeLapse);
                 printParticlesInTimeToFile(input, config, i, writerStates);
                 printVaInTimeToFile(calculateVa(), writerVa);
-              //  this.updateExperimentFileData(i);
             }
-            //this.printStatisticsToExperimentFile();
             writerVa.close();
             writerStates.close();
         }catch (IOException ex){

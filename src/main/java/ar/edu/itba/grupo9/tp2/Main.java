@@ -159,8 +159,8 @@ public class Main {
     }
     public static void main(String[] args) {
         boolean BENCHMARK_MODE = true;
-        Integer repsForBenchmark = 20;
-        ExperimentType experimentType = DENSITY;
+        Integer repsForBenchmark = 10;
+        ExperimentType experimentType = NOISE;
         long start = System.nanoTime();
         try {
             if (BENCHMARK_MODE) {

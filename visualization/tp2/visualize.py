@@ -3,15 +3,16 @@ import matplotlib.pyplot as plt
 import re
 
 def visualize_va_against_t():
-    repetitions = 5
+    repetitions = 10
 
     fig, ax = plt.subplots()
     ax.set_xlabel('t')
     ax.set_ylabel('Va')
     # ax.set_title()
     ax.set_ylim(0, 1)
-
-    for j in range(0, repetitions+1):
+    
+    for j in [0,2,5,7,10]:
+    # for j in range(0, repetitions+1):
         # Read from file
         file = open("../simulationOutputVa"+str(j)+".txt","r")
         lines = file.readlines()
@@ -34,7 +35,8 @@ def visualize_va_against_t():
             y[index] = float(line[0])
             index+=1
         
-        plt.plot(x, y, label ='N ='+str(N))
+        # plt.plot(x, y, label ='N ='+str(N))
+        plt.plot(x, y, label ='η ='+str(eta))
         
     plt.legend(loc ="lower right")
     plt.show()
@@ -47,18 +49,22 @@ def visualize_noise_against_va():
     # Create data
     x_eta = np.zeros(len(lines))
     y_vp = np.zeros(len(lines))
+    std = np.zeros(len(lines))
     index = 0
     for line in lines[1:]:
         line = line.split()
         x_eta[index] = float(line[0])
         y_vp[index] = float(line[1])
+        std[index] = float(line[2])
+        index+=1
     
     fig, ax = plt.subplots()
     ax.set_xlabel('η')
     ax.set_ylabel('Va')
-    ax.set_title('Va vs η')
+    ax.set_ylim(0, 1)
+    # ax.set_title('Va vs η')
      
-    plt.plot(x_eta, y_vp)
+    plt.errorbar(x_eta, y_vp,yerr=std,fmt='-o')
 
     plt.show()
 
@@ -82,7 +88,7 @@ def visualize_density_against_va():
     fig, ax = plt.subplots()
     ax.set_xlabel('ρ')
     ax.set_ylabel('Va')
-    ax.set_title('Va vs ρ')
+    # ax.set_title('Va vs ρ')
     ax.set_ylim(0, 1)
 
     plt.errorbar(x_density, y_va, yerr=std,fmt='-o')
@@ -90,4 +96,5 @@ def visualize_density_against_va():
     plt.show()
 
 visualize_va_against_t()
-visualize_density_against_va()
+# visualize_density_against_va()
+visualize_noise_against_va()
