@@ -80,7 +80,7 @@ public class Main {
         Integer timeLapse = config.getTimeLapse();
         Integer totalRepetitions = numberOfRepetitions;
 
-        BufferedWriter resultWriter = new BufferedWriter(new FileWriter("experimentResult.txt"));
+        BufferedWriter resultWriter = new BufferedWriter(new FileWriter(String.format("experimentResult%d.txt", config.getNumberOfParticles())));
         resultWriter.write(String.format("%d %d %f %f %d\n", timeLapse, numberOfRepetitions, config.getSideAreaLength(), config.getEta(), config.getNumberOfParticles()));
 
         if(experimentType == NOISE) {
