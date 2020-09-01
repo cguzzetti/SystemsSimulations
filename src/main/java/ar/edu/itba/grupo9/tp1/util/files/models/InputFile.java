@@ -4,13 +4,13 @@ package ar.edu.itba.grupo9.tp1.util.files.models;
 
 public class InputFile {
     private Integer numberOfParticles;
-    private long areaSideLength;
+    private Double areaSideLength;
 
     public void setNumberOfParticles(Integer numberOfParticles){
         this.numberOfParticles = numberOfParticles;
     }
 
-    public void setAreaSideLength(long areaSideLength){
+    public void setAreaSideLength(Double areaSideLength){
         this.areaSideLength = areaSideLength;
     }
 
@@ -18,7 +18,7 @@ public class InputFile {
         return this.numberOfParticles;
     }
 
-    public long getAreaSideLength(){
+    public Double getAreaSideLength(){
         return this.areaSideLength;
     }
 

@@ -89,7 +89,7 @@ public class Main {
             while(numberOfRepetitions >=0){
                 LatticeInput input = parseInputFile(config);
                 if(input == null) System.exit(1);
-                cratateOffLaticeAutomataAndRunSimulation(config, input, input.getNumberOfParticles(), (double)input.getAreaSideLength(), eta, numberOfRepetitions);
+                cratateOffLaticeAutomataAndRunSimulation(config, input, input.getNumberOfParticles(), input.getAreaSideLength(), eta, numberOfRepetitions);
                 eta+=0.5;
                 numberOfRepetitions--;
             }
@@ -109,7 +109,7 @@ public class Main {
             while(numberOfRepetitions >=0){
                 LatticeInput input = parseInputFile(config);
                 if(input == null) System.exit(1);
-                cratateOffLaticeAutomataAndRunSimulation(config, input, input.getNumberOfParticles(), (double)input.getAreaSideLength(), config.getEta(), numberOfRepetitions);
+                cratateOffLaticeAutomataAndRunSimulation(config, input, input.getNumberOfParticles(), input.getAreaSideLength(), config.getEta(), numberOfRepetitions);
                 numberOfRepetitions--;
             }
         }

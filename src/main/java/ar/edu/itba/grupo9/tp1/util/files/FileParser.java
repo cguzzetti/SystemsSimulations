@@ -102,7 +102,7 @@ public class FileParser {
                 if(linesRead == 0)
                     inputFile.setNumberOfParticles(Integer.parseInt(st));
                 else
-                    inputFile.setAreaSideLength(Long.parseLong(st));
+                    inputFile.setAreaSideLength(Double.parseDouble(st));
             }else{
                 createParticle(inputFile, st, linesRead);
             }
@@ -123,7 +123,7 @@ public class FileParser {
                 if(linesRead == 0)
                     dynamicFile.setNumberOfParticles(Integer.parseInt(st));
                 else
-                    dynamicFile.setAreaSideLength(Long.parseLong(st));
+                    dynamicFile.setAreaSideLength(Double.parseDouble(st));
             }else{
                 createParticle(dynamicFile, st, linesRead);
             }
@@ -145,7 +145,7 @@ public class FileParser {
                 if(linesRead == 0)
                     inputFile.setNumberOfParticles(Integer.parseInt(st));
                 else
-                    inputFile.setAreaSideLength(Long.parseLong(st));
+                    inputFile.setAreaSideLength(Double.parseDouble(st));
             }else{
                 createParticle(inputFile, st, linesRead);
             }
@@ -288,7 +288,7 @@ public class FileParser {
             long numberOfParticles = config.getNumberOfParticles();
             double sideLength = config.getSideAreaLength();
             writer.write(String.format("%d\n", numberOfParticles));
-            writer.write(String.format("%d\n", (int) sideLength));
+            writer.write(String.format("%f\n", sideLength));
 
             StringBuilder result = Stream.iterate(0, n -> n + 1).limit(numberOfParticles).parallel().collect(StringBuilder::new, (sb, i) -> {
                 // Every call to ThreadLocalRandom.current() is going to call
