@@ -42,32 +42,57 @@ def visualize_va_against_t():
     plt.show()
 
 def visualize_noise_against_va():
+    # Read from file
+    file = open("../../experimentResult.txt","r")
+    lines = file.readlines()
+
+    # Create data
+    x_eta = np.zeros(len(lines))
+    y_vp = np.zeros(len(lines))
+    std = np.zeros(len(lines))
+    index = 0
+    for line in lines[1:]:
+        line = line.split()
+        x_eta[index] = float(line[0])
+        y_vp[index] = float(line[1])
+        std[index] = float(line[2])
+        index+=1
+    
     fig, ax = plt.subplots()
-    ax.set_xlabel('eta')
+    ax.set_xlabel('η')
     ax.set_ylabel('Va')
     ax.set_ylim(0, 1)
+    # ax.set_title('Va vs η')
+     
+    plt.errorbar(x_eta, y_vp,yerr=std,fmt='-o')
+
+    plt.show()
+
+def visualize_density_against_va():
     # Read from file
-    for n in ["40", "100", "400"]:
-        file = open(f"../../experimentResult{n}.txt","r")
-        lines = file.readlines()
+    file = open("../../experimentResult.txt","r")
+    lines = file.readlines()
 
-        # Create data
-        x_eta = np.zeros(len(lines)-1)
-        y_va = np.zeros(len(lines)-1)
-        err = np.zeros(len(lines)-1)
-        index = 0
-        for line in lines[1:]:
-            line = line.split()
-            print(line)
-            x_eta[index] = float(line[0])
-            y_va[index] = float(line[1])
-            err[index] = float(line[2])
-            index+=1
+    # Create data
+    x_density = np.zeros(len(lines))
+    y_va = np.zeros(len(lines))
+    std = np.zeros(len(lines))
+    index = 0
+    for line in lines[1:]:
+        line = line.split()
+        x_density[index] = float(line[0])
+        y_va[index] = float(line[1])
+        std[index] = float(line[2])
+        index+=1
+    
+    fig, ax = plt.subplots()
+    ax.set_xlabel('ρ')
+    ax.set_ylabel('Va')
+    # ax.set_title('Va vs ρ')
+    ax.set_ylim(0, 1)
 
-        plt.plot(x_eta, y_va, "-o", label=f'N={n}')
-        plt.errorbar(x_eta, y_va, yerr=err, fmt='none')
-        
-    plt.legend(loc='best')
+    plt.errorbar(x_density, y_va, yerr=std,fmt='-o')
+
     plt.show()
 
 visualize_va_against_t()
