@@ -12,14 +12,25 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import java.io.File;
 import java.io.IOException;
-
+import java.nio.file.Files;
 
 
 public class Main
 {
-    public static final String VISUALIZATION_PATH = "CellIndexMethod/src/main/visualization";
+
+    public static String initializeVisualizationPath(){
+        boolean rootIncluded = new File("CellIndexMethod").exists();
+        if(rootIncluded){
+            return "CellIndexMethod/src/main/visualization";
+        }
+        return "src/main/visualization";
+    }
+    public static String VISUALIZATION_PATH;
     public static void main( String[] args ) {
+
+        VISUALIZATION_PATH = initializeVisualizationPath();
         Options options = new Options();
         Config config = null;
         try{

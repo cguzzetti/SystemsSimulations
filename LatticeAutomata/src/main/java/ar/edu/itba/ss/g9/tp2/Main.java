@@ -8,6 +8,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +18,14 @@ import static ar.edu.itba.ss.g9.commons.enums.ExperimentType.DENSITY;
 import static ar.edu.itba.ss.g9.commons.enums.ExperimentType.NOISE;
 
 public class Main {
-    public static final String VISUALIZATION_PATH = "LatticeAutomata/src/main/visualization";
+    public static String VISUALIZATION_PATH;
+    public static String initializeVisualizationPath(){
+        boolean rootIncluded = new File("LatticeAutomata").exists();
+        if(rootIncluded){
+            return "LatticeAutomata/src/main/visualization";
+        }
+        return "src/main/visualization";
+    }
     private static Config parseCLIArguments(String[] args){
         Options options = new Options();
         try{
@@ -156,7 +164,8 @@ public class Main {
 
     }
     public static void main(String[] args) {
-        boolean BENCHMARK_MODE = true;
+        VISUALIZATION_PATH = initializeVisualizationPath();
+        boolean BENCHMARK_MODE = false;
         Integer repsForBenchmark = 2;
         ExperimentType experimentType = NOISE;
         long start = System.nanoTime();

@@ -1,0 +1,10 @@
+-t static 
+-f latticeInput.txt 
+-N 100 
+-L 20 
+-e 
+-p 
+-rc 1 
+-eta 2 
+-v 0.03 
+--timelapse 2000
