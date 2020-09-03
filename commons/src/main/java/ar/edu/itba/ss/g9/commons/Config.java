@@ -239,7 +239,7 @@ public class Config {
     }
 
     public String getOutputFileName(String visualizationPath) {
-        return String.format("%s/outputFileName", visualizationPath);
+        return String.format("%s/simulationOutput", visualizationPath);
     }
 
     public Boolean isPeriodic() {

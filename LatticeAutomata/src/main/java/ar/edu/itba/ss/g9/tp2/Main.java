@@ -86,7 +86,7 @@ public class Main {
         Integer timeLapse = config.getTimeLapse();
         Integer totalRepetitions = numberOfRepetitions;
 
-        BufferedWriter resultWriter = new BufferedWriter(new FileWriter("experimentResult.txt"));
+        BufferedWriter resultWriter = new BufferedWriter(new FileWriter(String.format("%s/experimentResult.txt",VISUALIZATION_PATH)));
         resultWriter.write(String.format("%d %d %f %f %d\n", timeLapse, numberOfRepetitions, config.getSideAreaLength(), config.getEta(), config.getNumberOfParticles()));
 
         if(experimentType == NOISE) {
@@ -166,8 +166,8 @@ public class Main {
     public static void main(String[] args) {
         VISUALIZATION_PATH = initializeVisualizationPath();
         boolean BENCHMARK_MODE = false;
-        Integer repsForBenchmark = 2;
-        ExperimentType experimentType = NOISE;
+        Integer repsForBenchmark = 5;
+        ExperimentType experimentType = DENSITY;
         long start = System.nanoTime();
         try {
             if (BENCHMARK_MODE) {
