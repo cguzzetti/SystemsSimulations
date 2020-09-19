@@ -1,18 +1,14 @@
 package ar.edu.itba.ss.g9.commons.simulation;
 
-
-import java.awt.geom.Point2D;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import javafx.geometry.Point2D;
 
 public class Particle {
     private double radius;
     private String name;
     private final int id;
-    private Point2D.Double point;
+    private Point2D point;
     private Set<Particle> neighbors;
 
     private final boolean hasVelocity;
@@ -21,7 +17,7 @@ public class Particle {
     private final double mass;
 
     public Particle(double xPosition, double yPosition, double radius, int id, String name){
-        this.point = new Point2D.Double(xPosition, yPosition);
+        this.point = new Point2D(xPosition, yPosition);
         this.radius = radius;
         this.hasVelocity = false;
         this.id = id;
@@ -31,7 +27,7 @@ public class Particle {
     }
 
     public Particle(double xPosition, double yPosition, double radius, int id){
-        this.point = new Point2D.Double(xPosition, yPosition);
+        this.point = new Point2D(xPosition, yPosition);
         this.radius = radius;
         this.hasVelocity = false;
         this.id = id;
@@ -41,7 +37,7 @@ public class Particle {
     }
 
     public Particle(double xPosition, double yPosition, double speed, double direction, double radius, int id){
-        this.point = new Point2D.Double(xPosition, yPosition);
+        this.point = new Point2D(xPosition, yPosition);
         this.radius = radius;
         this.hasVelocity = true;
         this.direction = direction;
@@ -54,7 +50,7 @@ public class Particle {
 
     public Particle(double xPosition, double yPosition, double direction, int id, double mass){
         this.id = id;
-        this.point = new Point2D.Double(xPosition, yPosition);
+        this.point = new Point2D(xPosition, yPosition);
         this.radius = 0.0015;
         this.hasVelocity = true;
         this.speed = 0.01;
@@ -62,12 +58,10 @@ public class Particle {
         this.mass = mass;
     }
 
-    public void setX(double x){
-        this.point.x = x;
-    }
+    public void setX(double x){ this.point = new Point2D(x, this.point.getY()); }
 
     public void setY(double y){
-        this.point.y = y;
+        this.point = new Point2D(this.point.getX(), y);
     }
 
     public void setRadius(int radius){
@@ -78,7 +72,7 @@ public class Particle {
         return this.name;
     }
 
-    public Point2D.Double getPoint() {
+    public Point2D getPoint() {
         return this.point;
     }
 
@@ -167,5 +161,47 @@ public class Particle {
 
     public boolean collidesWith(Particle p){
         return this.point.distance(p.point) - this.radius - p.radius < 0;
+    }
+
+    private double timeToCollideWith(Particle particle) {
+        Point2D deltaR = new Point2D(particle.getX() - this.getX(), particle.getY() - this.getY());
+        Point2D deltaV = new Point2D(particle.getVx() - this.getVx(), particle.getVy() - this.getVy());
+        double deltaVdeltaR = deltaV.dotProduct(deltaR);
+
+        if(deltaVdeltaR >= 0)
+            return Double.POSITIVE_INFINITY;
+
+        double sigma = this.radius + particle.getRadius();
+        double deltaVdeltaV = deltaV.dotProduct(deltaV);
+        double deltaRdeltaR = deltaR.dotProduct(deltaR);
+        double d = deltaVdeltaR*deltaVdeltaR-deltaVdeltaV*(deltaRdeltaR-sigma*sigma);
+
+        if(d < 0)
+            return Double.POSITIVE_INFINITY;
+
+        return  -(deltaVdeltaR+Math.sqrt(d))/deltaVdeltaV;
+    }
+
+    private Optional<Collision> willCollideWith(Particle particle) {
+        double deltaT = timeToCollideWith(particle);
+        if(deltaT == Double.POSITIVE_INFINITY)
+            return Optional.empty();
+
+        return Optional.of(new Collision());
+    }
+
+    public List<Collision> calculateParticleNextCollision(Collection<Particle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls) {
+        List<Collision> particleNextCollisions = new LinkedList<>();
+
+        // Search for collisions with other particles
+        for(Particle p: particles) {
+            if(!this.equals(p)) {
+                this.willCollideWith(p).ifPresent(particleNextCollisions::add);
+            }
+        }
+
+        // Search with collisions with walls
+
+        return particleNextCollisions;
     }
 }

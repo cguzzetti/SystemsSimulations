@@ -1,4 +1,4 @@
-package ar.edu.itba.ss.g9.tp3;
+package ar.edu.itba.ss.g9.commons.simulation;
 
 public class Collision {
 

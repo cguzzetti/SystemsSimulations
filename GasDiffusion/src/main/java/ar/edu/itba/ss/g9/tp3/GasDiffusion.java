@@ -1,10 +1,11 @@
 package ar.edu.itba.ss.g9.tp3;
 
+import ar.edu.itba.ss.g9.commons.simulation.Collision;
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
 
-import java.awt.geom.Point2D;
+
+import javafx.geometry.Point2D;
 import java.util.*;
-import java.util.List;
 
 public class GasDiffusion {
     private final int N;
@@ -13,8 +14,8 @@ public class GasDiffusion {
     private final double partitionLen;
     private Queue<Collision> collisions;
     private Collection<Particle> particles;
-    private Point2D.Double verticalWalls;
-    private Point2D.Double horizontalWalls;
+    private Point2D[][] verticalWalls;
+    private Point2D[][] horizontalWalls;
 
     public GasDiffusion(GasDifussionConfig config, Collection<Particle> particles){
         this.N = config.getN();
@@ -23,7 +24,17 @@ public class GasDiffusion {
         this.partitionLen = config.getPartitionLen();
         this.collisions = new PriorityQueue<>();
         this.particles = particles;
-        // Definir paredes
+        this.horizontalWalls = new Point2D[][]{
+                {Point2D.ZERO, new Point2D(config.getWidth(), 0)},
+                {new Point2D(0, config.getHeight()), new Point2D(config.getWidth(), config.getHeight())},
+        };
+        this.verticalWalls = new Point2D[][]{
+                {Point2D.ZERO, new Point2D(0, config.getHeight())},
+                {new Point2D(config.getWidth() / 2, 0), new Point2D(config.getWidth() / 2, config.getHeight() / 2 - config.getPartitionLen() / 2)},
+                {new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2),
+                        new Point2D(config.getWidth() / 2, config.getHeight())},
+                {new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
+        };
     }
 
     public void simulate(GasDiffusionFileParser parser){
@@ -53,7 +64,7 @@ public class GasDiffusion {
     // Calculates te next collision for all particles
     private void calculateCollisions() {
         for(Particle p: particles) {
-            this.collisions.addAll(calculateParticleNextCollision(p));
+            this.collisions.addAll(p.calculateParticleNextCollision(this.particles, this.verticalWalls, this.horizontalWalls));
         }
     }
 
@@ -62,19 +73,6 @@ public class GasDiffusion {
             return Optional.of(collision);
 
         return Optional.empty();
-    }
-
-    private List<Collision> calculateParticleNextCollision(Particle particle) {
-        List<Collision> particleNextCollisions = new LinkedList<>();
-        for(Particle p: particles) {
-            if(!p.equals(particle)) {
-                //if(Collision(particle, p).isPresent(particleNextCollisions::add));
-            }
-                
-        }
-
-
-        return particleNextCollisions;
     }
 
     public double getHeight() {
