@@ -26,7 +26,7 @@ public class ParticleGeneration {
 
         Stream.iterate(0, n-> n+1).limit(numberOfParticles).parallel().forEach((i -> {
             ThreadLocalRandom rand = ThreadLocalRandom.current();
-            double x = rand.nextDouble(0, width);
+            double x = rand.nextDouble(0, width/2); // We want to initialize on the left side of the box
             double y = rand.nextDouble(0, height);
             double direction = rand.nextDouble(-Math.PI, Math.PI);
             double mass = 1;
