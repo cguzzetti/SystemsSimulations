@@ -18,6 +18,11 @@ elif [ $project == "CIM" ]; then
     ./run.sh
     echo Adios
     exit 0
+elif [ $project == "GAS" ]; then
+    cd GasDiffusion
+    ./run.sh
+    echo Au revoir
+    exit 0
 fi
 echo "Not found"
 exit 1

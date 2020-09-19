@@ -1,0 +1,7 @@
+#!/bin/bash
+
+args=`sed ':a;N;$!ba;s/\n/ /g' exec_arguments`
+GREEN='\033[0;34m'
+NORMAL='\033[0m'
+echo -e "\n\n${GREEN}Running GAS  with arguments: $args${NORMAL}\n\n"
+java -Dfile.encoding=UTF-8 -classpath target/classes:../commons/target/classes:$HOME/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:$HOME/.m2/repository/org/openjdk/jmh/jmh-core/1.19/jmh-core-1.19.jar:$HOME/.m2/repository/net/sf/jopt-simple/jopt-simple/4.6/jopt-simple-4.6.jar:$HOME/.m2/repository/org/apache/commons/commons-math3/3.2/commons-math3-3.2.jar:$HOME/.m2/repository/org/openjdk/jmh/jmh-generator-annprocess/1.19/jmh-generator-annprocess-1.19.jar ar.edu.itba.ss.g9.tp3.Main $args
