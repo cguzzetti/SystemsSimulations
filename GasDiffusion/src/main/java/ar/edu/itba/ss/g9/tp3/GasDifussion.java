@@ -3,15 +3,20 @@ package ar.edu.itba.ss.g9.tp3;
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
 import jdk.jfr.internal.Options;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.List;
 
 public class GasDifussion {
     private final int N;
     private final double height;
     private final double width;
     private final double partitionLen;
-    private Queue<Event> collisions;
+    private Queue<Collision> collisions;
     private Collection<Particle> particles;
+    private Point2D.Double verticalWalls;
+    private Point2D.Double horizontalWalls;
 
     public GasDifussion(GasDifussionConfig config, Collection<Particle> particles){
         this.N = config.getN();
@@ -28,15 +33,15 @@ public class GasDifussion {
         calculateCollisions();
         // TODO: EndCondition won't be time but fp
         while(dt != 1000){
-            //Optional<Event>: getFirstCollision
+            //Optional<Collision>: getFirstCollision
             if(collisions.isEmpty()) return;
-            Optional<Event> maybeCollision = getCollisionIfValid(collisions.poll());
+            Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(!maybeCollision.isPresent()) break;
 
 
             // advanceParticles(firstCollision.time())
             // save system state
-            // updateVelocityOfEventParticles
+            // updateVelocityOfCollisionParticles
             // determineAllFutureCollisionsOfParticles
 
             dt++;
@@ -51,15 +56,15 @@ public class GasDifussion {
         }
     }
 
-    private Optional<Event> getCollisionIfValid(Event collision){
+    private Optional<Collision> getCollisionIfValid(Collision collision){
         if(collision.isValid())
             return Optional.of(collision);
 
         return Optional.empty();
     }
 
-    private List<Event> calculateParticleNextCollision(Particle particle) {
-        List<Event> particleNextCollisions = new LinkedList<>();
+    private List<Collision> calculateParticleNextCollision(Particle particle) {
+        List<Collision> particleNextCollisions = new LinkedList<>();
         for(Particle p: particles) {
             if(!p.equals(particle)) {
                 //if(Collision(particle, p).isPresent(particleNextCollisions::add));
@@ -88,11 +93,11 @@ public class GasDifussion {
     }
 
 
-    public Queue<Event> getCollisions() {
+    public Queue<Collision> getCollisions() {
         return collisions;
     }
 
-    public void setCollisions(PriorityQueue<Event> collisions) {
+    public void setCollisions(PriorityQueue<Collision> collisions) {
         this.collisions = collisions;
     }
 }
