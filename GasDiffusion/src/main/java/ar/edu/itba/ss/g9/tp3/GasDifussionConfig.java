@@ -9,7 +9,7 @@ public class GasDifussionConfig {
     private final String outputFileName;
     private final Double width;
     private final Double height;
-    private final Double partitionLen;
+    private Double partitionLen;
 
     public GasDifussionConfig(String N, String inputName, String outputName){
         this.N = Integer.parseInt(N);
@@ -72,5 +72,9 @@ public class GasDifussionConfig {
 
     public Double getPartitionLen() {
         return partitionLen;
+    }
+
+    public void setPartitionLen(double newLen){
+        this.partitionLen = newLen;
     }
 }
