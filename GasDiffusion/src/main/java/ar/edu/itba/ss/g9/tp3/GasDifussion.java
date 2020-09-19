@@ -1,6 +1,7 @@
 package ar.edu.itba.ss.g9.tp3;
 
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
+import jdk.jfr.internal.Options;
 
 import java.util.*;
 
@@ -28,7 +29,10 @@ public class GasDifussion {
         // TODO: EndCondition won't be time but fp
         while(dt != 1000){
             //Optional<Event>: getFirstCollision
-            // if(!getFirstCollision.isPresent()) break;
+            if(collisions.isEmpty()) return;
+            Optional<Event> maybeCollision = getCollisionIfValid(collisions.poll());
+            if(!maybeCollision.isPresent()) break;
+
 
             // advanceParticles(firstCollision.time())
             // save system state
@@ -45,6 +49,13 @@ public class GasDifussion {
         for(Particle p: particles) {
             this.collisions.addAll(calculateParticleNextCollision(p));
         }
+    }
+
+    private Optional<Event> getCollisionIfValid(Event collision){
+        if(collision.isValid())
+            return Optional.of(collision);
+
+        return Optional.empty();
     }
 
     private List<Event> calculateParticleNextCollision(Particle particle) {
