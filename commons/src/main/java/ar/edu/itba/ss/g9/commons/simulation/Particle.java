@@ -16,6 +16,7 @@ public class Particle {
     private double direction;
     private final double mass;
 
+
     public Particle(double xPosition, double yPosition, double radius, int id, String name){
         this.point = new Point2D(xPosition, yPosition);
         this.radius = radius;
@@ -187,7 +188,8 @@ public class Particle {
         if(deltaT == Double.POSITIVE_INFINITY)
             return Optional.empty();
 
-        return Optional.of(new Collision());
+        //return Optional.of(new Collision());
+        return Optional.ofNullable(null);
     }
 
     public List<Collision> calculateParticleNextCollision(Collection<Particle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls) {

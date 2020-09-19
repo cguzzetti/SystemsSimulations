@@ -34,7 +34,24 @@ public class ParticleCollision extends Collision {
                 this.particle2.getVy() - this.particle2.getVy()
         );
         final Point2D deltaR = updatedPositionP2.subtract(updatedPositionP1);
-        // double J = 2*m1*m2*(deltaV.dotProduct()
+        double J = 2*m1*m2*(deltaV.dotProduct(deltaR))/(sigma*(m1 + m2));
+
+        double jx = J  * deltaR.getX() / sigma;
+        double jy = J * deltaR.getY() / sigma;
+
+        double newVx1 = this.particle1.getVx() + jx/m1;
+        double dir1 = Math.acos(newVx1/particle1.getSpeed());
+        assert dir1 == Math.asin((this.particle1.getVy() + jy/m1)/particle1.getSpeed());
+
+        double newVx2 = this.particle2.getVx() + jx/m2;
+        double dir2 = Math.acos(newVx2/particle2.getSpeed());
+        assert dir2 == Math.asin((this.particle2.getVy() + jy/m2)/particle2.getSpeed());
+
+        Particle newP1 = new Particle(
+                updatedPositionP1.getX(), updatedPositionP1.getY(),
+                dir1, particle1.getId(), particle1.getMass()
+        );
+        Particle newP2 = new Particle(updatedPositionP1.getX(), updatedPositionP1.getY(), dir2, particle2.getId(), particle2.getMass());
 
 
     }
