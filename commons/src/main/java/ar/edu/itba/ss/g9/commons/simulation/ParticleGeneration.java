@@ -1,8 +1,11 @@
 package ar.edu.itba.ss.g9.commons.simulation;
 
+import java.awt.geom.Point2D;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,15 +27,18 @@ public class ParticleGeneration {
     public static Collection<Particle> generateWeightedParticles(int numberOfParticles, double height, double width){
         Collection<Particle> particles = new ArrayList<>(numberOfParticles);
 
-        Stream.iterate(0, n-> n+1).limit(numberOfParticles).parallel().forEach((i -> {
+        int createdParticles = 0;
+        while( createdParticles < numberOfParticles){
             ThreadLocalRandom rand = ThreadLocalRandom.current();
             double x = rand.nextDouble(0, width/2); // We want to initialize on the left side of the box
             double y = rand.nextDouble(0, height);
             double direction = rand.nextDouble(-Math.PI, Math.PI);
             double mass = 1;
-            particles.add(new Particle(x, y, direction, i, mass));
-
-        }));
+            Particle particle = new Particle(x, y, direction, createdParticles, mass);
+            if(particle.isValid(particles))
+                particles.add(particle);
+                createdParticles++;
+        }
 
         return particles;
     }

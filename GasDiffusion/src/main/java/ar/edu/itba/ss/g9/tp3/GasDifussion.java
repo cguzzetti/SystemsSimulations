@@ -11,14 +11,14 @@ public class GasDifussion {
     private final double height;
     private final double width;
     private final double partitionLen;
-    private Queue<Particle> colisions;
+    private Queue<Particle> collisions;
 
     public GasDifussion(GasDifussionConfig config){
         this.N = config.getN();
         this.height = config.getHeight();
         this.width = config.getWidth();
         this.partitionLen = config.getPartitionLen();
-        colisions = new PriorityQueue<>();
+        collisions = new PriorityQueue<>();
         // Definir paredes
     }
 
@@ -56,11 +56,11 @@ public class GasDifussion {
         return partitionLen;
     }
 
-    public Queue<Particle> getColisions() {
-        return colisions;
+    public Queue<Particle> getCollisions() {
+        return collisions;
     }
 
-    public void setColisions(PriorityQueue<Particle> colisions) {
-        this.colisions = colisions;
+    public void setCollisions(PriorityQueue<Particle> collisions) {
+        this.collisions = collisions;
     }
 }

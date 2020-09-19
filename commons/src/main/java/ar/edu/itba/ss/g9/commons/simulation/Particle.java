@@ -2,7 +2,9 @@ package ar.edu.itba.ss.g9.commons.simulation;
 
 
 import java.awt.geom.Point2D;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -157,5 +159,13 @@ public class Particle {
 
     public double getMass() {
         return mass;
+    }
+
+    public boolean isValid(Collection<Particle> particleList){
+        return particleList.parallelStream().noneMatch(this::collidesWith);
+    }
+
+    public boolean collidesWith(Particle p){
+        return this.point.distance(p.point) - this.radius - p.radius < 0;
     }
 }
