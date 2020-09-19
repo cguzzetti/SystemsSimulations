@@ -2,42 +2,62 @@ package ar.edu.itba.ss.g9.tp3;
 
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
 
-import java.util.Collection;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class GasDifussion {
     private final int N;
     private final double height;
     private final double width;
     private final double partitionLen;
-    private Queue<Particle> collisions;
+    private Queue<Event> collisions;
+    private Collection<Particle> particles;
 
-    public GasDifussion(GasDifussionConfig config){
+    public GasDifussion(GasDifussionConfig config, Collection<Particle> particles){
         this.N = config.getN();
         this.height = config.getHeight();
         this.width = config.getWidth();
         this.partitionLen = config.getPartitionLen();
-        collisions = new PriorityQueue<>();
+        this.collisions = new PriorityQueue<>();
+        this.particles = particles;
         // Definir paredes
     }
 
-    public void simulate(Collection<Particle> particles){
+    public void simulate(){
         int dt = 0;
-        // calculate all colisions
+        calculateCollisions();
         // TODO: EndCondition won't be time but fp
         while(dt != 1000){
-            //Optional<Event>: getFirstColision
-            // if(!getFirstColision.isPresent()) break;
+            //Optional<Event>: getFirstCollision
+            // if(!getFirstCollision.isPresent()) break;
 
-            // advanceParticles(firstColision.time())
+            // advanceParticles(firstCollision.time())
             // save system state
             // updateVelocityOfEventParticles
-            // determineAllFutureColisionsOfParticles
+            // determineAllFutureCollisionsOfParticles
 
             dt++;
         }
 
+    }
+
+    // Calculates te next collision for all particles
+    private void calculateCollisions() {
+        for(Particle p: particles) {
+            this.collisions.addAll(calculateParticleNextCollision(p));
+        }
+    }
+
+    private List<Event> calculateParticleNextCollision(Particle particle) {
+        List<Event> particleNextCollisions = new LinkedList<>();
+        for(Particle p: particles) {
+            if(!p.equals(particle)) {
+                //if(Collision(particle, p).isPresent(particleNextCollisions::add));
+            }
+                
+        }
+
+
+        return particleNextCollisions;
     }
 
     public double getHeight() {
@@ -56,11 +76,12 @@ public class GasDifussion {
         return partitionLen;
     }
 
-    public Queue<Particle> getCollisions() {
+
+    public Queue<Event> getCollisions() {
         return collisions;
     }
 
-    public void setCollisions(PriorityQueue<Particle> collisions) {
+    public void setCollisions(PriorityQueue<Event> collisions) {
         this.collisions = collisions;
     }
 }
