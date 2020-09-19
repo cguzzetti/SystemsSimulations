@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
+import static ar.edu.itba.ss.g9.commons.simulation.ParticleGeneration.generateRandomParticles;
+
 public class FileParser {
 
     private static void createParticle(StaticFile inputFile, String particleLine, int lineNum){
@@ -141,19 +143,6 @@ public class FileParser {
             writer.write(String.format("%s\n",particle.toString()));
         }
         writer.close();
-    }
-
-    public static StringBuilder generateRandomParticles(long numberOfParticles, double sideLength){
-        return Stream.iterate(0, n -> n+1).limit(numberOfParticles).parallel().collect(StringBuilder::new, (sb, i)-> {
-            // Every call to ThreadLocalRandom.current() is going to call
-            // localInit which will generate a new seed.
-            ThreadLocalRandom rand = ThreadLocalRandom.current();
-            double x = rand.nextDouble(0, sideLength);
-            double y = rand.nextDouble(0, sideLength);
-            // double radius = rand.nextDouble(0, 1);
-            double radius = 0.25;
-            sb.append(String.format("%.2f %.2f %.2f\n", x, y, radius));
-        }, StringBuilder::append);
     }
 
     public static void createExperimentFile(final Config config) throws IOException{

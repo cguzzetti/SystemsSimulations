@@ -87,7 +87,6 @@ public class LatticeFileParser extends FileParser {
         }
         return vaOutput;
     }
-
     public static void printHeadertoFile(LatticeInput file, final Config config, BufferedWriter writer, Integer timelapse){
         try {
             writer.write(String.format("%s\n",

@@ -7,8 +7,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Particle {
-    private double x;
-    private double y;
     private double radius;
     private String name;
     private final int id;
@@ -18,6 +16,7 @@ public class Particle {
     private final boolean hasVelocity;
     private double speed;
     private double direction;
+    private final double mass;
 
     public Particle(double xPosition, double yPosition, double radius, int id, String name){
         this.point = new Point2D.Double(xPosition, yPosition);
@@ -26,6 +25,7 @@ public class Particle {
         this.id = id;
         this.name = name;
         this.neighbors = new HashSet<>();
+        this.mass = 0.0;
     }
 
     public Particle(double xPosition, double yPosition, double radius, int id){
@@ -35,6 +35,7 @@ public class Particle {
         this.id = id;
         this.neighbors = new HashSet<>();
         this.name = String.format("p%d", id);
+        this.mass = 0.0;
     }
 
     public Particle(double xPosition, double yPosition, double speed, double direction, double radius, int id){
@@ -46,6 +47,17 @@ public class Particle {
         this.id = id;
         this.neighbors = new HashSet<>();
         this.name = String.format("p%d", id);
+        this.mass = 0.0;
+    }
+
+    public Particle(double xPosition, double yPosition, double direction, int id, double mass){
+        this.id = id;
+        this.point = new Point2D.Double(xPosition, yPosition);
+        this.radius = 0.0015;
+        this.hasVelocity = true;
+        this.speed = 0.01;
+        this.direction = direction;
+        this.mass = mass;
     }
 
     public void setX(double x){
@@ -131,10 +143,19 @@ public class Particle {
                     "%d %.3f %.3f %.3f %s",
                     this.getId() ,this.point.getX(), this.point.getY(), this.radius, this.neighbors.stream().map(Particle::getId).collect(Collectors.toList()).stream().map(String::valueOf).collect(Collectors.joining(","))
             );
+        if(mass == 0)
+            return String.format(
+                    "%d %f %f %f %f %f",
+                    this.getId(),this.point.getX(), this.point.getY(), this.getVx(), this.getVy(), this.direction
+            );
 
         return String.format(
-                "%d %f %f %f %f %f",
-                this.getId(),this.point.getX(), this.point.getY(), this.getVx(), this.getVy(), this.direction
+                "%d %f %f %f %f %f %f",
+                this.getId(), this.point.getX(), this.point.getY(), this.getVx(), this.getVy(), this.direction, this.mass
         );
+    }
+
+    public double getMass() {
+        return mass;
     }
 }
