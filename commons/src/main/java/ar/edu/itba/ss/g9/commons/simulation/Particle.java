@@ -188,8 +188,40 @@ public class Particle {
         if(deltaT == Double.POSITIVE_INFINITY)
             return Optional.empty();
 
-        //return Optional.of(new Collision());
-        return Optional.ofNullable(null);
+        return Optional.of(new ParticleCollision(this, particle, deltaT));
+    }
+
+    private Optional<Collision> willCollideWithWalls(Point2D[] wall) {
+        if(this.getVx() == 0 && this.getVy() == 0)
+            return Optional.empty();
+
+        Point2D wallStart = wall[0];
+        Point2D wallEnd = wall[1];
+        boolean vertical;
+        double origin, wallPosition, velocity;
+        vertical = wallStart.getX() == wallEnd.getX();
+
+        if(vertical) {
+            origin = this.getY();
+            velocity = this.getVy();
+            wallPosition = velocity > 0? wallEnd.getY():wallStart.getY();
+        }
+        else {
+            origin = this.getX();
+            velocity = this.getVx();
+            wallPosition = velocity > 0? wallEnd.getX():wallStart.getX();
+        }
+
+        double deltaT = (wallPosition + velocity > 0? -1:1 * this.getRadius() - origin)/velocity;
+
+        if(deltaT < 0)
+            return Optional.empty();
+
+        double newDirection = vertical? Math.asin((-velocity)/this.getSpeed()):Math.acos((-velocity)/this.getSpeed());
+        Particle particleAfterCollision = new Particle(this.getX(), this.getY(), newDirection, this.getId(), this.getMass());
+
+        // TODO: calculate pressure?
+        return Optional.of(new WallCollision(particleAfterCollision, deltaT));
     }
 
     public List<Collision> calculateParticleNextCollision(Collection<Particle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls) {
@@ -203,6 +235,10 @@ public class Particle {
         }
 
         // Search with collisions with walls
+        for(Point2D[] verticalWall: verticalWalls)
+            this.willCollideWithWalls(verticalWall).ifPresent(particleNextCollisions::add);
+        for(Point2D[] horizontalWall: horizontalWalls)
+            this.willCollideWithWalls(horizontalWall).ifPresent(particleNextCollisions::add);
 
         return particleNextCollisions;
     }

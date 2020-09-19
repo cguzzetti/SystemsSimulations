@@ -14,6 +14,7 @@ public class ParticleCollision extends Collision {
         this.particle2 = p2;
         this.time = time;
     }
+
     @Override
     public void updateVelocity() {
         final Point2D updatedPositionP1 = new Point2D(
@@ -52,8 +53,6 @@ public class ParticleCollision extends Collision {
                 dir1, particle1.getId(), particle1.getMass()
         );
         Particle newP2 = new Particle(updatedPositionP1.getX(), updatedPositionP1.getY(), dir2, particle2.getId(), particle2.getMass());
-
-
     }
 
     public Particle getParticle1() {

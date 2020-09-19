@@ -39,9 +39,8 @@ public class GasDiffusion {
 
     public void simulate(GasDiffusionFileParser parser){
         int dt = 0;
-        // calculateCollisions();
+        calculateCollisions();
         // TODO: EndCondition won't be time but fp
-
         while(dt != 1000){
             //Optional<Collision>: getFirstCollision
             if(collisions.isEmpty()) return;
