@@ -47,11 +47,11 @@ public class GasDiffusion {
             if(collisions.isEmpty()) return;
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(!maybeCollision.isPresent()) break;
-
+            Collision collision = maybeCollision.get();
 
             // advanceParticles(firstCollision.time())
             parser.writeStateToOutput(particles, dt);
-            // updateVelocityOfCollisionParticles
+            collision.updateVelocity();
             // determineAllFutureCollisionsOfParticles
 
             dt++;
