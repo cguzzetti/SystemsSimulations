@@ -42,17 +42,28 @@ public class ParticleCollision extends Collision {
 
         double newVx1 = this.particle1.getVx() + jx/m1;
         double dir1 = Math.acos(newVx1/particle1.getSpeed());
-        assert dir1 == Math.asin((this.particle1.getVy() + jy/m1)/particle1.getSpeed());
+        //assert dir1 - (-Math.asin((this.particle1.getVy() + jy/m1)/particle1.getSpeed())) < 0.0001;
 
+        System.out.printf("DIR1: %f\n", dir1);
+        System.out.printf("OTHER DIR1: %f\n", Math.asin((this.particle1.getVy() + jy/m1)/particle1.getSpeed()));
         double newVx2 = this.particle2.getVx() + jx/m2;
         double dir2 = Math.acos(newVx2/particle2.getSpeed());
-        assert dir2 == Math.asin((this.particle2.getVy() + jy/m2)/particle2.getSpeed());
+
+        System.out.printf("DIR2: %f\n",dir2);
+        System.out.printf("OtherDIR2: %f\n",Math.asin((this.particle2.getVy() + jy/m2)/particle2.getSpeed()));
+        // assert dir2 - (Math.asin((this.particle2.getVy() + jy/m2)/particle2.getSpeed())) < 0.0001;
 
         Particle newP1 = new Particle(
                 updatedPositionP1.getX(), updatedPositionP1.getY(),
                 dir1, particle1.getId(), particle1.getMass()
         );
-        Particle newP2 = new Particle(updatedPositionP1.getX(), updatedPositionP1.getY(), dir2, particle2.getId(), particle2.getMass());
+        Particle newP2 = new Particle(
+                updatedPositionP1.getX(), updatedPositionP1.getY(),
+                dir2, particle2.getId(), particle2.getMass()
+        );
+
+        System.out.printf("P1: %s\n", newP1.toString());
+        System.out.printf("P2: %s\n", newP2.toString());
     }
 
     public Particle getParticle1() {

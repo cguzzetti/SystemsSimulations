@@ -188,6 +188,8 @@ public class Particle {
         if(deltaT == Double.POSITIVE_INFINITY)
             return Optional.empty();
 
+        // Este ParticlCollision debería guardar las nuevas particulas
+        // Averiguar cómo hacerlo al crearse.
         return Optional.of(new ParticleCollision(this, particle, deltaT));
     }
 
