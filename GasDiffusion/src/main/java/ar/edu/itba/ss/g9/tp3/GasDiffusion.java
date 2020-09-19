@@ -1,14 +1,12 @@
 package ar.edu.itba.ss.g9.tp3;
 
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
-import jdk.jfr.internal.Options;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
-public class GasDifussion {
+public class GasDiffusion {
     private final int N;
     private final double height;
     private final double width;
@@ -18,7 +16,7 @@ public class GasDifussion {
     private Point2D.Double verticalWalls;
     private Point2D.Double horizontalWalls;
 
-    public GasDifussion(GasDifussionConfig config, Collection<Particle> particles){
+    public GasDiffusion(GasDifussionConfig config, Collection<Particle> particles){
         this.N = config.getN();
         this.height = config.getHeight();
         this.width = config.getWidth();
@@ -28,10 +26,11 @@ public class GasDifussion {
         // Definir paredes
     }
 
-    public void simulate(){
+    public void simulate(GasDiffusionFileParser parser){
         int dt = 0;
-        calculateCollisions();
+        // calculateCollisions();
         // TODO: EndCondition won't be time but fp
+
         while(dt != 1000){
             //Optional<Collision>: getFirstCollision
             if(collisions.isEmpty()) return;
@@ -40,12 +39,14 @@ public class GasDifussion {
 
 
             // advanceParticles(firstCollision.time())
-            // save system state
+            parser.writeStateToOutput(particles, dt);
             // updateVelocityOfCollisionParticles
             // determineAllFutureCollisionsOfParticles
 
             dt++;
         }
+
+        parser.finish();
 
     }
 

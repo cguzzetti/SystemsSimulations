@@ -2,14 +2,21 @@ package ar.edu.itba.ss.g9.tp3;
 
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
 import ar.edu.itba.ss.g9.commons.simulation.ParticleGeneration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collection;
 
 public class Main {
+    private static Logger logger = LoggerFactory.getLogger(Main.class);
+
     public static String initializeVisualizationPath(){
         boolean rootIncluded = new File("GasDiffusion").exists();
         if(rootIncluded){
@@ -17,8 +24,9 @@ public class Main {
         }
         return "src/main/visualization";
     }
-
+    public static String VISUALIZATION_PATH;
     public static void main( String[] args ) {
+        VISUALIZATION_PATH = initializeVisualizationPath();
         Options options = new Options();
         GasDifussionConfig config = null;
         try {
@@ -41,6 +49,18 @@ public class Main {
                 config.getWidth()
         );
 
-        particles.forEach(System.out::println);
+
+        GasDiffusion gas = new GasDiffusion(config, particles);
+        GasDiffusionFileParser parser = null;
+
+        try{
+            parser = new GasDiffusionFileParser(String.format("%s/%s", VISUALIZATION_PATH, config.getInputFileName()));
+        }catch (IOException ex){
+            logger.error("There was an error while creating the FileParser. %s\n", ex.getMessage());
+            ex.printStackTrace();
+            System.exit(1);
+        }
+
+//        gas.simulate(parser);
    }
 }
