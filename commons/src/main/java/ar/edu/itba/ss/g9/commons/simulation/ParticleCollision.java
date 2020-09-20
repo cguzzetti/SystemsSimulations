@@ -5,6 +5,7 @@ import javafx.geometry.Point2D;
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class ParticleCollision implements Collision {
 
     private final Particle particle1;
@@ -38,27 +39,31 @@ public class ParticleCollision implements Collision {
         double m2 = this.particle2.getMass();
         final Point2D deltaV = new Point2D(
                 this.particle2.getVx() - this.particle1.getVx(),
-                this.particle2.getVy() - this.particle2.getVy()
+                this.particle2.getVy() - this.particle1.getVy()
         );
         final Point2D deltaR = updatedPositionP2.subtract(updatedPositionP1);
-        double J = 2*m1*m2*(deltaV.dotProduct(deltaR))/(sigma*(m1 + m2));
+        double deltaVxR = deltaV.dotProduct(deltaR);
+        double J = 2 * m1 * m2 * deltaVxR / (sigma * (m1 + m2));
 
-        double jx = J  * deltaR.getX() / sigma;
-        double jy = J * deltaR.getY() / sigma;
+        Point2D jVector = deltaR.multiply(J/sigma);
 
-        double newVx1 = this.particle1.getVx() + jx/m1;
-        double dir1 = Math.acos(newVx1/particle1.getSpeed());
-        //assert dir1 - (-Math.asin((this.particle1.getVy() + jy/m1)/particle1.getSpeed())) < 0.0001;
 
-        System.out.printf("DIR1: %f\n", dir1);
-        System.out.printf("OTHER DIR1: %f\n", Math.asin((this.particle1.getVy() + jy/m1)/particle1.getSpeed()));
-        double newVx2 = this.particle2.getVx() + jx/m2;
-        double dir2 = Math.acos(newVx2/particle2.getSpeed());
+        System.out.println("Particle1 Velocity:");
+        Point2D v1 = new Point2D(
+                this.particle1.getVx(), this.particle1.getVy()
+        );
+        Point2D vP1 = v1.add(jVector.multiply((double) 1/particle1.getMass()));
+        System.out.println(vP1);
 
-        System.out.printf("DIR2: %f\n",dir2);
-        System.out.printf("OtherDIR2: %f\n",Math.asin((this.particle2.getVy() + jy/m2)/particle2.getSpeed()));
-        // assert dir2 - (Math.asin((this.particle2.getVy() + jy/m2)/particle2.getSpeed())) < 0.0001;
+        System.out.println("Particle2 Velocity:");
+        Point2D v2 = new Point2D(
+                this.particle2.getVx(), this.particle2.getVy()
+        );
 
+        Point2D vP2 = v2.subtract(jVector.multiply((double) 1/particle2.getMass()));
+        System.out.println(vP2);
+
+/*
         Particle newP1 = new Particle(
                 updatedPositionP1.getX(), updatedPositionP1.getY(),
                 dir1, particle1.getId(), particle1.getMass()
@@ -70,6 +75,8 @@ public class ParticleCollision implements Collision {
 
         System.out.printf("P1: %s\n", newP1.toString());
         System.out.printf("P2: %s\n", newP2.toString());
+ */
+
     }
 
     public Particle getParticle1() {
