@@ -23,7 +23,7 @@ public class GasDiffusionFileParser extends FileParser {
 
     public void writeStateToOutput(Collection<GasParticle> particles, int iteration){
         try {
-            outputWriter.write(String.format("%d\n", iteration));
+            outputWriter.write(String.format("%d\n%d\n",particles.size(), iteration));
         }catch (IOException ex){
             logger.error("There was an error while writing the t for the file. %s\n", ex.getMessage());
             ex.printStackTrace();

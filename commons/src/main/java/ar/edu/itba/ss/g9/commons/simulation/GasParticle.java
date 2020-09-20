@@ -37,8 +37,8 @@ public class GasParticle extends Particle{
     @Override
     public String toString(){
         return String.format(
-                "%d %f %f %f %f %f",
-                this.getId(), this.point.getX(), this.point.getY(), this.getVx(), this.getVy(), this.mass
+                "%d %f %f %f %f %f %f",
+                this.getId(), this.point.getX(), this.point.getY(), this.getVx(), this.getVy(), this.getRadius(), this.mass
         );
     }
 
