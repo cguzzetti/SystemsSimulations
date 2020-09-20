@@ -49,7 +49,7 @@ public class GasDiffusion {
 
         // TODO: EndCondition won't be time but fp
         while(time < 1000){
-            // Get firt valid collision
+            // Get first valid collision
             if(collisions.isEmpty()) return;
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(maybeCollision.isEmpty()) break;

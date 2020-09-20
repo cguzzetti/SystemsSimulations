@@ -2,6 +2,7 @@ package ar.edu.itba.ss.g9.commons.simulation;
 
 import javafx.geometry.Point2D;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class ParticleCollision implements Collision {
@@ -86,7 +87,10 @@ public class ParticleCollision implements Collision {
 
     @Override
     public Set<Particle> getParticles() {
-        return null;
+        Set<Particle> particles = new HashSet<>();
+        particles.add(this.particle1);
+        particles.add(this.particle2);
+        return particles;
     }
 
     @Override
