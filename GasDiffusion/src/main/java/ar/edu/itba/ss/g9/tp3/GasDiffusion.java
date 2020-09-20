@@ -49,6 +49,7 @@ public class GasDiffusion {
 
         // TODO: EndCondition won't be time but fp
         while(time < 1000){
+            double fp = calculateParticleFraction();
             // Get first valid collision
             if(collisions.isEmpty()) return;
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
@@ -91,6 +92,15 @@ public class GasDiffusion {
         for(Particle p: particles) {
             p.updateParticlePosition(time);
         }
+    }
+
+    private double calculateParticleFraction() {
+        int particleCounterLeftSide = 0;
+        for(Particle p: particles) {
+            if(p. getX() < width/2)
+                particleCounterLeftSide++;
+        }
+        return new Double(particleCounterLeftSide)/particles.size();
     }
 
     public double getHeight() {
