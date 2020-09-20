@@ -8,10 +8,10 @@ import java.util.Set;
 
 public class WallCollision implements Collision {
     private double time;
-    private Particle particle;
+    private GasParticle particle;
     private int collisionCounter;
 
-    public WallCollision(Particle particle, double time) {
+    public WallCollision(GasParticle particle, double time) {
         this.particle = particle;
         this.time = time;
         this.collisionCounter = particle.getCollisionCounter();
@@ -24,8 +24,8 @@ public class WallCollision implements Collision {
     }
 
     @Override
-    public Set<Particle> getParticles() {
-        return new HashSet<Particle>(Collections.singleton(this.particle));
+    public Set<GasParticle> getParticles() {
+        return new HashSet<GasParticle>(Collections.singleton(this.particle));
     }
 
     @Override

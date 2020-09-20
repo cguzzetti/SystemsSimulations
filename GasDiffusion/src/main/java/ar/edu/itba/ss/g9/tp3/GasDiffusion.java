@@ -1,6 +1,7 @@
 package ar.edu.itba.ss.g9.tp3;
 
 import ar.edu.itba.ss.g9.commons.simulation.Collision;
+import ar.edu.itba.ss.g9.commons.simulation.GasParticle;
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
 
 
@@ -13,11 +14,11 @@ public class GasDiffusion {
     private final double width;
     private final double partitionLen;
     private Queue<Collision> collisions;
-    private Set<Particle> particles;
+    private Set<GasParticle> particles;
     private Point2D[][] verticalWalls;
     private Point2D[][] horizontalWalls;
 
-    public GasDiffusion(GasDifussionConfig config, Set<Particle> particles){
+    public GasDiffusion(GasDifussionConfig config, Set<GasParticle> particles){
         this.N = config.getN();
         this.height = config.getHeight();
         this.width = config.getWidth();
@@ -59,12 +60,12 @@ public class GasDiffusion {
             advanceParticles(collision.getTime());
             // parser.writeStateToOutput(particles, dt);
 
-            Set<Particle> particlesInCollision = collision.getParticles();
+            Set<GasParticle> particlesInCollision = collision.getParticles();
 
             // For particles involved in current collision:
             collision.updateVelocity(); // Update velocity
             calculateCollisions(particlesInCollision); // Determine future collisions
-            particlesInCollision.forEach(Particle::increaseCollisionCounter); // Increase collision counter
+            particlesInCollision.forEach(GasParticle::incrementCollisionCounter); // Increase collision counter
 
             // TODO: time won't be the driver of the main loop
             time+=1;
@@ -75,8 +76,8 @@ public class GasDiffusion {
     }
 
     // Calculates te next collision for all particles
-    private void calculateCollisions(Set<Particle> particles) {
-        for(Particle p: particles) {
+    private void calculateCollisions(Set<GasParticle> particles) {
+        for(GasParticle p: particles) {
             this.collisions.addAll(p.calculateParticleNextCollision(this.particles, this.verticalWalls, this.horizontalWalls));
         }
     }
@@ -89,7 +90,7 @@ public class GasDiffusion {
     }
 
     private void advanceParticles(double time) {
-        for(Particle p: particles) {
+        for(GasParticle p: particles) {
             p.updateParticlePosition(time);
         }
     }

@@ -8,7 +8,7 @@ public interface Collision {
 
     void updateVelocity();
 
-    Set<Particle> getParticles();
+    Set<GasParticle> getParticles();
 
     double getTime();
 }

@@ -1,10 +1,7 @@
 package ar.edu.itba.ss.g9.commons.simulation;
 
-import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ParticleGeneration {
@@ -21,8 +18,8 @@ public class ParticleGeneration {
         }, StringBuilder::append);
     }
 
-    public static Set<Particle> generateWeightedParticles(int numberOfParticles, double height, double width){
-        Set<Particle> particles = new HashSet<>(numberOfParticles);
+    public static Set<GasParticle> generateGasParticles(int numberOfParticles, double height, double width){
+        Set<GasParticle> particles = new HashSet<>(numberOfParticles);
 
         int createdParticles = 0;
         while( createdParticles < numberOfParticles){
@@ -31,7 +28,7 @@ public class ParticleGeneration {
             double y = rand.nextDouble(0, height);
             double direction = rand.nextDouble(-Math.PI, Math.PI);
             double mass = 1;
-            Particle particle = new Particle(x, y, direction, createdParticles, mass);
+            GasParticle particle = new GasParticle(x, y, direction, createdParticles, mass);
             if(particle.isValid(particles))
                 particles.add(particle);
                 createdParticles++;

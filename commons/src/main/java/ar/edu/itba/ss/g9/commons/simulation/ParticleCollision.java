@@ -8,13 +8,13 @@ import java.util.Set;
 
 public class ParticleCollision implements Collision {
 
-    private final Particle particle1;
-    private final Particle particle2;
+    private final GasParticle particle1;
+    private final GasParticle particle2;
     private int collisionCounterP1;
     private int collisionCounterP2;
     private final double time;
 
-    public ParticleCollision(Particle p1, Particle p2, double time){
+    public ParticleCollision(GasParticle p1, GasParticle p2, double time){
         this.particle1 = p1;
         this.particle2 = p2;
         this.time = time;
@@ -93,8 +93,8 @@ public class ParticleCollision implements Collision {
     }
 
     @Override
-    public Set<Particle> getParticles() {
-        Set<Particle> particles = new HashSet<>();
+    public Set<GasParticle> getParticles() {
+        Set<GasParticle> particles = new HashSet<>();
         particles.add(this.particle1);
         particles.add(this.particle2);
         return particles;

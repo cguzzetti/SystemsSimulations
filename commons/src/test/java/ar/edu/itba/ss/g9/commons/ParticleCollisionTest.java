@@ -1,5 +1,6 @@
 package ar.edu.itba.ss.g9.commons;
 
+import ar.edu.itba.ss.g9.commons.simulation.GasParticle;
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
 import ar.edu.itba.ss.g9.commons.simulation.ParticleCollision;
 import javafx.geometry.Point2D;
@@ -9,11 +10,11 @@ public class ParticleCollisionTest {
 
     @Test
     public void someTest(){
-        Particle p1 = new Particle(
+        GasParticle p1 = new GasParticle(
                 0, 0, 0, 1, 1
         );
 
-        Particle p2 = new Particle(
+        GasParticle p2 = new GasParticle(
                 10, 0, Math.PI, 2, 1
         );
 
