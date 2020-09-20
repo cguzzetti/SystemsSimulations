@@ -10,17 +10,24 @@ public class WallCollision implements Collision {
     private double time;
     private GasParticle particle;
     private int collisionCounter;
+    private final boolean isVertical;
 
-    public WallCollision(GasParticle particle, double time) {
+    public WallCollision(GasParticle particle, double time, boolean isVertical) {
         this.particle = particle;
         this.time = time;
         this.collisionCounter = particle.getCollisionCounter();
+        this.isVertical = isVertical;
     }
 
     @Override
     public void updateVelocity() {
-        //double newDirection = vertical? Math.asin((-velocity)/this.getSpeed()):Math.acos((-velocity)/this.getSpeed());
-        // TODO: update direction of this.particle
+        Point2D newVelocity;
+        if(isVertical)
+            newVelocity = new Point2D(particle.getVx(), -particle.getVy());
+        else
+            newVelocity = new Point2D(-particle.getVx(), particle.getVy());
+
+        this.particle.setVelocity(newVelocity);
     }
 
     @Override

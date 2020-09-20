@@ -66,7 +66,7 @@ public class GasParticle extends Particle{
     }
 
     public void updateParticlePosition(double time) {
-        this.point.add(this.velocity.getX()*time,this.velocity.getY()*time);
+        this.setPosition(this.point.add(this.velocity.getX()*time,this.velocity.getY()*time));
     }
 
     private double timeToCollideWith(GasParticle particle) {
@@ -123,7 +123,7 @@ public class GasParticle extends Particle{
             return Optional.empty();
 
         // TODO: calculate pressure?
-        return Optional.of(new WallCollision(this, deltaT));
+        return Optional.of(new WallCollision(this, deltaT, vertical));
     }
 
     public List<Collision> calculateParticleNextCollision(Collection<GasParticle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls) {
