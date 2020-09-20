@@ -4,12 +4,13 @@ import ar.edu.itba.ss.g9.commons.simulation.GasParticle;
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
 import ar.edu.itba.ss.g9.commons.simulation.ParticleCollision;
 import javafx.geometry.Point2D;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ParticleCollisionTest {
 
     @Test
-    public void someTest(){
+    public void collisionUpdatesVelocityCorrectlyTest(){
         GasParticle p1 = new GasParticle(
                 0, 0, 0, 1, 1
         );
@@ -22,6 +23,10 @@ public class ParticleCollisionTest {
 
         collision.updateVelocity();
 
+        Assert.assertEquals(p1.getVx(), -0.01, 0.00001);
+        Assert.assertEquals(p2.getVx(), 0.01, 0.00001);
+        Assert.assertEquals(p1.getVy(), 0, 0.00001);
+        Assert.assertEquals(p2.getVy(), 0, 0.00001);
 
 
     }
