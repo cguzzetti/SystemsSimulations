@@ -2,10 +2,7 @@ package ar.edu.itba.ss.g9.commons.simulation;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,8 +21,8 @@ public class ParticleGeneration {
         }, StringBuilder::append);
     }
 
-    public static Collection<Particle> generateWeightedParticles(int numberOfParticles, double height, double width){
-        Collection<Particle> particles = new ArrayList<>(numberOfParticles);
+    public static Set<Particle> generateWeightedParticles(int numberOfParticles, double height, double width){
+        Set<Particle> particles = new HashSet<>(numberOfParticles);
 
         int createdParticles = 0;
         while( createdParticles < numberOfParticles){

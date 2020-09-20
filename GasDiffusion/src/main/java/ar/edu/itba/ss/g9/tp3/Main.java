@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Set;
 
 public class Main {
     private static Logger logger = LoggerFactory.getLogger(Main.class);
@@ -43,7 +44,7 @@ public class Main {
 
         System.out.println(config.toString());
 
-        Collection<Particle> particles = ParticleGeneration.generateWeightedParticles(
+        Set<Particle> particles = ParticleGeneration.generateWeightedParticles(
                 config.getN(),
                 config.getHeight(),
                 config.getWidth()
