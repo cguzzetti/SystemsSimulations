@@ -182,6 +182,10 @@ public class Particle {
         return this.point.distance(p.point) - this.radius - p.radius < 0;
     }
 
+    public void updateParticlePosition(double time) {
+        this.point.add(this.getVx()*time,this.getVy()*time);
+    }
+
     private double timeToCollideWith(Particle particle) {
         Point2D deltaR = new Point2D(particle.getX() - this.getX(), particle.getY() - this.getY());
         Point2D deltaV = new Point2D(particle.getVx() - this.getVx(), particle.getVy() - this.getVy());

@@ -55,7 +55,7 @@ public class GasDiffusion {
             if(maybeCollision.isEmpty()) break;
             Collision collision = maybeCollision.get();
 
-            // advanceParticles(collision.time())
+            advanceParticles(collision.getTime());
             // parser.writeStateToOutput(particles, dt);
 
             Set<Particle> particlesInCollision = collision.getParticles();
@@ -65,8 +65,8 @@ public class GasDiffusion {
             calculateCollisions(particlesInCollision); // Determine future collisions
             particlesInCollision.forEach(Particle::increaseCollisionCounter); // Increase collision counter
 
-            // TODO: better handle of time evolution. Not sure how the time in collisions differs from the main timeline.
-            time+=collision.getTime();
+            // TODO: time won't be the driver of the main loop
+            time+=1;
         }
 
         parser.finish();
@@ -85,6 +85,12 @@ public class GasDiffusion {
             return Optional.of(collision);
 
         return Optional.empty();
+    }
+
+    private void advanceParticles(double time) {
+        for(Particle p: particles) {
+            p.updateParticlePosition(time);
+        }
     }
 
     public double getHeight() {
