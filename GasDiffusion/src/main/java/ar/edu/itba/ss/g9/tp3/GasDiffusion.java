@@ -13,16 +13,21 @@ public class GasDiffusion {
     private final double width;
     private final double partitionLen;
     private Queue<Collision> collisions;
-    private Collection<Particle> particles;
+    private Set<Particle> particles;
     private Point2D[][] verticalWalls;
     private Point2D[][] horizontalWalls;
 
-    public GasDiffusion(GasDifussionConfig config, Collection<Particle> particles){
+    public GasDiffusion(GasDifussionConfig config, Set<Particle> particles){
         this.N = config.getN();
         this.height = config.getHeight();
         this.width = config.getWidth();
         this.partitionLen = config.getPartitionLen();
-        this.collisions = new PriorityQueue<>();
+        this.collisions = new PriorityQueue<>(new Comparator<Collision>() {
+            @Override
+            public int compare(Collision o1, Collision o2) {
+                return Double.compare(o1.getTime(),o2.getTime());
+            }
+        });
         this.particles = particles;
         this.horizontalWalls = new Point2D[][]{
                 {Point2D.ZERO, new Point2D(config.getWidth(), 0)},
@@ -38,22 +43,30 @@ public class GasDiffusion {
     }
 
     public void simulate(GasDiffusionFileParser parser){
-        int dt = 0;
-        calculateCollisions();
+        double time = 0;
+        calculateCollisions(this.particles);
+        if(collisions.isEmpty()) return;
+
         // TODO: EndCondition won't be time but fp
-        while(dt != 1000){
-            //Optional<Collision>: getFirstCollision
+        while(time < 1000){
+            // Get firt valid collision
             if(collisions.isEmpty()) return;
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
-            if(!maybeCollision.isPresent()) break;
+            if(maybeCollision.isEmpty()) break;
             Collision collision = maybeCollision.get();
 
-            // advanceParticles(firstCollision.time())
-            parser.writeStateToOutput(particles, dt);
-            collision.updateVelocity();
-            // determineAllFutureCollisionsOfParticles
+            // advanceParticles(collision.time())
+            // parser.writeStateToOutput(particles, dt);
 
-            dt++;
+            Set<Particle> particlesInCollision = collision.getParticles();
+
+            // For particles involved in current collision:
+            collision.updateVelocity(); // Update velocity
+            calculateCollisions(particlesInCollision); // Determine future collisions
+            particlesInCollision.forEach(Particle::increaseCollisionCounter); // Increase collision counter
+
+            // TODO: better handle of time evolution. Not sure how the time in collisions differs from the main timeline.
+            time+=collision.getTime();
         }
 
         parser.finish();
@@ -61,7 +74,7 @@ public class GasDiffusion {
     }
 
     // Calculates te next collision for all particles
-    private void calculateCollisions() {
+    private void calculateCollisions(Set<Particle> particles) {
         for(Particle p: particles) {
             this.collisions.addAll(p.calculateParticleNextCollision(this.particles, this.verticalWalls, this.horizontalWalls));
         }

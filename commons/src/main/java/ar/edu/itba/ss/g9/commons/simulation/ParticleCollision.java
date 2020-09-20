@@ -2,17 +2,22 @@ package ar.edu.itba.ss.g9.commons.simulation;
 
 import javafx.geometry.Point2D;
 
-public class ParticleCollision extends Collision {
+import java.util.Set;
 
+public class ParticleCollision implements Collision {
 
     private final Particle particle1;
     private final Particle particle2;
+    private int collisionCounterP1;
+    private int collisionCounterP2;
     private final double time;
 
     public ParticleCollision(Particle p1, Particle p2, double time){
         this.particle1 = p1;
         this.particle2 = p2;
         this.time = time;
+        this.collisionCounterP1 = p1.getCollisionCounter();
+        this.collisionCounterP2 = p2.getCollisionCounter();
     }
 
     @Override
@@ -72,5 +77,20 @@ public class ParticleCollision extends Collision {
 
     public Particle getParticle2() {
         return particle2;
+    }
+
+    @Override
+    public boolean isValid() {
+        return this.collisionCounterP1 == this.particle1.getCollisionCounter() && this.collisionCounterP2 == this.particle2.getCollisionCounter();
+    }
+
+    @Override
+    public Set<Particle> getParticles() {
+        return null;
+    }
+
+    @Override
+    public double getTime() {
+        return this.time;
     }
 }

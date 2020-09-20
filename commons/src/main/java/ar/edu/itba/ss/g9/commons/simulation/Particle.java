@@ -16,6 +16,8 @@ public class Particle {
     private double direction;
     private final double mass;
 
+    private int collisionCounter;
+
 
     public Particle(double xPosition, double yPosition, double radius, int id, String name){
         this.point = new Point2D(xPosition, yPosition);
@@ -25,6 +27,7 @@ public class Particle {
         this.name = name;
         this.neighbors = new HashSet<>();
         this.mass = 0.0;
+        this.collisionCounter = 0;
     }
 
     public Particle(double xPosition, double yPosition, double radius, int id){
@@ -35,6 +38,7 @@ public class Particle {
         this.neighbors = new HashSet<>();
         this.name = String.format("p%d", id);
         this.mass = 0.0;
+        this.collisionCounter = 0;
     }
 
     public Particle(double xPosition, double yPosition, double speed, double direction, double radius, int id){
@@ -47,6 +51,7 @@ public class Particle {
         this.neighbors = new HashSet<>();
         this.name = String.format("p%d", id);
         this.mass = 0.0;
+        this.collisionCounter = 0;
     }
 
     public Particle(double xPosition, double yPosition, double direction, int id, double mass){
@@ -57,6 +62,7 @@ public class Particle {
         this.speed = 0.01;
         this.direction = direction;
         this.mass = mass;
+        this.collisionCounter = 0;
     }
 
     public void setX(double x){ this.point = new Point2D(x, this.point.getY()); }
@@ -98,6 +104,18 @@ public class Particle {
     }
     public double getSpeed() {
         return this.speed;
+    }
+
+    public int getCollisionCounter() {
+        return collisionCounter;
+    }
+
+    public void setCollisionCounter(int collisionCounter) {
+        this.collisionCounter = collisionCounter;
+    }
+
+    public void increaseCollisionCounter() {
+        this.collisionCounter++;
     }
 
     public void setDirection(double direction) {
@@ -188,8 +206,6 @@ public class Particle {
         if(deltaT == Double.POSITIVE_INFINITY)
             return Optional.empty();
 
-        // Este ParticlCollision debería guardar las nuevas particulas
-        // Averiguar cómo hacerlo al crearse.
         return Optional.of(new ParticleCollision(this, particle, deltaT));
     }
 
@@ -219,11 +235,8 @@ public class Particle {
         if(deltaT < 0)
             return Optional.empty();
 
-        double newDirection = vertical? Math.asin((-velocity)/this.getSpeed()):Math.acos((-velocity)/this.getSpeed());
-        Particle particleAfterCollision = new Particle(this.getX(), this.getY(), newDirection, this.getId(), this.getMass());
-
         // TODO: calculate pressure?
-        return Optional.of(new WallCollision(particleAfterCollision, deltaT));
+        return Optional.of(new WallCollision(this, deltaT));
     }
 
     public List<Collision> calculateParticleNextCollision(Collection<Particle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls) {
