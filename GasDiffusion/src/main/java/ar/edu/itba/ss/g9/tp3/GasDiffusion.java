@@ -44,7 +44,7 @@ public class GasDiffusion {
     }
 
     public void simulate(GasDiffusionFileParser parser){
-        double time = 0;
+        int time = 0;
         calculateCollisions(this.particles);
         if(collisions.isEmpty()) return;
 
@@ -52,13 +52,13 @@ public class GasDiffusion {
         while(time < 1000){
             double fp = calculateParticleFraction();
             // Get first valid collision
-            if(collisions.isEmpty()) return;
+            if(collisions.isEmpty()) break;
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
-            if(maybeCollision.isEmpty()) break;
+            if(maybeCollision.isEmpty()) continue;
             Collision collision = maybeCollision.get();
 
             advanceParticles(collision.getTime());
-            // parser.writeStateToOutput(particles, dt);
+            parser.writeStateToOutput(particles, time);
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
 

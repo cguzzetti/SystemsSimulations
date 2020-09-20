@@ -61,6 +61,6 @@ public class Main {
             System.exit(1);
         }
 
-//        gas.simulate(parser);
+        gas.simulate(parser);
    }
 }

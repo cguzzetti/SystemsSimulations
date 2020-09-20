@@ -1,6 +1,7 @@
 package ar.edu.itba.ss.g9.tp3;
 
 import ar.edu.itba.ss.g9.commons.simulation.FileParser;
+import ar.edu.itba.ss.g9.commons.simulation.GasParticle;
 import ar.edu.itba.ss.g9.commons.simulation.Particle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class GasDiffusionFileParser extends FileParser {
         this.outputWriter = new BufferedWriter(new FileWriter(new File(inputFilename)));
     }
 
-    public void writeStateToOutput(Collection<Particle> particles, int iteration){
+    public void writeStateToOutput(Collection<GasParticle> particles, int iteration){
         try {
             outputWriter.write(String.format("%d\n", iteration));
         }catch (IOException ex){
