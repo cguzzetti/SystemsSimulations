@@ -47,35 +47,22 @@ public class ParticleCollision implements Collision {
 
         Point2D jVector = deltaR.multiply(J/sigma);
 
-
-        System.out.println("Particle1 Velocity:");
         Point2D v1 = new Point2D(
                 this.particle1.getVx(), this.particle1.getVy()
         );
         Point2D vP1 = v1.add(jVector.multiply((double) 1/particle1.getMass()));
-        System.out.println(vP1);
 
-        System.out.println("Particle2 Velocity:");
         Point2D v2 = new Point2D(
                 this.particle2.getVx(), this.particle2.getVy()
         );
 
         Point2D vP2 = v2.subtract(jVector.multiply((double) 1/particle2.getMass()));
-        System.out.println(vP2);
 
-/*
-        Particle newP1 = new Particle(
-                updatedPositionP1.getX(), updatedPositionP1.getY(),
-                dir1, particle1.getId(), particle1.getMass()
-        );
-        Particle newP2 = new Particle(
-                updatedPositionP1.getX(), updatedPositionP1.getY(),
-                dir2, particle2.getId(), particle2.getMass()
-        );
+        this.particle1.setPosition(updatedPositionP1);
+        this.particle1.setVelocity(vP1);
+        this.particle2.setPosition(updatedPositionP2);
+        this.particle2.setVelocity(vP2);
 
-        System.out.printf("P1: %s\n", newP1.toString());
-        System.out.printf("P2: %s\n", newP2.toString());
- */
 
     }
 

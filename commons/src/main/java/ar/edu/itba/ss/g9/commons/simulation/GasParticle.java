@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class GasParticle extends Particle{
-    private final Point2D velocity;
+    private Point2D velocity;
     private int collisionCounter;
 
     public GasParticle(double xPosition, double yPosition, double direction, int id, double mass) {
@@ -40,6 +40,10 @@ public class GasParticle extends Particle{
                 "%d %f %f %f %f %f",
                 this.getId(), this.point.getX(), this.point.getY(), this.getVx(), this.getVy(), this.mass
         );
+    }
+
+    public void setVelocity(Point2D newVelocity){
+        this.velocity = newVelocity;
     }
     public int getCollisionCounter() {
         return collisionCounter;

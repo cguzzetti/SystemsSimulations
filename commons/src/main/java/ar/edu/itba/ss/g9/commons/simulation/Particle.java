@@ -153,4 +153,8 @@ public class Particle {
     public double getMass() {
         return mass;
     }
+
+    public void setPosition(Point2D newPosition){
+        this.point = newPosition;
+    }
 }
