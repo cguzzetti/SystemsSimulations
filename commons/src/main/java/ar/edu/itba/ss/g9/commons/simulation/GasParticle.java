@@ -132,12 +132,12 @@ public class GasParticle extends Particle{
     public List<Collision> calculateParticleNextCollision(Collection<GasParticle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls, double timeSoFar) {
         List<Collision> particleNextCollisions = new LinkedList<>();
 
-//        // Search for collisions with other particles
-//        for(GasParticle p: particles) {
-//            if(!this.equals(p)) {
-//                this.willCollideWith(p, timeSoFar).ifPresent(particleNextCollisions::add);
-//            }
-//        }
+        // Search for collisions with other particles
+        for(GasParticle p: particles) {
+            if(!this.equals(p)) {
+                this.willCollideWith(p, timeSoFar).ifPresent(particleNextCollisions::add);
+            }
+        }
 
         // Search with collisions with walls
         for(Point2D[] verticalWall: verticalWalls)

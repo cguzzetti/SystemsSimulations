@@ -24,16 +24,6 @@ public class ParticleCollision implements Collision {
 
     @Override
     public void updateVelocity() {
-        final Point2D updatedPositionP1 = new Point2D(
-                this.particle1.getX() + this.particle1.getVx() * time,
-                this.particle1.getY() + this.particle1.getVy() * time
-        );
-
-        final Point2D updatedPositionP2 = new Point2D(
-                this.particle2.getX() + this.particle2.getVx() * time,
-                this.particle2.getY() + this.particle2.getVy() * time
-        );
-
         double sigma = this.particle1.getRadius() + this.particle2.getRadius();
         double m1 = this.particle1.getMass();
         double m2 = this.particle2.getMass();
@@ -41,7 +31,7 @@ public class ParticleCollision implements Collision {
                 this.particle2.getVx() - this.particle1.getVx(),
                 this.particle2.getVy() - this.particle1.getVy()
         );
-        final Point2D deltaR = updatedPositionP2.subtract(updatedPositionP1);
+        final Point2D deltaR = this.particle2.getPoint().subtract(this.particle1.getPoint());
         double deltaVxR = deltaV.dotProduct(deltaR);
         double J = 2 * m1 * m2 * deltaVxR / (sigma * (m1 + m2));
 
@@ -58,13 +48,8 @@ public class ParticleCollision implements Collision {
 
         Point2D vP2 = v2.subtract(jVector.multiply((double) 1/particle2.getMass()));
 
-        // TODO: position must not be updated in this method, only velocity
-        //this.particle1.setPosition(updatedPositionP1);
         this.particle1.setVelocity(vP1);
-        //this.particle2.setPosition(updatedPositionP2);
         this.particle2.setVelocity(vP2);
-
-
     }
 
     public Particle getParticle1() {
@@ -91,5 +76,16 @@ public class ParticleCollision implements Collision {
     @Override
     public double getTime() {
         return this.time;
+    }
+
+    @Override
+    public String toString() {
+        return "ParticleCollision{" +
+                ", time=" + time +
+                ", particle1=" + particle1 +
+                ", particle2=" + particle2 +
+                ", collisionCounterP1=" + collisionCounterP1 +
+                ", collisionCounterP2=" + collisionCounterP2 +
+                '}';
     }
 }
