@@ -18,7 +18,7 @@ public class GasParticle extends Particle{
     }
 
     public GasParticle(double xPosition, double yPosition, double Vx, double Vy, int id, double mass){
-        super(id, xPosition, yPosition, 0.015, 0.01, mass);
+        super(id, xPosition, yPosition, 0.0015, 0.01, mass);
         this.velocity = new Point2D(Vx, Vy);
         this.collisionCounter = 0;
     }
@@ -112,25 +112,33 @@ public class GasParticle extends Particle{
         if(isVertical) {
             origin = this.getX();
             velocity = this.getVx();
-            wallPosition = velocity > 0? wallEnd.getX():wallStart.getX();
+            wallPosition = wallStart.getX();
         }
         else {
             origin = this.getY();
             velocity = this.getVy();
-            wallPosition = velocity > 0? wallEnd.getY():wallStart.getY();
+            wallPosition = wallStart.getY();
         }
 
-//        System.out.println("id="+this.id);
-//        System.out.println("wall position: "+wallPosition);
-//        System.out.println("velocity: "+velocity);
-//        System.out.println("origin: "+origin);
-//        System.out.println("isVertical: "+isVertical);
+
 
         double deltaT = (wallPosition + velocity > 0? -1:1 * this.getRadius() - origin)/velocity;
-//        System.out.println(deltaT);
+
+        //if((wallEnd.getY() == 0.05 && wallStart.getY() == 0.05) || (wallStart.getX() == 0.05 && wallEnd.getY() ==0.05)) {
+        if(wallPosition == 0.05) {
+            System.out.println("id=" + this.id);
+            System.out.println("wall position: " + wallPosition);
+            System.out.println("velocity: " + velocity);
+            System.out.println("origin: " + origin);
+            System.out.println("isVertical: " + isVertical);
+            if(deltaT>0)
+                System.out.println(deltaT);
+        }
 
         if(deltaT < 0)
             return Optional.empty();
+
+        System.out.println(wallStart +", "+wallEnd);
 
         // TODO: calculate pressure?
         return Optional.of(new WallCollision(this, deltaT + timeSoFar, isVertical));

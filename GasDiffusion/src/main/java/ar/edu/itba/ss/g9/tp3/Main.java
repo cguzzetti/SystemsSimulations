@@ -55,7 +55,7 @@ public class Main {
             System.exit(1);
         }
 
-        boolean readingFromFile = true;
+        boolean readingFromFile = false;
         Set<GasParticle> particles;
         if(!readingFromFile) {
             particles = ParticleGeneration.generateGasParticles(

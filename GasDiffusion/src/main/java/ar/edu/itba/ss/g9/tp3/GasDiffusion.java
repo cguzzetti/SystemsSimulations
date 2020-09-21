@@ -3,6 +3,7 @@ package ar.edu.itba.ss.g9.tp3;
 import ar.edu.itba.ss.g9.commons.simulation.*;
 
 
+import com.sun.scenario.effect.impl.state.GaussianShadowState;
 import javafx.geometry.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,8 @@ public class GasDiffusion {
         };
         this.verticalWalls = new Point2D[][]{
                 {Point2D.ZERO, new Point2D(0, config.getHeight())},
-                {new Point2D(config.getWidth() / 2, 0), new Point2D(config.getWidth() / 2, config.getHeight())},// / 2 - config.getPartitionLen() / 2)},
+                {new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
+                //{new Point2D(config.getWidth() / 2, 0), new Point2D(config.getWidth() / 2, config.getHeight() / 2 - config.getPartitionLen() / 2)},
                 //{new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2), new Point2D(config.getWidth() / 2, config.getHeight())},
                 //{new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
         };
@@ -47,11 +49,22 @@ public class GasDiffusion {
     }
 
     public void simulate(GasDiffusionFileParser parser){
+        Set<GasParticle> wallLimitsParticles = new HashSet<>();
+        wallLimitsParticles.add(new GasParticle(horizontalWalls[0][0].getX(), horizontalWalls[0][0].getY(),0,0,-1,1));
+        wallLimitsParticles.add(new GasParticle(horizontalWalls[0][1].getX(), horizontalWalls[0][1].getY(),0,0,-1,1));
+        wallLimitsParticles.add(new GasParticle(horizontalWalls[1][0].getX(), horizontalWalls[1][0].getY(),0,0,-1,1));
+        wallLimitsParticles.add(new GasParticle(horizontalWalls[1][1].getX(), horizontalWalls[1][1].getY(),0,0,-1,1));
+
+
         int iteration = 0;
         calculateCollisions(this.particles, currentTime);
         if(collisions.isEmpty()) return;
 
-        parser.writeStateToOutput(particles, iteration++);
+
+        Set<GasParticle> allParticles = new HashSet<>();
+        allParticles.addAll(wallLimitsParticles);
+        allParticles.addAll(particles);
+        parser.writeStateToOutput(allParticles, iteration++);
 
         // TODO: EndCondition won't be time but fp
         while(currentTime < 1000){
@@ -77,10 +90,10 @@ public class GasDiffusion {
             collision.updateVelocity(); // Update velocity
             calculateCollisions(particlesInCollision, currentTime); // Determine future collisions // TODO: has to consider time until now
 
-
-
-            //if(collision instanceof ParticleCollision)
-            parser.writeStateToOutput(particles, iteration);
+            allParticles.clear();
+            allParticles.addAll(wallLimitsParticles);
+            allParticles.addAll(particles);
+            parser.writeStateToOutput(allParticles, iteration);
 
             // TODO: time won't be the driver of the main loop
             currentTime += deltaT;
