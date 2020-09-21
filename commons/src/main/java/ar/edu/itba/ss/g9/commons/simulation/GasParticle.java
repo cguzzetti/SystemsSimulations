@@ -122,7 +122,7 @@ public class GasParticle extends Particle{
 
 
 
-        double deltaT = (wallPosition + velocity > 0? -1:1 * this.getRadius() - origin)/velocity;
+        double deltaT = (wallPosition + (velocity > 0? -1:1) * this.getRadius() - origin)/velocity;
 
         //if((wallEnd.getY() == 0.05 && wallStart.getY() == 0.05) || (wallStart.getX() == 0.05 && wallEnd.getY() ==0.05)) {
         if(wallPosition == 0.05) {
@@ -131,7 +131,7 @@ public class GasParticle extends Particle{
             System.out.println("velocity: " + velocity);
             System.out.println("origin: " + origin);
             System.out.println("isVertical: " + isVertical);
-            if(deltaT>0)
+//            if(deltaT>0)
                 System.out.println(deltaT);
         }
 
