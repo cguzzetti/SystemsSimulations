@@ -1,8 +1,6 @@
 package ar.edu.itba.ss.g9.tp3;
 
-import ar.edu.itba.ss.g9.commons.simulation.Collision;
-import ar.edu.itba.ss.g9.commons.simulation.GasParticle;
-import ar.edu.itba.ss.g9.commons.simulation.Particle;
+import ar.edu.itba.ss.g9.commons.simulation.*;
 
 
 import javafx.geometry.Point2D;
@@ -37,16 +35,18 @@ public class GasDiffusion {
         this.verticalWalls = new Point2D[][]{
                 {Point2D.ZERO, new Point2D(0, config.getHeight())},
                 {new Point2D(config.getWidth() / 2, 0), new Point2D(config.getWidth() / 2, config.getHeight() / 2 - config.getPartitionLen() / 2)},
-                {new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2),
-                        new Point2D(config.getWidth() / 2, config.getHeight())},
+                {new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2), new Point2D(config.getWidth() / 2, config.getHeight())},
                 {new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
         };
     }
 
     public void simulate(GasDiffusionFileParser parser){
-        int time = 0;
+        double time = 0;
+        int iteration = 0;
         calculateCollisions(this.particles);
         if(collisions.isEmpty()) return;
+
+        parser.writeStateToOutput(particles, iteration++);
 
         // TODO: EndCondition won't be time but fp
         while(time < 1000){
@@ -56,19 +56,24 @@ public class GasDiffusion {
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(maybeCollision.isEmpty()) continue;
             Collision collision = maybeCollision.get();
+            System.out.println(collision);
 
-            advanceParticles(collision.getTime());
-            parser.writeStateToOutput(particles, time);
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
+            double deltaT = collision.getTime() - time;
 
             // For particles involved in current collision:
             collision.updateVelocity(); // Update velocity
-            calculateCollisions(particlesInCollision); // Determine future collisions
+            //calculateCollisions(particlesInCollision); // Determine future collisions // TODO: has to consider time until now
             particlesInCollision.forEach(GasParticle::incrementCollisionCounter); // Increase collision counter
+            advanceParticles(deltaT);
+
+            //if(collision instanceof ParticleCollision)
+            parser.writeStateToOutput(particles, iteration);
 
             // TODO: time won't be the driver of the main loop
-            time+=1;
+            time += deltaT;
+            iteration++;
         }
 
         parser.finish();

@@ -58,9 +58,10 @@ public class ParticleCollision implements Collision {
 
         Point2D vP2 = v2.subtract(jVector.multiply((double) 1/particle2.getMass()));
 
-        this.particle1.setPosition(updatedPositionP1);
+        // TODO: position must not be updated in this method, only velocity
+        //this.particle1.setPosition(updatedPositionP1);
         this.particle1.setVelocity(vP1);
-        this.particle2.setPosition(updatedPositionP2);
+        //this.particle2.setPosition(updatedPositionP2);
         this.particle2.setVelocity(vP2);
 
 

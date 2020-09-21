@@ -2,10 +2,7 @@ package ar.edu.itba.ss.g9.commons.simulation;
 
 import javafx.geometry.Point2D;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class GasParticle extends Particle{
     private Point2D velocity;
@@ -102,11 +99,11 @@ public class GasParticle extends Particle{
 
         Point2D wallStart = wall[0];
         Point2D wallEnd = wall[1];
-        boolean vertical;
+        boolean isVertical;
         double origin, wallPosition, velocity;
-        vertical = wallStart.getX() == wallEnd.getX();
+        isVertical = wallStart.getX() == wallEnd.getX();
 
-        if(vertical) {
+        if(isVertical) {
             origin = this.getY();
             velocity = this.getVy();
             wallPosition = velocity > 0? wallEnd.getY():wallStart.getY();
@@ -123,18 +120,21 @@ public class GasParticle extends Particle{
             return Optional.empty();
 
         // TODO: calculate pressure?
-        return Optional.of(new WallCollision(this, deltaT, vertical));
+        System.out.println(Arrays.toString(wall));
+        System.out.println("id="+this.id);
+        return Optional.of(new WallCollision(this, deltaT, isVertical));
     }
 
     public List<Collision> calculateParticleNextCollision(Collection<GasParticle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls) {
         List<Collision> particleNextCollisions = new LinkedList<>();
 
-        // Search for collisions with other particles
-        for(GasParticle p: particles) {
-            if(!this.equals(p)) {
-                this.willCollideWith(p).ifPresent(particleNextCollisions::add);
-            }
-        }
+        // TODO: uncomment when wall collisions work
+//        // Search for collisions with other particles
+//        for(GasParticle p: particles) {
+//            if(!this.equals(p)) {
+//                this.willCollideWith(p).ifPresent(particleNextCollisions::add);
+//            }
+//        }
 
         // Search with collisions with walls
         for(Point2D[] verticalWall: verticalWalls)

@@ -16,7 +16,7 @@ public class GasDifussionConfig {
         this.inputFileName = inputName;
         this.outputFileName = outputName;
         this.width = 0.24;
-        this.height = 0.9;
+        this.height = 0.09;
         this.partitionLen = 0.01;
     }
     public static GasDifussionConfig parseArguments(String[] args, Options options) throws ParseException {

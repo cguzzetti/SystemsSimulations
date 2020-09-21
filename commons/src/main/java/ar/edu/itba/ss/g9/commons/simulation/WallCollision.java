@@ -23,9 +23,9 @@ public class WallCollision implements Collision {
     public void updateVelocity() {
         Point2D newVelocity;
         if(isVertical)
-            newVelocity = new Point2D(particle.getVx(), -particle.getVy());
-        else
             newVelocity = new Point2D(-particle.getVx(), particle.getVy());
+        else
+            newVelocity = new Point2D(particle.getVx(), -particle.getVy());
 
         this.particle.setVelocity(newVelocity);
     }
@@ -43,5 +43,15 @@ public class WallCollision implements Collision {
     @Override
     public double getTime() {
         return this.time;
+    }
+
+    @Override
+    public String toString() {
+        return "WallCollision{" +
+                "time=" + time +
+                ", particle=" + particle +
+                ", collisionCounter=" + collisionCounter +
+                ", isVertical=" + isVertical +
+                '}';
     }
 }
