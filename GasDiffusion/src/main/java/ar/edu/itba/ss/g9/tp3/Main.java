@@ -55,7 +55,7 @@ public class Main {
             System.exit(1);
         }
 
-        boolean readingFromFile = false;
+        boolean readingFromFile = true;
         Set<GasParticle> particles;
         if(!readingFromFile) {
             particles = ParticleGeneration.generateGasParticles(
@@ -67,13 +67,9 @@ public class Main {
         }else {
             particles = parser.readParticlesFromFile();
         }
-
-        System.out.println("Hello");
         particles.forEach(System.out::println);
 
-
         GasDiffusion gas = new GasDiffusion(config, particles);
-
 
         gas.simulate(parser);
    }

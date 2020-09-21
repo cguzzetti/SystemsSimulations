@@ -59,10 +59,8 @@ public class GasDiffusionFileParser extends FileParser {
     }
 
     public Set<GasParticle> readParticlesFromFile(){
-        System.out.println("asdasda");
         Set<GasParticle> particles = new HashSet<>();
         this.inputReader.lines().forEach( line -> {
-            System.out.println("asdasdadq2131232131");
             String[] myLine = line.split(" ");
             particles.add(new GasParticle(
                     Double.parseDouble(myLine[1]), Double.parseDouble(myLine[2]), Double.parseDouble(myLine[3]),

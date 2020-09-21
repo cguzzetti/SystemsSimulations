@@ -49,6 +49,7 @@ public class GasDiffusion {
     }
 
     public void simulate(GasDiffusionFileParser parser){
+        // Wall particles
         Set<GasParticle> wallLimitsParticles = new HashSet<>();
         wallLimitsParticles.add(new GasParticle(horizontalWalls[0][0].getX(), horizontalWalls[0][0].getY(),0,0,-1,1));
         wallLimitsParticles.add(new GasParticle(horizontalWalls[0][1].getX(), horizontalWalls[0][1].getY(),0,0,-1,1));
@@ -61,9 +62,11 @@ public class GasDiffusion {
         if(collisions.isEmpty()) return;
 
 
+        // Wall particles
         Set<GasParticle> allParticles = new HashSet<>();
         allParticles.addAll(wallLimitsParticles);
         allParticles.addAll(particles);
+
         parser.writeStateToOutput(allParticles, iteration++);
 
         // TODO: EndCondition won't be time but fp
@@ -82,21 +85,27 @@ public class GasDiffusion {
 
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
+
+            // Time calculation
+            // * We need deltaT in order to advance all particles
+            // * We need to update the current time before
+            //   calculating future collisions of particles
+            //   involved in current collision
             double deltaT = collision.getTime() - currentTime;
+            currentTime += deltaT;
 
-            // For particles involved in current collision:
-            particlesInCollision.forEach(GasParticle::incrementCollisionCounter); // Increase collision counter
-            advanceParticles(deltaT); // All particles
-            collision.updateVelocity(); // Update velocity
-            calculateCollisions(particlesInCollision, currentTime); // Determine future collisions // TODO: has to consider time until now
+            particlesInCollision.forEach(GasParticle::incrementCollisionCounter); // Increase collision counter for particles involved in current collision
+            advanceParticles(deltaT); // Advance all particles
+            collision.updateVelocity(); // Update velocity of particles involved in current collision
+            calculateCollisions(particlesInCollision, currentTime); // Determine future collisions of particles involved in current collision
 
+
+            //Wall particles
             allParticles.clear();
             allParticles.addAll(wallLimitsParticles);
             allParticles.addAll(particles);
             parser.writeStateToOutput(allParticles, iteration);
 
-            // TODO: time won't be the driver of the main loop
-            currentTime += deltaT;
             iteration++;
         }
 
@@ -104,7 +113,7 @@ public class GasDiffusion {
 
     }
 
-    // Calculates te next collision for all particles
+    // Calculates the next collision for all particles
      private void calculateCollisions(Set<GasParticle> particles, double timeSoFar) {
         for(GasParticle p: particles) {
             this.collisions.addAll(p.calculateParticleNextCollision(this.particles, this.verticalWalls, this.horizontalWalls, timeSoFar));

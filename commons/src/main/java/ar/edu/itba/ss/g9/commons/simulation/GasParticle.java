@@ -96,7 +96,7 @@ public class GasParticle extends Particle{
         if(deltaT == Double.POSITIVE_INFINITY)
             return Optional.empty();
 
-        return Optional.of(new ParticleCollision(this, particle, deltaT));
+        return Optional.of(new ParticleCollision(this, particle, deltaT + timeSoFar));
     }
 
     private Optional<Collision> willCollideWithWalls(Point2D[] wall, double timeSoFar) {
@@ -120,25 +120,10 @@ public class GasParticle extends Particle{
             wallPosition = wallStart.getY();
         }
 
-
-
         double deltaT = (wallPosition + (velocity > 0? -1:1) * this.getRadius() - origin)/velocity;
-
-        //if((wallEnd.getY() == 0.05 && wallStart.getY() == 0.05) || (wallStart.getX() == 0.05 && wallEnd.getY() ==0.05)) {
-        if(wallPosition == 0.05) {
-            System.out.println("id=" + this.id);
-            System.out.println("wall position: " + wallPosition);
-            System.out.println("velocity: " + velocity);
-            System.out.println("origin: " + origin);
-            System.out.println("isVertical: " + isVertical);
-//            if(deltaT>0)
-                System.out.println(deltaT);
-        }
 
         if(deltaT < 0)
             return Optional.empty();
-
-        System.out.println(wallStart +", "+wallEnd);
 
         // TODO: calculate pressure?
         return Optional.of(new WallCollision(this, deltaT + timeSoFar, isVertical));
@@ -147,7 +132,6 @@ public class GasParticle extends Particle{
     public List<Collision> calculateParticleNextCollision(Collection<GasParticle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls, double timeSoFar) {
         List<Collision> particleNextCollisions = new LinkedList<>();
 
-        // TODO: uncomment when wall collisions work
 //        // Search for collisions with other particles
 //        for(GasParticle p: particles) {
 //            if(!this.equals(p)) {
