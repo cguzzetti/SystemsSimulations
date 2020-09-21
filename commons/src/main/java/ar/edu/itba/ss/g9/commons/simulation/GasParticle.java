@@ -17,6 +17,12 @@ public class GasParticle extends Particle{
         this.collisionCounter = 0;
     }
 
+    public GasParticle(double xPosition, double yPosition, double Vx, double Vy, int id, double mass){
+        super(id, xPosition, yPosition, 0.015, 0.01, mass);
+        this.velocity = new Point2D(Vx, Vy);
+        this.collisionCounter = 0;
+    }
+
     public Point2D getVelocity() {
         return velocity;
     }
@@ -67,8 +73,8 @@ public class GasParticle extends Particle{
     }
 
     private double timeToCollideWith(GasParticle particle) {
-        Point2D deltaR = new Point2D(particle.getX() - this.getX(), particle.getY() - this.getY());
-        Point2D deltaV = new Point2D(particle.getVx() - this.getVx(), particle.getVy() - this.getVy());
+        Point2D deltaR = particle.getPoint().subtract(this.getPoint());
+        Point2D deltaV = particle.getVelocity().subtract(this.getVelocity());
         double deltaVdeltaR = deltaV.dotProduct(deltaR);
 
         if(deltaVdeltaR >= 0)
@@ -82,7 +88,7 @@ public class GasParticle extends Particle{
         if(d < 0)
             return Double.POSITIVE_INFINITY;
 
-        return  -(deltaVdeltaR+Math.sqrt(d))/deltaVdeltaV;
+        return  -(deltaVdeltaR + Math.sqrt(d)) / deltaVdeltaV;
     }
 
     private Optional<Collision> willCollideWith(GasParticle particle) {

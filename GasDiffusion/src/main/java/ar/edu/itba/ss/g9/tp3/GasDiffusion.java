@@ -4,9 +4,13 @@ import ar.edu.itba.ss.g9.commons.simulation.*;
 
 
 import javafx.geometry.Point2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 public class GasDiffusion {
+   // private static Logger logger = LoggerFactory.getLogger(GasDiffusionFileParser.class);
     private final int N;
     private final double height;
     private final double width;
@@ -15,6 +19,7 @@ public class GasDiffusion {
     private Set<GasParticle> particles;
     private Point2D[][] verticalWalls;
     private Point2D[][] horizontalWalls;
+    private double currentTime;
 
     public GasDiffusion(GasDifussionConfig config, Set<GasParticle> particles){
         this.N = config.getN();
@@ -38,10 +43,10 @@ public class GasDiffusion {
                 {new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2), new Point2D(config.getWidth() / 2, config.getHeight())},
                 {new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
         };
+        this.currentTime = 0.0;
     }
 
     public void simulate(GasDiffusionFileParser parser){
-        double time = 0;
         int iteration = 0;
         calculateCollisions(this.particles);
         if(collisions.isEmpty()) return;
@@ -49,10 +54,14 @@ public class GasDiffusion {
         parser.writeStateToOutput(particles, iteration++);
 
         // TODO: EndCondition won't be time but fp
-        while(time < 1000){
+        while(currentTime < 1000){
             double fp = calculateParticleFraction();
             // Get first valid collision
-            if(collisions.isEmpty()) break;
+            if(collisions.isEmpty()) {
+                //logger.error("No more collisions to show!");
+                System.out.printf("No more collisions to show! Exiting at t=%f\n", currentTime);
+                break;
+            }
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(maybeCollision.isEmpty()) continue;
             Collision collision = maybeCollision.get();
@@ -60,11 +69,11 @@ public class GasDiffusion {
 
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
-            double deltaT = collision.getTime() - time;
+            double deltaT = collision.getTime() - currentTime;
 
             // For particles involved in current collision:
             collision.updateVelocity(); // Update velocity
-            //calculateCollisions(particlesInCollision); // Determine future collisions // TODO: has to consider time until now
+            calculateCollisions(particlesInCollision); // Determine future collisions // TODO: has to consider time until now
             particlesInCollision.forEach(GasParticle::incrementCollisionCounter); // Increase collision counter
             advanceParticles(deltaT);
 
@@ -72,7 +81,7 @@ public class GasDiffusion {
             parser.writeStateToOutput(particles, iteration);
 
             // TODO: time won't be the driver of the main loop
-            time += deltaT;
+            currentTime += deltaT;
             iteration++;
         }
 
@@ -106,7 +115,7 @@ public class GasDiffusion {
             if(p. getX() < width/2)
                 particleCounterLeftSide++;
         }
-        return new Double(particleCounterLeftSide)/particles.size();
+        return (double) particleCounterLeftSide /particles.size();
     }
 
     public double getHeight() {

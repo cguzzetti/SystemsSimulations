@@ -10,9 +10,12 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+
+import static ar.edu.itba.ss.g9.tp3.GasDiffusionFileParser.getFilePath;
 
 public class Main {
     private static Logger logger = LoggerFactory.getLogger(Main.class);
@@ -42,24 +45,35 @@ public class Main {
         }
 
         System.out.println(config.toString());
-
-        Set<GasParticle> particles = ParticleGeneration.generateGasParticles(
-                config.getN(),
-                config.getHeight(),
-                config.getWidth()
-        );
-
-
-        GasDiffusion gas = new GasDiffusion(config, particles);
         GasDiffusionFileParser parser = null;
 
         try{
-            parser = new GasDiffusionFileParser(String.format("%s/%s", VISUALIZATION_PATH, config.getInputFileName()));
+            parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(config.getOutputFileName()));
         }catch (IOException ex){
             logger.error("There was an error while creating the FileParser. %s\n", ex.getMessage());
             ex.printStackTrace();
             System.exit(1);
         }
+
+        boolean readingFromFile = true;
+        Set<GasParticle> particles;
+        if(!readingFromFile) {
+            particles = ParticleGeneration.generateGasParticles(
+                    config.getN(),
+                    config.getHeight(),
+                    config.getWidth()
+            );
+            parser.saveInitialState(particles);
+        }else {
+            particles = parser.readParticlesFromFile();
+        }
+
+        System.out.println("Hello");
+        particles.forEach(System.out::println);
+
+
+        GasDiffusion gas = new GasDiffusion(config, particles);
+
 
         gas.simulate(parser);
    }
