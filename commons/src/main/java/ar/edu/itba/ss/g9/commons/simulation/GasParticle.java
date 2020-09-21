@@ -91,7 +91,7 @@ public class GasParticle extends Particle{
         return  -(deltaVdeltaR + Math.sqrt(d)) / deltaVdeltaV;
     }
 
-    private Optional<Collision> willCollideWith(GasParticle particle) {
+    private Optional<Collision> willCollideWith(GasParticle particle, double timeSoFar) {
         double deltaT = timeToCollideWith(particle);
         if(deltaT == Double.POSITIVE_INFINITY)
             return Optional.empty();
@@ -99,7 +99,7 @@ public class GasParticle extends Particle{
         return Optional.of(new ParticleCollision(this, particle, deltaT));
     }
 
-    private Optional<Collision> willCollideWithWalls(Point2D[] wall) {
+    private Optional<Collision> willCollideWithWalls(Point2D[] wall, double timeSoFar) {
         if(this.getVx() == 0 && this.getVy() == 0)
             return Optional.empty();
 
@@ -120,33 +120,38 @@ public class GasParticle extends Particle{
             wallPosition = velocity > 0? wallEnd.getY():wallStart.getY();
         }
 
+//        System.out.println("id="+this.id);
+//        System.out.println("wall position: "+wallPosition);
+//        System.out.println("velocity: "+velocity);
+//        System.out.println("origin: "+origin);
+//        System.out.println("isVertical: "+isVertical);
+
         double deltaT = (wallPosition + velocity > 0? -1:1 * this.getRadius() - origin)/velocity;
+//        System.out.println(deltaT);
 
         if(deltaT < 0)
             return Optional.empty();
 
         // TODO: calculate pressure?
-        System.out.println(Arrays.toString(wall));
-        System.out.println("id="+this.id);
-        return Optional.of(new WallCollision(this, deltaT, isVertical));
+        return Optional.of(new WallCollision(this, deltaT + timeSoFar, isVertical));
     }
 
-    public List<Collision> calculateParticleNextCollision(Collection<GasParticle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls) {
+    public List<Collision> calculateParticleNextCollision(Collection<GasParticle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls, double timeSoFar) {
         List<Collision> particleNextCollisions = new LinkedList<>();
 
         // TODO: uncomment when wall collisions work
 //        // Search for collisions with other particles
 //        for(GasParticle p: particles) {
 //            if(!this.equals(p)) {
-//                this.willCollideWith(p).ifPresent(particleNextCollisions::add);
+//                this.willCollideWith(p, timeSoFar).ifPresent(particleNextCollisions::add);
 //            }
 //        }
 
         // Search with collisions with walls
         for(Point2D[] verticalWall: verticalWalls)
-            this.willCollideWithWalls(verticalWall).ifPresent(particleNextCollisions::add);
+            this.willCollideWithWalls(verticalWall, timeSoFar).ifPresent(particleNextCollisions::add);
         for(Point2D[] horizontalWall: horizontalWalls)
-            this.willCollideWithWalls(horizontalWall).ifPresent(particleNextCollisions::add);
+            this.willCollideWithWalls(horizontalWall, timeSoFar).ifPresent(particleNextCollisions::add);
 
         return particleNextCollisions;
     }

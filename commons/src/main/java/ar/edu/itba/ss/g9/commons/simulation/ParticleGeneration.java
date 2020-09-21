@@ -20,12 +20,12 @@ public class ParticleGeneration {
 
     public static Set<GasParticle> generateGasParticles(int numberOfParticles, double height, double width){
         Set<GasParticle> particles = new HashSet<>(numberOfParticles);
-
+        double radius = 0.0015;
         int createdParticles = 0;
         while( createdParticles < numberOfParticles){
             ThreadLocalRandom rand = ThreadLocalRandom.current();
-            double x = rand.nextDouble(0, width/2); // We want to initialize on the left side of the box
-            double y = rand.nextDouble(0, height);
+            double x = rand.nextDouble(0 + radius, width/2 - radius); // We want to initialize on the left side of the box
+            double y = rand.nextDouble(0 + radius, height - radius);
             double direction = rand.nextDouble(-Math.PI, Math.PI);
             double mass = 1;
             GasParticle particle = new GasParticle(x, y, direction, createdParticles, mass);
