@@ -125,6 +125,14 @@ public class GasParticle extends Particle{
         if(deltaT < 0)
             return Optional.empty();
 
+        final Point2D newPosition = this.getPoint().add(this.velocity.multiply(deltaT));
+
+        // If vertical, check if it should go through the gap
+        if (isVertical) {
+            if (newPosition.getY() < wallStart.getY() || newPosition.getY() > wallEnd.getY()) {
+                return Optional.empty();
+            }
+        }
         // TODO: calculate pressure?
         return Optional.of(new WallCollision(this, deltaT + timeSoFar, isVertical));
     }
