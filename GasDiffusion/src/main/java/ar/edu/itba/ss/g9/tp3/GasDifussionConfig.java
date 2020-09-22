@@ -19,6 +19,7 @@ public class GasDifussionConfig {
         this.height = 0.09;
         this.partitionLen = 0.01;
     }
+
     public static GasDifussionConfig parseArguments(String[] args, Options options) throws ParseException {
         Option particleNum = new Option("N", "particleNum", true, "Number of particles");
         particleNum.setRequired(true);

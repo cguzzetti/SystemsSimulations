@@ -80,16 +80,16 @@ public class GasDiffusion {
         Double fp = calculateParticleFraction();
 
         while(fp - 0.5 > 0.0001){
+            metricsEngine.writeFP(1 - fp, System.currentTimeMillis()-simulationStart);
+
             if(collisions.isEmpty()) {
                 //logger.error("No more collisions to show!");
                 System.out.printf("No more collisions to show! Exiting at t=%f\n", currentTime);
                 break;
             }
+
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(maybeCollision.isEmpty()) continue;
-
-            // We only care about the FP if its a valid collision
-            metricsEngine.writeFP(1 - fp, System.currentTimeMillis()-simulationStart);
             Collision collision = maybeCollision.get();
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
@@ -113,11 +113,14 @@ public class GasDiffusion {
             allParticles.addAll(wallLimitsParticles);
             allParticles.addAll(particles);
             parser.writeStateToOutput(allParticles, iteration);
+
             fp = calculateParticleFraction();
+
             iteration++;
         }
 
         parser.finish();
+        metricsEngine.finalizeExperiment();
 
     }
 

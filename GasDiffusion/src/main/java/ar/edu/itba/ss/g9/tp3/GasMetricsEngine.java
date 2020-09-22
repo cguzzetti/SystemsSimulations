@@ -41,7 +41,7 @@ public class GasMetricsEngine {
     public void writeFP(double fp, long timeInMillis){
         try{
             this.writer.write(String.format(
-                    "%s %s\n", fp, timeInMillis/1000.0
+                    "%f %f\n", fp, timeInMillis/1000.0
             ));
         }catch (IOException ex){
             logger.error(String.format(
