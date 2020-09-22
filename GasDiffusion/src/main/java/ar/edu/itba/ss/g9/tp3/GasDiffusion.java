@@ -67,11 +67,11 @@ public class GasDiffusion {
         allParticles.addAll(particles);
 
         parser.writeStateToOutput(allParticles, iteration++);
-
-        // TODO: EndCondition won't be time but fp
-        while(currentTime < 1000){
-            double fp = calculateParticleFraction();
+        Double fp = calculateParticleFraction();
+        System.out.printf("CURRENT FP: %f", fp);
+        while(fp - 0.5 > 0.0001){
             // Get first valid collision
+            System.out.println(fp);
             if(collisions.isEmpty()) {
                 //logger.error("No more collisions to show!");
                 System.out.printf("No more collisions to show! Exiting at t=%f\n", currentTime);
@@ -80,8 +80,6 @@ public class GasDiffusion {
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(maybeCollision.isEmpty()) continue;
             Collision collision = maybeCollision.get();
-            System.out.println(collision);
-
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
 
@@ -104,7 +102,7 @@ public class GasDiffusion {
             allParticles.addAll(wallLimitsParticles);
             allParticles.addAll(particles);
             parser.writeStateToOutput(allParticles, iteration);
-
+            fp = calculateParticleFraction();
             iteration++;
         }
 
