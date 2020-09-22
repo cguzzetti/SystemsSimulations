@@ -8,7 +8,10 @@ import javafx.geometry.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.*;
+
+import static ar.edu.itba.ss.g9.tp3.GasDiffusionFileParser.getFilePath;
 
 public class GasDiffusion {
    // private static Logger logger = LoggerFactory.getLogger(GasDiffusionFileParser.class);
@@ -56,6 +59,13 @@ public class GasDiffusion {
         wallLimitsParticles.add(new GasParticle(horizontalWalls[1][1].getX(), horizontalWalls[1][1].getY(),0,0,-1,1));
 
 
+        GasMetricsEngine metricsEngine = new GasMetricsEngine(
+                ExperimentType.FP, getFilePath("fpExperiment.txt")
+        );
+
+        metricsEngine.writeIterationHeader();
+
+        long simulationStart = System.currentTimeMillis();
         int iteration = 0;
         calculateCollisions(this.particles, currentTime);
         if(collisions.isEmpty()) return;
@@ -68,10 +78,8 @@ public class GasDiffusion {
 
         parser.writeStateToOutput(allParticles, iteration++);
         Double fp = calculateParticleFraction();
-        System.out.printf("CURRENT FP: %f", fp);
+
         while(fp - 0.5 > 0.0001){
-            // Get first valid collision
-            System.out.println(fp);
             if(collisions.isEmpty()) {
                 //logger.error("No more collisions to show!");
                 System.out.printf("No more collisions to show! Exiting at t=%f\n", currentTime);
@@ -79,6 +87,9 @@ public class GasDiffusion {
             }
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(maybeCollision.isEmpty()) continue;
+
+            // We only care about the FP if its a valid collision
+            metricsEngine.writeFP(fp, System.currentTimeMillis()-simulationStart);
             Collision collision = maybeCollision.get();
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
