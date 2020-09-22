@@ -89,7 +89,7 @@ public class GasDiffusion {
             if(maybeCollision.isEmpty()) continue;
 
             // We only care about the FP if its a valid collision
-            metricsEngine.writeFP(fp, System.currentTimeMillis()-simulationStart);
+            metricsEngine.writeFP(1 - fp, System.currentTimeMillis()-simulationStart);
             Collision collision = maybeCollision.get();
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
