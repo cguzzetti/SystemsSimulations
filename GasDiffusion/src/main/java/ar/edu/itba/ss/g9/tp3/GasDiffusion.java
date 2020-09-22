@@ -40,10 +40,9 @@ public class GasDiffusion {
         };
         this.verticalWalls = new Point2D[][]{
                 {Point2D.ZERO, new Point2D(0, config.getHeight())},
+                {new Point2D(config.getWidth() / 2, 0), new Point2D(config.getWidth() / 2, config.getHeight() / 2 - config.getPartitionLen() / 2)},
+                {new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2), new Point2D(config.getWidth() / 2, config.getHeight())},
                 {new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
-                //{new Point2D(config.getWidth() / 2, 0), new Point2D(config.getWidth() / 2, config.getHeight() / 2 - config.getPartitionLen() / 2)},
-                //{new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2), new Point2D(config.getWidth() / 2, config.getHeight())},
-                //{new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
         };
         this.currentTime = 0.0;
     }
