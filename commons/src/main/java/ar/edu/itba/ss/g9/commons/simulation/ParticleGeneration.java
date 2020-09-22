@@ -29,11 +29,12 @@ public class ParticleGeneration {
             double direction = rand.nextDouble(-Math.PI, Math.PI);
             double mass = 1;
             GasParticle particle = new GasParticle(x, y, direction, createdParticles, mass);
-            if(particle.isValid(particles))
+            if(particle.isValid(particles)) {
                 particles.add(particle);
                 createdParticles++;
+            }
         }
-
+        System.out.println(particles.size());
         return particles;
     }
 }
