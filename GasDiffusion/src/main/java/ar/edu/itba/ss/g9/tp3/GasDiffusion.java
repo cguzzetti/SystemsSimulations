@@ -80,7 +80,6 @@ public class GasDiffusion {
         Double fp = calculateParticleFraction();
 
         while(fp - 0.5 > 0.0001){
-            metricsEngine.writeFP(1 - fp, System.currentTimeMillis()-simulationStart);
 
             if(collisions.isEmpty()) {
                 //logger.error("No more collisions to show!");
@@ -102,11 +101,12 @@ public class GasDiffusion {
             double deltaT = collision.getTime() - currentTime;
             currentTime += deltaT;
 
+            metricsEngine.writeFP(1 - fp, currentTime);
+
             particlesInCollision.forEach(GasParticle::incrementCollisionCounter); // Increase collision counter for particles involved in current collision
             advanceParticles(deltaT); // Advance all particles
             collision.updateVelocity(); // Update velocity of particles involved in current collision
             calculateCollisions(particlesInCollision, currentTime); // Determine future collisions of particles involved in current collision
-
 
             //Wall particles
             allParticles.clear();
@@ -121,6 +121,8 @@ public class GasDiffusion {
 
         parser.finish();
         metricsEngine.finalizeExperiment();
+
+        // Calculate mean(P*V) && Energia total del sistema (nRT)
 
     }
 
