@@ -3,7 +3,6 @@ package ar.edu.itba.ss.g9.tp3;
 import ar.edu.itba.ss.g9.commons.simulation.*;
 
 
-import com.sun.scenario.effect.impl.state.GaussianShadowState;
 import javafx.geometry.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,7 @@ public class GasDiffusion {
     private double currentTime;
     private static final double MAX_TIME = 100;
     private static final double BOLTZMANN = 1.38066e-23;
+    private GasMetricsEngine metricsEngineGAS;
 
     public GasDiffusion(GasDifussionConfig config, Set<GasParticle> particles){
         this.N = config.getN();
@@ -56,13 +56,17 @@ public class GasDiffusion {
         this.currentTime = 0.0;
     }
 
+    public void setMetricsEngineGAS(GasMetricsEngine metricsEngineGAS) {
+        this.metricsEngineGAS = metricsEngineGAS;
+    }
+
     public void simulate(GasDiffusionFileParser parser){
 
-        GasMetricsEngine metricsEngine = new GasMetricsEngine(
+        GasMetricsEngine metricsEngineFP = new GasMetricsEngine(
                 ExperimentType.FP, getFilePath("fpExperiment.txt")
         );
 
-        metricsEngine.writeIterationHeader();
+        metricsEngineFP.writeIterationHeader();
 
         double maxTime = 0;
         int iteration = 0;
@@ -100,7 +104,7 @@ public class GasDiffusion {
             double deltaT = collision.getTime() - currentTime;
             currentTime += deltaT;
 
-            metricsEngine.writeFP(1 - fp, currentTime);
+            metricsEngineFP.writeFP(1 - fp, currentTime);
 
             particlesInCollision.forEach(GasParticle::incrementCollisionCounter); // Increase collision counter for particles involved in current collision
             advanceParticles(deltaT); // Advance all particles
@@ -117,13 +121,19 @@ public class GasDiffusion {
         }
 
         parser.finish();
-        metricsEngine.finalizeExperiment();
+        metricsEngineFP.finalizeExperiment();
 
-        double totalEnergy = this.N * this.particlesMass * this.particlesSpeed * this.particlesSpeed /2;
-        double p = totalPressure/MAX_TIME;
-        System.out.println("P: "+ p);
-        System.out.println("Energy: "+ totalEnergy);
-        System.out.println("diff: "+ (totalEnergy-p));
+        if(metricsEngineGAS != null) {
+            System.out.println(this.particlesMass);
+            System.out.println(this.particlesSpeed);
+            double totalEnergy = this.N * this.particlesMass * this.particlesSpeed * this.particlesSpeed /2;
+            double p = totalPressure/MAX_TIME;
+            metricsEngineGAS.writeGas(p,totalEnergy);
+            System.out.println("P: "+ p);
+            System.out.println("Energy: "+ totalEnergy);
+            System.out.println("diff: "+ Math.abs(totalEnergy-p));
+            System.out.println("****************");
+        }
     }
 
     private double calculateTemperature() {

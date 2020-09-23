@@ -43,34 +43,77 @@ public class Main {
         }
 
         System.out.println(config.toString());
-        GasDiffusionFileParser parser = null;
 
-        try{
-            parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(config.getOutputFileName()));
-        }catch (IOException ex){
-            logger.error("There was an error while creating the FileParser. %s\n", ex.getMessage());
-            ex.printStackTrace();
-            System.exit(1);
-        }
-
-        boolean readingFromFile = false;
-        Set<GasParticle> particles;
-        if(!readingFromFile) {
-            particles = ParticleGeneration.generateGasParticles(
-                    config.getN(),
-                    config.getHeight(),
-                    config.getWidth(),
-                    config.getParticleRadius(),
-                    config.getParticleMass(),
-                    config.getparticleSpeed()
+        boolean gasExperiment = true;
+        if(gasExperiment) {
+            GasMetricsEngine metricsEngineGAS = new GasMetricsEngine(
+                    ExperimentType.GAS, getFilePath("gasExperiment.txt")
             );
-            parser.saveInitialState(particles);
-        }else {
-            particles = parser.readParticlesFromFile();
+
+            for(double speed = 0.01; speed < 0.05 ; speed += 0.005) {
+                GasDiffusionFileParser parser = null;
+                config.setParticleSpeed(speed);
+
+                try{
+                    parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(config.getOutputFileName()));
+                }catch (IOException ex){
+                    logger.error("There was an error while creating the FileParser. %s\n", ex.getMessage());
+                    ex.printStackTrace();
+                    System.exit(1);
+                }
+
+                boolean readingFromFile = false;
+                Set<GasParticle> particles;
+                if (!readingFromFile) {
+                    particles = ParticleGeneration.generateGasParticles(
+                            config.getN(),
+                            config.getHeight(),
+                            config.getWidth(),
+                            config.getParticleRadius(),
+                            config.getParticleMass(),
+                            config.getparticleSpeed()
+                    );
+                    parser.saveInitialState(particles);
+                } else {
+                    particles = parser.readParticlesFromFile();
+                }
+
+                GasDiffusion gas = new GasDiffusion(config, particles);
+                gas.setMetricsEngineGAS(metricsEngineGAS);
+                gas.simulate(parser);
+            }
+
+            metricsEngineGAS.finalizeExperiment();
         }
+        else {
+            GasDiffusionFileParser parser = null;
 
-        GasDiffusion gas = new GasDiffusion(config, particles);
+            try{
+                parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(config.getOutputFileName()));
+            }catch (IOException ex){
+                logger.error("There was an error while creating the FileParser. %s\n", ex.getMessage());
+                ex.printStackTrace();
+                System.exit(1);
+            }
 
-        gas.simulate(parser);
+            boolean readingFromFile = false;
+            Set<GasParticle> particles;
+            if (!readingFromFile) {
+                particles = ParticleGeneration.generateGasParticles(
+                        config.getN(),
+                        config.getHeight(),
+                        config.getWidth(),
+                        config.getParticleRadius(),
+                        config.getParticleMass(),
+                        config.getparticleSpeed()
+                );
+                parser.saveInitialState(particles);
+            } else {
+                particles = parser.readParticlesFromFile();
+            }
+
+            GasDiffusion gas = new GasDiffusion(config, particles);
+            gas.simulate(parser);
+        }
    }
 }

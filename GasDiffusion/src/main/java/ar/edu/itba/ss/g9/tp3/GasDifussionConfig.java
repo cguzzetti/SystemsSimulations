@@ -93,6 +93,10 @@ public class GasDifussionConfig {
         return particleSpeed;
     }
 
+    public void setParticleSpeed(double particleSpeed) {
+        this.particleSpeed = particleSpeed;
+    }
+
     public void setPartitionLen(double newLen){
         this.partitionLen = newLen;
     }

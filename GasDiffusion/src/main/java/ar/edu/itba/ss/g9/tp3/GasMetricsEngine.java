@@ -52,6 +52,20 @@ public class GasMetricsEngine {
         }
     }
 
+    public void writeGas(double pressure, double energy) {
+        try{
+            this.writer.write(String.format(
+                    "%f %f\n", pressure, energy
+            ));
+        }catch (IOException ex){
+            logger.error(String.format(
+                    "There was an error while writing GAS to experiment file (%s)",
+                    ex.getMessage()
+            ));
+            ex.printStackTrace();
+        }
+    }
+
     public void finalizeExperiment(){
         try {
             this.writer.close();
