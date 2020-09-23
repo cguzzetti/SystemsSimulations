@@ -12,11 +12,11 @@ public class ParticleCollisionTest {
     @Test
     public void collisionUpdatesVelocityCorrectlyTest(){
         GasParticle p1 = new GasParticle(
-                0, 0, 0, 1, 1
+                0, 0, 0, 1, 0.0015, 1, 0.01
         );
 
         GasParticle p2 = new GasParticle(
-                10, 0, Math.PI, 2, 1
+                10, 0, Math.PI, 2, 0.0015, 1, 0.01
         );
 
         ParticleCollision collision = new ParticleCollision(p1, p2, 500.15);

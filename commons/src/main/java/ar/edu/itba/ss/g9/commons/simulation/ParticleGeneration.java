@@ -18,23 +18,20 @@ public class ParticleGeneration {
         }, StringBuilder::append);
     }
 
-    public static Set<GasParticle> generateGasParticles(int numberOfParticles, double height, double width){
+    public static Set<GasParticle> generateGasParticles(int numberOfParticles, double height, double width, double particleRadius, double particleMass, double particleSpeed){
         Set<GasParticle> particles = new HashSet<>(numberOfParticles);
-        double radius = 0.0015;
         int createdParticles = 0;
         while( createdParticles < numberOfParticles){
             ThreadLocalRandom rand = ThreadLocalRandom.current();
-            double x = rand.nextDouble(0 + radius, width/2 - radius); // We want to initialize on the left side of the box
-            double y = rand.nextDouble(0 + radius, height - radius);
+            double x = rand.nextDouble(0 + particleRadius, width/2 - particleRadius); // We want to initialize on the left side of the box
+            double y = rand.nextDouble(0 + particleRadius, height - particleRadius);
             double direction = rand.nextDouble(-Math.PI, Math.PI);
-            double mass = 1;
-            GasParticle particle = new GasParticle(x, y, direction, createdParticles, mass);
+            GasParticle particle = new GasParticle(x, y, direction, createdParticles, particleRadius, particleMass, particleSpeed);
             if(particle.isValid(particles)) {
                 particles.add(particle);
                 createdParticles++;
             }
         }
-        System.out.println(particles.size());
         return particles;
     }
 }

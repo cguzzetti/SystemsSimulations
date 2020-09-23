@@ -64,7 +64,7 @@ public class GasDiffusionFileParser extends FileParser {
             String[] myLine = line.split(" ");
             particles.add(new GasParticle(
                     Double.parseDouble(myLine[1]), Double.parseDouble(myLine[2]), Double.parseDouble(myLine[3]),
-                    Double.parseDouble(myLine[4]), Integer.parseInt(myLine[0]), Double.parseDouble(myLine[5])
+                    Double.parseDouble(myLine[4]), Integer.parseInt(myLine[0]), Double.parseDouble(myLine[5]), Double.parseDouble(myLine[6]), Double.parseDouble(myLine[7])
             ));
         });
 

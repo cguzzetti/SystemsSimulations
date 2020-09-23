@@ -8,8 +8,8 @@ public class GasParticle extends Particle{
     private Point2D velocity;
     private int collisionCounter;
 
-    public GasParticle(double xPosition, double yPosition, double direction, int id, double mass) {
-        super(id, xPosition, yPosition, 0.0015, 0.01, mass);
+    public GasParticle(double xPosition, double yPosition, double direction, int id, double particleRadius, double particleMass, double particleSpeed) {
+        super(id, xPosition, yPosition, particleRadius, particleSpeed, particleMass);
         this.velocity = new Point2D(
                 this.speed*Math.cos(direction),
                 this.speed*Math.sin(direction)
@@ -17,8 +17,8 @@ public class GasParticle extends Particle{
         this.collisionCounter = 0;
     }
 
-    public GasParticle(double xPosition, double yPosition, double Vx, double Vy, int id, double mass){
-        super(id, xPosition, yPosition, 0.0015, 0.01, mass);
+    public GasParticle(double xPosition, double yPosition, double Vx, double Vy, int id, double particleRadius, double particleMass, double particleSpeed){
+        super(id, xPosition, yPosition, particleRadius, particleSpeed, particleMass);
         this.velocity = new Point2D(Vx, Vy);
         this.collisionCounter = 0;
     }
@@ -133,8 +133,8 @@ public class GasParticle extends Particle{
                 return Optional.empty();
             }
         }
-        // TODO: calculate pressure?
-        return Optional.of(new WallCollision(this, deltaT + timeSoFar, isVertical));
+
+        return Optional.of(new WallCollision(this, deltaT + timeSoFar, isVertical, wallEnd.distance(wallStart)));
     }
 
     public List<Collision> calculateParticleNextCollision(Collection<GasParticle> particles, Point2D[][] verticalWalls, Point2D[][] horizontalWalls, double timeSoFar) {

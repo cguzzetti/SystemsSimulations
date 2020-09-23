@@ -23,7 +23,11 @@ public class GasDiffusion {
     private Set<GasParticle> particles;
     private Point2D[][] verticalWalls;
     private Point2D[][] horizontalWalls;
+    private double particlesMass;
+    private double particlesSpeed;
     private double currentTime;
+    private static final double MAX_TIME = 100;
+    private static final double BOLTZMANN = 1.38066e-23;
 
     public GasDiffusion(GasDifussionConfig config, Set<GasParticle> particles){
         this.N = config.getN();
@@ -37,6 +41,8 @@ public class GasDiffusion {
             }
         });
         this.particles = particles;
+        this.particlesMass = config.getParticleMass();
+        this.particlesSpeed = config.getparticleSpeed();
         this.horizontalWalls = new Point2D[][]{
                 {Point2D.ZERO, new Point2D(config.getWidth(), 0)},
                 {new Point2D(0, config.getHeight()), new Point2D(config.getWidth(), config.getHeight())},
@@ -51,13 +57,6 @@ public class GasDiffusion {
     }
 
     public void simulate(GasDiffusionFileParser parser){
-        // Wall particles
-        Set<GasParticle> wallLimitsParticles = new HashSet<>();
-        wallLimitsParticles.add(new GasParticle(horizontalWalls[0][0].getX(), horizontalWalls[0][0].getY(),0,0,-1,1));
-        wallLimitsParticles.add(new GasParticle(horizontalWalls[0][1].getX(), horizontalWalls[0][1].getY(),0,0,-1,1));
-        wallLimitsParticles.add(new GasParticle(horizontalWalls[1][0].getX(), horizontalWalls[1][0].getY(),0,0,-1,1));
-        wallLimitsParticles.add(new GasParticle(horizontalWalls[1][1].getX(), horizontalWalls[1][1].getY(),0,0,-1,1));
-
 
         GasMetricsEngine metricsEngine = new GasMetricsEngine(
                 ExperimentType.FP, getFilePath("fpExperiment.txt")
@@ -65,22 +64,18 @@ public class GasDiffusion {
 
         metricsEngine.writeIterationHeader();
 
-        long simulationStart = System.currentTimeMillis();
+        double maxTime = 0;
         int iteration = 0;
+        double totalPressure = 0;
+
         calculateCollisions(this.particles, currentTime);
         if(collisions.isEmpty()) return;
 
+        parser.writeStateToOutput(particles, iteration++);
 
-        // Wall particles
-        Set<GasParticle> allParticles = new HashSet<>();
-        allParticles.addAll(wallLimitsParticles);
-        allParticles.addAll(particles);
+        double fp = calculateParticleFraction();
 
-        parser.writeStateToOutput(allParticles, iteration++);
-        Double fp = calculateParticleFraction();
-
-        while(fp - 0.5 > 0.0001){
-
+        while( !inEquilibrium(fp) || currentTime < maxTime ){
             if(collisions.isEmpty()) {
                 //logger.error("No more collisions to show!");
                 System.out.printf("No more collisions to show! Exiting at t=%f\n", currentTime);
@@ -90,6 +85,10 @@ public class GasDiffusion {
             Optional<Collision> maybeCollision = getCollisionIfValid(collisions.poll());
             if(maybeCollision.isEmpty()) continue;
             Collision collision = maybeCollision.get();
+
+            if(inEquilibrium(fp)) {
+                totalPressure += collision.getPressure();
+            }
 
             Set<GasParticle> particlesInCollision = collision.getParticles();
 
@@ -108,22 +107,34 @@ public class GasDiffusion {
             collision.updateVelocity(); // Update velocity of particles involved in current collision
             calculateCollisions(particlesInCollision, currentTime); // Determine future collisions of particles involved in current collision
 
-            //Wall particles
-            allParticles.clear();
-            allParticles.addAll(wallLimitsParticles);
-            allParticles.addAll(particles);
-            parser.writeStateToOutput(allParticles, iteration);
+            parser.writeStateToOutput(particles, iteration);
 
             fp = calculateParticleFraction();
-
+            if(inEquilibrium(fp) && maxTime == 0) {
+                maxTime = currentTime + MAX_TIME;
+            }
             iteration++;
         }
 
         parser.finish();
         metricsEngine.finalizeExperiment();
 
-        // Calculate mean(P*V) && Energia total del sistema (nRT)
+        double totalEnergy = this.N * this.particlesMass * this.particlesSpeed * this.particlesSpeed /2;
+        double p = totalPressure/MAX_TIME;
+        System.out.println("P: "+ p);
+        System.out.println("Energy: "+ totalEnergy);
+        System.out.println("diff: "+ (totalEnergy-p));
+    }
 
+    private double calculateTemperature() {
+        return this.particles.stream()
+                .mapToDouble(p -> p.getMass() * p.getVelocity().magnitude() * p.getVelocity().magnitude())
+                .average()
+                .getAsDouble()/(2*BOLTZMANN);
+    }
+
+    private boolean inEquilibrium(double fp) {
+        return fp - 0.5 < 0.0001;
     }
 
     // Calculates the next collision for all particles

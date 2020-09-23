@@ -11,12 +11,14 @@ public class WallCollision implements Collision {
     private GasParticle particle;
     private int collisionCounter;
     private final boolean isVertical;
+    private double wallLength;
 
-    public WallCollision(GasParticle particle, double time, boolean isVertical) {
+    public WallCollision(GasParticle particle, double time, boolean isVertical, double wallLength) {
         this.particle = particle;
         this.time = time;
         this.collisionCounter = particle.getCollisionCounter();
         this.isVertical = isVertical;
+        this.wallLength = wallLength;
     }
 
     @Override
@@ -43,6 +45,11 @@ public class WallCollision implements Collision {
     @Override
     public double getTime() {
         return this.time;
+    }
+
+    @Override
+    public double getPressure() {
+        return (2 * particle.getMass() * Math.abs(isVertical? particle.getVelocity().getX():particle.getVelocity().getX())) / wallLength;
     }
 
     @Override

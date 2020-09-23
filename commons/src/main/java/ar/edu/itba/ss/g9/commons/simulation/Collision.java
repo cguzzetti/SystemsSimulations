@@ -11,4 +11,6 @@ public interface Collision {
     Set<GasParticle> getParticles();
 
     double getTime();
+
+    double getPressure();
 }

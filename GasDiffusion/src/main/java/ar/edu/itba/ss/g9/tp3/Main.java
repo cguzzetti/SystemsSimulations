@@ -59,13 +59,15 @@ public class Main {
             particles = ParticleGeneration.generateGasParticles(
                     config.getN(),
                     config.getHeight(),
-                    config.getWidth()
+                    config.getWidth(),
+                    config.getParticleRadius(),
+                    config.getParticleMass(),
+                    config.getparticleSpeed()
             );
             parser.saveInitialState(particles);
         }else {
             particles = parser.readParticlesFromFile();
         }
-        particles.forEach(System.out::println);
 
         GasDiffusion gas = new GasDiffusion(config, particles);
 

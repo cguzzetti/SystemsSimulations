@@ -10,6 +10,9 @@ public class GasDifussionConfig {
     private final Double width;
     private final Double height;
     private Double partitionLen;
+    private double particleRadius;
+    private double particleMass;
+    private double particleSpeed;
 
     public GasDifussionConfig(String N, String inputName, String outputName){
         this.N = Integer.parseInt(N);
@@ -18,6 +21,9 @@ public class GasDifussionConfig {
         this.width = 0.24;
         this.height = 0.09;
         this.partitionLen = 0.01;
+        this.particleMass = 1;
+        this.particleRadius = 0.0015;
+        this.particleSpeed = 0.01;
     }
 
     public static GasDifussionConfig parseArguments(String[] args, Options options) throws ParseException {
@@ -73,6 +79,18 @@ public class GasDifussionConfig {
 
     public Double getPartitionLen() {
         return partitionLen;
+    }
+
+    public double getParticleMass() {
+        return particleMass;
+    }
+
+    public double getParticleRadius() {
+        return particleRadius;
+    }
+
+    public double getparticleSpeed() {
+        return particleSpeed;
     }
 
     public void setPartitionLen(double newLen){

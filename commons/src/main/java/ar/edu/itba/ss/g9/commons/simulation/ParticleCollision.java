@@ -79,6 +79,11 @@ public class ParticleCollision implements Collision {
     }
 
     @Override
+    public double getPressure() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
         return "ParticleCollision{" +
                 ", time=" + time +
