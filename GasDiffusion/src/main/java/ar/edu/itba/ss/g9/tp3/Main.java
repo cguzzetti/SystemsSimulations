@@ -50,7 +50,7 @@ public class Main {
                     ExperimentType.GAS, getFilePath("gasExperiment.txt")
             );
 
-            for(double speed = 0.01; speed < 0.05 ; speed += 0.005) {
+            for(double speed = 0.01; speed < 0.03 ; speed += 0.002) {
                 GasDiffusionFileParser parser = null;
                 config.setParticleSpeed(speed);
 

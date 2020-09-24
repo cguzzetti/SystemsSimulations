@@ -26,7 +26,12 @@ def plot_pressure():
         #std[index] = float(line[2])
         index+=1
 
-    plt.plot(x,y)
+    #plt.plot(x,y)
+
+    p = np.polyfit(x, y, 1)
+    yfit = np.polyval(p, x)
+    plt.scatter(x, y, label='data')
+    plt.plot(x, yfit, label='regr')
     #plt.errorbar(x_eta, y_vp, yerr=std,fmt='-o', label ='N ='+str(N))
 
     #plt.legend(loc ="upper right")

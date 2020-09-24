@@ -1,11 +1,8 @@
 package ar.edu.itba.ss.g9.tp3;
 
 import ar.edu.itba.ss.g9.commons.simulation.*;
-
-
 import javafx.geometry.Point2D;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -25,7 +22,7 @@ public class GasDiffusion {
     private double particlesMass;
     private double particlesSpeed;
     private double currentTime;
-    private static final double MAX_TIME = 100;
+    private static final double MAX_TIME = 10;
     private static final double BOLTZMANN = 1.38066e-23;
     private GasMetricsEngine metricsEngineGAS;
 
@@ -144,7 +141,7 @@ public class GasDiffusion {
     }
 
     private boolean inEquilibrium(double fp) {
-        return fp - 0.5 < 0.0001;
+        return fp - 0.5 < 0.01;
     }
 
     // Calculates the next collision for all particles

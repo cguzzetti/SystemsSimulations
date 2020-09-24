@@ -55,7 +55,7 @@ public class GasMetricsEngine {
     public void writeGas(double pressure, double energy) {
         try{
             this.writer.write(String.format(
-                    "%f %f\n", pressure, energy
+                    "%f %f\n", energy, pressure
             ));
         }catch (IOException ex){
             logger.error(String.format(

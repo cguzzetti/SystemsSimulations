@@ -1,5 +1,8 @@
 package ar.edu.itba.ss.g9.commons.simulation;
 
+
+
+
 import javafx.geometry.Point2D;
 
 import java.util.*;

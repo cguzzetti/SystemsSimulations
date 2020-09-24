@@ -49,7 +49,7 @@ public class WallCollision implements Collision {
 
     @Override
     public double getPressure() {
-        return (2 * particle.getMass() * Math.abs(isVertical? particle.getVelocity().getX():particle.getVelocity().getX())) / wallLength;
+        return (2 * particle.getMass() * particle.getVelocity().magnitude()) / wallLength;
     }
 
     @Override
