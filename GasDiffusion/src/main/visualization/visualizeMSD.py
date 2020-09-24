@@ -44,7 +44,7 @@ def find_x_y(i):
                 aux = [x, values]
                 x = np.add.reduce(aux)  # Vector sum x + values
 
-        x = x / N
+        x = x / x.size
 
         return x, y
 
