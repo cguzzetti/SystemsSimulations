@@ -52,8 +52,7 @@ public class WallCollision implements Collision {
     public double getPressure() {
         if(isVertical)
             return 0;
-        System.out.println(wallLength);
-        return (2 * particle.getMass() * Math.abs(particle.getVelocity().getY())) / (wallLength);
+        return (2 * particle.getMass() * Math.abs(particle.getVelocity().getY()));
     }
 
     @Override

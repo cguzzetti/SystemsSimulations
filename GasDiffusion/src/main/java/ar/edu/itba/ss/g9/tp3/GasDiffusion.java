@@ -125,7 +125,7 @@ public class GasDiffusion {
         if(metricsEngineGAS != null) {
             System.out.println(this.particlesSpeed);
             double totalEnergy = (this.N * this.particlesMass * this.particlesSpeed * this.particlesSpeed) /2;
-            double p = totalPressure/(currentTime-eqTime);
+            double p = totalPressure/((currentTime-eqTime)*2*width);
             metricsEngineGAS.writeGas(p,totalEnergy);
             System.out.println("P: "+ p);
             System.out.println("Energy: "+ totalEnergy);

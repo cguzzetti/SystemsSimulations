@@ -49,14 +49,14 @@ public class Main {
             GasMetricsEngine metricsEngineGAS = new GasMetricsEngine(
                     ExperimentType.GAS, getFilePath("gasExperiment.txt")
             );
-            // for(double speed = 0.01; speed < 0.03 ; speed += 0.002)  {
-            for(int i = 0; i< 100; i++){
-                double speed = 0.01;
+             for(double speed = 0.01; speed < 0.03 ; speed += 0.002)  {
+//            for(int i = 0; i< 100; i++){
+//                double speed = 0.01;
                 GasDiffusionFileParser parser = null;
                 config.setParticleSpeed(speed);
 
-                // String filename = config.getInputFileName();
-                String filename = String.format("output%d.xyz", i);
+                 String filename = config.getInputFileName();
+//                String filename = String.format("output%d.xyz", i);
                 try{
                     parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(filename));
                 }catch (IOException ex){
