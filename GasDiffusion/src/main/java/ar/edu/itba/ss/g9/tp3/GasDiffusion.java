@@ -25,6 +25,7 @@ public class GasDiffusion {
     private static final double MAX_TIME = 10;
     private static final double BOLTZMANN = 1.38066e-23;
     private GasMetricsEngine metricsEngineGAS;
+    private boolean IN_EQUILIBRIUM;
 
     public GasDiffusion(GasDifussionConfig config, Set<GasParticle> particles){
         this.N = config.getN();
@@ -51,6 +52,7 @@ public class GasDiffusion {
                 {new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
         };
         this.currentTime = 0.0;
+        this.IN_EQUILIBRIUM = false;
     }
 
     public void setMetricsEngineGAS(GasMetricsEngine metricsEngineGAS) {
@@ -77,7 +79,7 @@ public class GasDiffusion {
 
         double fp = calculateParticleFraction();
 
-        while( !inEquilibrium(fp) || currentTime < maxTime ){
+        while( !IN_EQUILIBRIUM || currentTime < maxTime ){
             if(collisions.isEmpty()) {
                 //logger.error("No more collisions to show!");
                 System.out.printf("No more collisions to show! Exiting at t=%f\n", currentTime);
@@ -88,7 +90,7 @@ public class GasDiffusion {
             if(maybeCollision.isEmpty()) continue;
             Collision collision = maybeCollision.get();
 
-            if(inEquilibrium(fp)) {
+            if(IN_EQUILIBRIUM) {
                 totalPressure += collision.getPressure();
             }
 
@@ -112,9 +114,10 @@ public class GasDiffusion {
             parser.writeStateToOutput(particles, iteration);
 
             fp = calculateParticleFraction();
-            if(inEquilibrium(fp) && maxTime == 0) {
+            if(!IN_EQUILIBRIUM && inEquilibrium(fp) && maxTime == 0) {
                 eqTime = currentTime;
                 maxTime = currentTime + MAX_TIME;
+                IN_EQUILIBRIUM = true;
             }
             iteration++;
         }
