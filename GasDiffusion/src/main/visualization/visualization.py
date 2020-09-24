@@ -15,11 +15,11 @@ def plot_pressure():
     lines = file.readlines()
 
     # Create data
-    x = np.zeros(len(lines)-1)
-    y = np.zeros(len(lines)-1)
+    x = np.zeros(len(lines))
+    y = np.zeros(len(lines))
     #std = np.zeros(len(lines)-1)
     index = 0
-    for line in lines[1:]:
+    for line in lines[0:]:
         line = line.split()
         x[index] = float(line[0])
         y[index] = float(line[1])

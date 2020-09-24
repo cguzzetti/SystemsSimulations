@@ -68,6 +68,7 @@ public class GasDiffusion {
         double maxTime = 0;
         int iteration = 0;
         double totalPressure = 0;
+        double eqTime = 0;
 
         calculateCollisions(this.particles, currentTime);
         if(collisions.isEmpty()) return;
@@ -112,6 +113,7 @@ public class GasDiffusion {
 
             fp = calculateParticleFraction();
             if(inEquilibrium(fp) && maxTime == 0) {
+                eqTime = currentTime;
                 maxTime = currentTime + MAX_TIME;
             }
             iteration++;
@@ -121,10 +123,9 @@ public class GasDiffusion {
         metricsEngineFP.finalizeExperiment();
 
         if(metricsEngineGAS != null) {
-            System.out.println(this.particlesMass);
             System.out.println(this.particlesSpeed);
-            double totalEnergy = this.N * this.particlesMass * this.particlesSpeed * this.particlesSpeed /2;
-            double p = totalPressure/MAX_TIME;
+            double totalEnergy = (this.N * this.particlesMass * this.particlesSpeed * this.particlesSpeed) /2;
+            double p = totalPressure/(currentTime-eqTime);
             metricsEngineGAS.writeGas(p,totalEnergy);
             System.out.println("P: "+ p);
             System.out.println("Energy: "+ totalEnergy);
