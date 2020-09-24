@@ -30,6 +30,7 @@ public class WallCollision implements Collision {
             newVelocity = new Point2D(particle.getVx(), -particle.getVy());
 
         this.particle.setVelocity(newVelocity);
+        this.particle.setMeanSquaredDisplacement(-1);
     }
 
     @Override

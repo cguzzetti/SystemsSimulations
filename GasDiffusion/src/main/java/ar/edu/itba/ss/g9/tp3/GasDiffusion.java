@@ -161,6 +161,8 @@ public class GasDiffusion {
     private void advanceParticles(double time) {
         for(GasParticle p: particles) {
             p.updateParticlePosition(time);
+            if(p.getMeanSquaredDisplacement() != -1)
+                p.updateMeanSquaredDisplacement();
         }
     }
 

@@ -49,13 +49,16 @@ public class Main {
             GasMetricsEngine metricsEngineGAS = new GasMetricsEngine(
                     ExperimentType.GAS, getFilePath("gasExperiment.txt")
             );
-
-            for(double speed = 0.01; speed < 0.03 ; speed += 0.002) {
+            // for(double speed = 0.01; speed < 0.03 ; speed += 0.002)  {
+            for(int i = 0; i< 100; i++){
+                double speed = 0.01;
                 GasDiffusionFileParser parser = null;
                 config.setParticleSpeed(speed);
 
+                // String filename = config.getInputFileName();
+                String filename = String.format("output%d.xyz", i);
                 try{
-                    parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(config.getOutputFileName()));
+                    parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(filename));
                 }catch (IOException ex){
                     logger.error("There was an error while creating the FileParser. %s\n", ex.getMessage());
                     ex.printStackTrace();
@@ -81,6 +84,7 @@ public class Main {
                 GasDiffusion gas = new GasDiffusion(config, particles);
                 gas.setMetricsEngineGAS(metricsEngineGAS);
                 gas.simulate(parser);
+
             }
 
             metricsEngineGAS.finalizeExperiment();

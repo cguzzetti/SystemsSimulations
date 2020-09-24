@@ -10,20 +10,25 @@ import java.util.*;
 public class GasParticle extends Particle{
     private Point2D velocity;
     private int collisionCounter;
-
+    private final Point2D initialPosition;
+    private double meanSquaredDisplacement;
     public GasParticle(double xPosition, double yPosition, double direction, int id, double particleRadius, double particleMass, double particleSpeed) {
         super(id, xPosition, yPosition, particleRadius, particleSpeed, particleMass);
+        this.initialPosition = this.point;
         this.velocity = new Point2D(
                 this.speed*Math.cos(direction),
                 this.speed*Math.sin(direction)
         );
         this.collisionCounter = 0;
+        this.meanSquaredDisplacement = 0;
     }
 
     public GasParticle(double xPosition, double yPosition, double Vx, double Vy, int id, double particleRadius, double particleMass, double particleSpeed){
         super(id, xPosition, yPosition, particleRadius, particleSpeed, particleMass);
+        this.initialPosition = this.point;
         this.velocity = new Point2D(Vx, Vy);
         this.collisionCounter = 0;
+        this.meanSquaredDisplacement = 0;
     }
 
     public Point2D getVelocity() {
@@ -43,8 +48,10 @@ public class GasParticle extends Particle{
     @Override
     public String toString(){
         return String.format(
-                "%d %f %f %f %f %f %f",
-                this.getId(), this.point.getX(), this.point.getY(), this.getVx(), this.getVy(), this.getRadius(), this.mass
+                "%d %f %f %f %f %f %f %f",
+                this.getId(), this.point.getX(), this.point.getY(),
+                this.getVx(), this.getVy(), this.getRadius(),
+                this.mass, this.getMeanSquaredDisplacement()
         );
     }
 
@@ -157,5 +164,24 @@ public class GasParticle extends Particle{
             this.willCollideWithWalls(horizontalWall, timeSoFar).ifPresent(particleNextCollisions::add);
 
         return particleNextCollisions;
+    }
+
+    public Point2D getInitialPosition() {
+        return initialPosition;
+    }
+
+    public double getMeanSquaredDisplacement() {
+        return meanSquaredDisplacement;
+    }
+
+    public void setMeanSquaredDisplacement(double meanSquaredDisplacement) {
+        this.meanSquaredDisplacement = meanSquaredDisplacement;
+    }
+
+    public void updateMeanSquaredDisplacement() {
+        this.setMeanSquaredDisplacement(
+                Math.pow(this.point.getX() - this.initialPosition.getX(), 2) +
+                        Math.pow(this.point.getY() - this.initialPosition.getY(), 2)
+        );
     }
 }

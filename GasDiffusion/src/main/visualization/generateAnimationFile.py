@@ -3,15 +3,15 @@ def write_headers(animation_file, N, time, real_time):
     animation_file.write(f'{N}\n{time} ({real_time})\n')
 
 
-def write_line(animatino_file, line):
+def write_line(animation_file, line):
     print(line)
-    animatino_file.write(f'{line}')
+    animation_file.write(f'{line}')
 
 
-def generate_animation():
+def generate_animation(i):
     # Save in RAM only one line at a time
-    with open("output.xyz") as f:
-        animation_file = open("animation.xyz", "w")
+    with open(f"output{i}.xyz") as f:
+        animation_file = open(f"animation{i}.xyz", "w")
         current_N = 0
         is_time = False
         expected_time = 0
@@ -36,5 +36,6 @@ def generate_animation():
 
 
 if __name__ == '__main__':
-    generate_animation()
+    for i in range(0, 100):
+        generate_animation(i)
 
