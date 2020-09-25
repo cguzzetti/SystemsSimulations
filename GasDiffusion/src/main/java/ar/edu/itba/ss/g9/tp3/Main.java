@@ -43,7 +43,7 @@ public class Main {
 
         System.out.println(config.toString());
 
-        boolean gasExperiment = false;
+        boolean gasExperiment = true;
         if(gasExperiment) {
             GasMetricsEngine metricsEngineGAS = new GasMetricsEngine(
                     ExperimentType.GAS, getFilePath("gasExperiment.txt")
@@ -51,12 +51,13 @@ public class Main {
 
             int maxReps = 5;
             metricsEngineGAS.writeHeader(5);
-             for(double speed = 0.01; speed <= 0.03 ; speed += 0.002)  {
+             //for(double speed = 0.01; speed <= 0.03 ; speed += 0.002)  {
+            double speed = 0.01;
                  for(int repetition = 0; repetition < maxReps; repetition++) {
                      GasDiffusionFileParser parser = null;
                      config.setParticleSpeed(speed);
 
-                     String filename = config.getInputFileName();
+                     String filename = String.format("output_0.01_%d.xyz", repetition);
                      try {
                          parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(filename));
                      } catch (IOException ex) {
@@ -84,7 +85,7 @@ public class Main {
                      gas.setMetricsEngineGAS(metricsEngineGAS);
                      gas.simulate(parser);
                  }
-            }
+            //}
 
             metricsEngineGAS.finalizeExperiment();
         }
