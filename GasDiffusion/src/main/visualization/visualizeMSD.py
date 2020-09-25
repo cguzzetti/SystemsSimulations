@@ -10,12 +10,12 @@ def visualize_MSD(x, y):
         plt.xlabel("Tiempo [s]")
         plt.ylabel("Desplazamiento cuadrático médio [m*m]")
         plt.plot(y, yfit, label='regr')
-        plt.savefig('MSD_N200.png')
+        plt.savefig('MSD_N200_muchas.png')
 
 
 def find_x_y(i):
-    startT = 200
-    endT = 210
+    startT = 5
+    endT = 15
     with open(f"animation{i}.xyz") as f:
         x = np.zeros(11)
         y = list(range(startT, endT + 1))
