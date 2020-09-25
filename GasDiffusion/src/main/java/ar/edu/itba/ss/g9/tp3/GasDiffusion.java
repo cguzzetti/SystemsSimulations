@@ -59,7 +59,7 @@ public class GasDiffusion {
         this.metricsEngineGAS = metricsEngineGAS;
     }
 
-    public void simulate(GasDiffusionFileParser parser){
+    public void simulate(GasDiffusionFileParser parser) {
 
         GasMetricsEngine metricsEngineFP = new GasMetricsEngine(
                 ExperimentType.FP, getFilePath("fpExperiment.txt")
@@ -75,7 +75,7 @@ public class GasDiffusion {
         calculateCollisions(this.particles, currentTime);
         if(collisions.isEmpty()) return;
 
-        parser.writeStateToOutput(particles, iteration++);
+        parser.writeStateToOutput(particles, currentTime);
 
         double fp = calculateParticleFraction();
 
@@ -111,7 +111,7 @@ public class GasDiffusion {
             collision.updateVelocity(); // Update velocity of particles involved in current collision
             calculateCollisions(particlesInCollision, currentTime); // Determine future collisions of particles involved in current collision
 
-            parser.writeStateToOutput(particles, iteration);
+            parser.writeStateToOutput(particles, currentTime);
 
             fp = calculateParticleFraction();
             if(!IN_EQUILIBRIUM && inEquilibrium(fp) && maxTime == 0) {
