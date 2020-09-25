@@ -43,7 +43,7 @@ public class Main {
 
         System.out.println(config.toString());
 
-        boolean gasExperiment = true;
+        boolean gasExperiment = false;
         if(gasExperiment) {
             GasMetricsEngine metricsEngineGAS = new GasMetricsEngine(
                     ExperimentType.GAS, getFilePath("gasExperiment.txt")

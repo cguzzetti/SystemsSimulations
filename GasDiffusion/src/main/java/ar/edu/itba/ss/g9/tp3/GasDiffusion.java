@@ -53,6 +53,7 @@ public class GasDiffusion {
         };
         this.currentTime = 0.0;
         this.IN_EQUILIBRIUM = false;
+        this.metricsEngineGAS = null;
     }
 
     public void setMetricsEngineGAS(GasMetricsEngine metricsEngineGAS) {
@@ -79,7 +80,7 @@ public class GasDiffusion {
 
         double fp = calculateParticleFraction();
 
-        while( !IN_EQUILIBRIUM || currentTime < maxTime ){
+        while( !IN_EQUILIBRIUM || (metricsEngineGAS != null && currentTime < maxTime) ){
             if(collisions.isEmpty()) {
                 //logger.error("No more collisions to show!");
                 System.out.printf("No more collisions to show! Exiting at t=%f\n", currentTime);
