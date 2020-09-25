@@ -5,12 +5,17 @@ import numpy as np
 def visualize_MSD(x, y):
         p = np.polyfit(y, x, 1)
         yfit = np.polyval(p, y)
-        print(f"D= {abs(p[1])}")
-        plt.scatter(y, x, c='k')
+        plt.subplot()
+        print(f"Polinomio: {p[0]}*x + {p[1]}")
+        print(f"D= {p[0]}")
+        plt.scatter(y, x, c='k', label="Datos (promedios de simulaciones")
         plt.xlabel("Tiempo [s]")
         plt.ylabel("Desplazamiento cuadrático médio [m*m]")
-        plt.plot(y, yfit, label='regr')
-        plt.savefig('MSD_N200_muchas.png')
+        plt.plot(y, yfit, label='Ajuste modelo lineal')
+        plt.legend(loc ="lower right")
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0), useMathText=True)
+
+        plt.savefig('MSD_100.png')
 
 
 def find_x_y(i):
@@ -52,7 +57,7 @@ def find_x_y(i):
 if __name__ == "__main__":
     final_x = np.zeros(11)
     x_acumulator = []
-    for i in range(0, 100):
+    for i in range(0, 5):
         x, y = find_x_y(i)
         x_acumulator.append(x)
         final_x = np.add.reduce([final_x, x])

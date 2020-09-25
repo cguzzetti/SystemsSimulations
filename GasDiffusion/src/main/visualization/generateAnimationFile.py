@@ -10,7 +10,7 @@ def write_line(animation_file, line):
 
 def generate_animation(i):
     # Save in RAM only one line at a time
-    with open(f"output{i}.xyz") as f:
+    with open(f"output_0.01_{i}.xyz") as f:
         animation_file = open(f"animation{i}.xyz", "w")
         current_N = 0
         is_time = False
@@ -36,6 +36,6 @@ def generate_animation(i):
 
 
 if __name__ == '__main__':
-    for i in range(100):
+    for i in range(5):
         generate_animation(i)
 
