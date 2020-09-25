@@ -1,16 +1,13 @@
 package ar.edu.itba.ss.g9.commons.simulation;
 
 import ar.edu.itba.ss.g9.commons.DynamicFile;
-import ar.edu.itba.ss.g9.commons.InputFile;
 import ar.edu.itba.ss.g9.commons.Config;
 import ar.edu.itba.ss.g9.commons.StaticFile;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
 
-import static ar.edu.itba.ss.g9.commons.simulation.ParticleGeneration.generateRandomParticles;
+import static ar.edu.itba.ss.g9.commons.simulation.ParticleGenerator.generateRandomParticles;
 
 public class FileParser {
 

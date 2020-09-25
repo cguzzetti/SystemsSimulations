@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
-public class ParticleGeneration {
+public class ParticleGenerator {
     public static StringBuilder generateRandomParticles(long numberOfParticles, double sideLength){
         return Stream.iterate(0, n -> n+1).limit(numberOfParticles).parallel().collect(StringBuilder::new, (sb, i)-> {
             // Every call to ThreadLocalRandom.current() is going to call

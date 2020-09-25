@@ -1,8 +1,7 @@
 package ar.edu.itba.ss.g9.tp3;
 
 import ar.edu.itba.ss.g9.commons.simulation.GasParticle;
-import ar.edu.itba.ss.g9.commons.simulation.Particle;
-import ar.edu.itba.ss.g9.commons.simulation.ParticleGeneration;
+import ar.edu.itba.ss.g9.commons.simulation.ParticleGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.cli.HelpFormatter;
@@ -69,7 +68,7 @@ public class Main {
                      boolean readingFromFile = false;
                      Set<GasParticle> particles;
                      if (!readingFromFile) {
-                         particles = ParticleGeneration.generateGasParticles(
+                         particles = ParticleGenerator.generateGasParticles(
                                  config.getN(),
                                  config.getHeight(),
                                  config.getWidth(),
@@ -81,7 +80,6 @@ public class Main {
                      } else {
                          particles = parser.readParticlesFromFile();
                      }
-
                      GasDiffusion gas = new GasDiffusion(config, particles);
                      gas.setMetricsEngineGAS(metricsEngineGAS);
                      gas.simulate(parser);
@@ -104,7 +102,7 @@ public class Main {
             boolean readingFromFile = false;
             Set<GasParticle> particles;
             if (!readingFromFile) {
-                particles = ParticleGeneration.generateGasParticles(
+                particles = ParticleGenerator.generateGasParticles(
                         config.getN(),
                         config.getHeight(),
                         config.getWidth(),
