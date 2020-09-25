@@ -38,6 +38,16 @@ public class GasMetricsEngine {
         }
     }
 
+    public void writeHeader(int amountOfRepetitions) {
+        try{
+            this.writer.write(String.format("%d\n", amountOfRepetitions));
+            this.currentIteration++;
+        }catch (IOException ex){
+            ex.printStackTrace();
+            System.exit(1);
+        }
+    }
+
     public void writeFP(double fp, double time){
         try{
             this.writer.write(String.format(

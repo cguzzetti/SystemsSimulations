@@ -49,42 +49,43 @@ public class Main {
             GasMetricsEngine metricsEngineGAS = new GasMetricsEngine(
                     ExperimentType.GAS, getFilePath("gasExperiment.txt")
             );
+
+            int maxReps = 5;
+            metricsEngineGAS.writeHeader(5);
              for(double speed = 0.01; speed <= 0.03 ; speed += 0.002)  {
-//            for(int i = 0; i< 100; i++){
-//                double speed = 0.01;
-                GasDiffusionFileParser parser = null;
-                config.setParticleSpeed(speed);
+                 for(int repetition = 0; repetition < maxReps; repetition++) {
+                     GasDiffusionFileParser parser = null;
+                     config.setParticleSpeed(speed);
 
-                 String filename = config.getInputFileName();
-//                String filename = String.format("output%d.xyz", i);
-                try{
-                    parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(filename));
-                }catch (IOException ex){
-                    logger.error("There was an error while creating the FileParser. %s\n", ex.getMessage());
-                    ex.printStackTrace();
-                    System.exit(1);
-                }
+                     String filename = config.getInputFileName();
+                     try {
+                         parser = new GasDiffusionFileParser(getFilePath(config.getInputFileName()), getFilePath(filename));
+                     } catch (IOException ex) {
+                         logger.error("There was an error while creating the FileParser. %s\n", ex.getMessage());
+                         ex.printStackTrace();
+                         System.exit(1);
+                     }
 
-                boolean readingFromFile = false;
-                Set<GasParticle> particles;
-                if (!readingFromFile) {
-                    particles = ParticleGeneration.generateGasParticles(
-                            config.getN(),
-                            config.getHeight(),
-                            config.getWidth(),
-                            config.getParticleRadius(),
-                            config.getParticleMass(),
-                            config.getparticleSpeed()
-                    );
-                    parser.saveInitialState(particles);
-                } else {
-                    particles = parser.readParticlesFromFile();
-                }
+                     boolean readingFromFile = false;
+                     Set<GasParticle> particles;
+                     if (!readingFromFile) {
+                         particles = ParticleGeneration.generateGasParticles(
+                                 config.getN(),
+                                 config.getHeight(),
+                                 config.getWidth(),
+                                 config.getParticleRadius(),
+                                 config.getParticleMass(),
+                                 config.getparticleSpeed()
+                         );
+                         parser.saveInitialState(particles);
+                     } else {
+                         particles = parser.readParticlesFromFile();
+                     }
 
-                GasDiffusion gas = new GasDiffusion(config, particles);
-                gas.setMetricsEngineGAS(metricsEngineGAS);
-                gas.simulate(parser);
-
+                     GasDiffusion gas = new GasDiffusion(config, particles);
+                     gas.setMetricsEngineGAS(metricsEngineGAS);
+                     gas.simulate(parser);
+                 }
             }
 
             metricsEngineGAS.finalizeExperiment();
