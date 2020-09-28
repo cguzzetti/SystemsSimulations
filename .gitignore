@@ -29,10 +29,11 @@
 .idea/**/gradle.xml
 .idea/**/libraries
 
-.idea/**
+**/.idea/**
 **/.vscode/**
 **/__pycache__/**
 *.txt
+*.png
 **/*.iml
 **/target/**
 # Gradle and Maven with auto-import
