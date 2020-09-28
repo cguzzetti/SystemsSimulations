@@ -2,19 +2,49 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+# X: TIempo, Y: DCM
+def get_errors(x, y):
+    slope = 0.0001
+    step = 0.00001
+    final_slope = 0.005
+    error_acum = 0
+    errors = []
+    slopes = []
+    while slope <= final_slope:
+        slopes.append(slope)
+        for i in range(len(y)):
+            error_acum += (y[i] - (slope*x[i]))**2
+        errors.append(error_acum)
+        error_acum = 0
+        slope += step
+    return slopes, errors
+
+
 def visualize_MSD(x, y):
-        p = np.polyfit(y, x, 1)
-        yfit = np.polyval(p, y)
         plt.subplot()
-        print(f"Polinomio: {p[0]}*x + {p[1]}")
-        print(f"D= {p[0]}")
+        slopes, errs = get_errors(y, x)
+        min = np.array(errs).min()
+        index = np.where(errs == min)[0][0]
+        desired_slope = slopes[index]
+        print(f"Desired slope: {desired_slope} has error {min}")
+        plt.scatter(slopes, errs)
+        plt.xlabel("Pendientes [m*m/s]")
+        plt.ylabel("Error [m*m]")
+        plt.savefig("errorFigureN300.png")
+        plt.clf()
+
+        print(f"Polinomio: {desired_slope}*x")
+        print(f"D= {desired_slope}")
         plt.scatter(y, x, c='k', label="Datos (promedios de simulaciones")
         plt.xlabel("Tiempo [s]")
         plt.ylabel("Desplazamiento cuadrático médio [m*m]")
-        plt.plot(y, yfit, label='Ajuste modelo lineal')
+        x_lin = np.linspace(np.array(y).min(), np.array(y).max())
+        y_lin = desired_slope * x_lin
+
+        plt.plot(x_lin,y_lin, label='Ajuste modelo lineal')
         plt.legend(loc ="lower right")
         plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0), useMathText=True)
-
+        plt.savefig("dcmN300.png")
         plt.savefig('MSD_100.png')
 
 
