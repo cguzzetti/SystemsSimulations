@@ -1,6 +1,8 @@
 package ar.edu.itba.ss.g9.tp3;
 
-import ar.edu.itba.ss.g9.commons.simulation.*;
+import ar.edu.itba.ss.g9.commons.simulation.Collision;
+import ar.edu.itba.ss.g9.commons.simulation.GasParticle;
+import ar.edu.itba.ss.g9.commons.simulation.Particle;
 import javafx.geometry.Point2D;
 
 
@@ -47,8 +49,8 @@ public class GasDiffusion {
         };
         this.verticalWalls = new Point2D[][]{
                 {Point2D.ZERO, new Point2D(0, config.getHeight())},
-                {new Point2D(config.getWidth() / 2, 0), new Point2D(config.getWidth() / 2, config.getHeight() / 2 - config.getPartitionLen() / 2)},
-                {new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2), new Point2D(config.getWidth() / 2, config.getHeight())},
+                //{new Point2D(config.getWidth() / 2, 0), new Point2D(config.getWidth() / 2, config.getHeight() / 2 - config.getPartitionLen() / 2)},
+                //{new Point2D(config.getWidth() / 2, config.getHeight() / 2 + config.getPartitionLen() / 2), new Point2D(config.getWidth() / 2, config.getHeight())},
                 {new Point2D(config.getWidth(), 0), new Point2D(config.getWidth(), config.getHeight())}
         };
         this.currentTime = 0.0;
