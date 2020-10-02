@@ -4,8 +4,7 @@ package ar.edu.itba.grupo9.tp4;
  * Hello world!
  *
  */
-public class Main
-{
+public class Main {
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
