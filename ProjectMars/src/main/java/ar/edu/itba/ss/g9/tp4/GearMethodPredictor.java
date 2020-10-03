@@ -1,11 +1,6 @@
-package ar.edu.itba.grupo9.tp4;
+package ar.edu.itba.ss.g9.tp4;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static ar.edu.itba.grupo9.tp4.IntegralMethods.GEAR_PREDICTOR_CORRECTOR;
+import static ar.edu.itba.ss.g9.tp4.IntegralMethods.GEAR_PREDICTOR_CORRECTOR;
 import static java.lang.Math.pow;
 
 /**

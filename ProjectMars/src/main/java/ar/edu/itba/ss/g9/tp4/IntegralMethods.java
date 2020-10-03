@@ -1,4 +1,4 @@
-package ar.edu.itba.grupo9.tp4;
+package ar.edu.itba.ss.g9.tp4;
 
 /**
  *  Determines which Integral Method we are running
