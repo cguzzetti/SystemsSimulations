@@ -28,6 +28,11 @@ public class AcceleratedParticle {
         this(id, position.getX(), position.getY(), radius, mass);
     }
 
+    public AcceleratedParticle(int id, Point2D position, Point2D velocity, double radius, double mass){
+        this(id, position, radius, mass);
+        this.velocity = velocity;
+    }
+
     public AcceleratedParticle(int id, double radius, double mass){
         this.id = id;
         this.radius = radius;
