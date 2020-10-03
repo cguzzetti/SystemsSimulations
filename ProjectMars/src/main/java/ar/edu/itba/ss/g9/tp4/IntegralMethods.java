@@ -5,7 +5,7 @@ package ar.edu.itba.ss.g9.tp4;
  */
 public enum IntegralMethods {
     BEEMAN ("Beeman Method"),
-    VERLET ("Verlet Type Method"),
+    VERLET_ORIGINAL ("Verlet Original Type Method"),
     GEAR_PREDICTOR_CORRECTOR ("Gear Predictor Corrector of order V"),
     ;
 
