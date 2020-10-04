@@ -17,4 +17,7 @@ fi
 echo -e "\n\n${GREEN}Running Project Mars with arguments: $* ${NORMAL}\n\n"
 
 mvn clean package
-java -jar target/ProjectMars-1.0-SNAPSHOT.jar "$@" > mars_output.xyz
+
+FILE_PATH="src/main/java/ar/edu/itba/ss/g9/tp4/visualization"
+FILE_NAME="mars_output.txt"
+java -jar target/ProjectMars-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/$FILE_NAME"
