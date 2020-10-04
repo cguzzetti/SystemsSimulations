@@ -49,4 +49,31 @@ public class Oscillator {
         particle.rListX[4] = -(k / mass) * particle.rListX[2] - (g / mass) * particle.rListX[3];
         particle.rListX[5] = -(k / mass) * particle.rListX[3] - (g / mass) * particle.rListX[4];
     }
+
+    public void generateSimulationForVisualization(double deltaT2, double tf) {
+        double currentTime = 0;
+
+        while( currentTime < tf){
+            boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
+            if(shouldPrint){
+                System.out.println(5);
+                System.out.println("t " + Math.round(currentTime / deltaT2));
+            }
+            IntegralMethod  integralMethod = new GearMethodPredictor(deltaT, force);
+            this.particle =  integralMethod.moveParticle(this.particle, currentTime);
+            if(shouldPrint){
+                System.out.println("0 " + this.particle.getPositionX() + " " + 0 + " " + 0.4);
+                printLimits();
+            }
+            currentTime+=deltaT;
+        }
+
+    }
+
+    private void printLimits(){
+        System.out.println("1 -1.5 3 0");
+        System.out.println("2 1.5 3 0");
+        System.out.println("3 -1.5 -5 0");
+        System.out.println("4 1.5 -5 0");
+    }
 }
