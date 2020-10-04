@@ -15,8 +15,13 @@ public class Main {
         double g = 100;
         double m = 70;
         double tf = 5;
-        double deltaT = 0.001;
-        double deltaT2 = 0.02;
+        RunMode mode = RunMode.valueOf(args[0]);
+        double deltaT = Double.parseDouble(args[1]);
+        double deltaT2;
+        if(args.length == 2)
+            deltaT2 = 0.02;
+        else
+            deltaT2 = Double.parseDouble(args[2]);
 
         Force force = new OscillatorForce(k, g);
         Oscillator oscillator;
@@ -33,8 +38,18 @@ public class Main {
                 oscillator.initializePreviousValues();
             oscillators.add(oscillator);
         }
+        switch (mode){
+            case OVITO:
+                generateSimulationForVisualization(deltaT2, tf, oscillators);
+                break;
+            case SOLUTION:
+                System.out.println("IN SOLUTION MODE");
+                break;
+            case ERROR:
+                System.out.println("IN ERROR MODE");
+                break;
+        }
 
-        generateSimulationForVisualization(deltaT2, tf, oscillators);
 
     }
 }
