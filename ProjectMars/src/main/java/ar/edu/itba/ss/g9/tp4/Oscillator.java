@@ -1,30 +1,37 @@
 package ar.edu.itba.ss.g9.tp4;
 
+
 import java.awt.geom.Point2D;
+import java.util.LinkedList;
+import java.util.List;
+
 import static java.lang.Math.pow;
 
 public class Oscillator {
+    private final static int NUMBER_OF_PARTICLES = 8;
     Force force;
-    IntegralMethods method;
+    IntegralMethod method;
     double k;
     double g;
     double mass;
     double deltaT;
+    private int id;
 
     final static double EPSILON = Math.pow(10, -6);
 
     AcceleratedParticle particle;
 
-    public Oscillator(Force force, IntegralMethods method, double k, double g, double m, double deltaT) {
+    public Oscillator(int id ,Force force, IntegralMethods method, double k, double g, double m, double deltaT) {
+        this.id = id;
         this.force = force;
-        this.method = method;
         this.k = k;
         this.g = g;
         this.mass = m;
         this.deltaT = deltaT;
-        Point2D.Double position = new Point2D.Double(1, 0);
+        this.method = initializeMethod(method);
+        Point2D.Double position = new Point2D.Double(1, id);
         Point2D.Double velocity = new Point2D.Double(-(g/ (2 * mass)), 0);
-        particle = new AcceleratedParticle(1, position, velocity, 0, mass);
+        particle = new AcceleratedParticle(id, position, velocity, 0, mass);
     }
 
     public void initializePreviousValues(){
@@ -33,44 +40,74 @@ public class Oscillator {
                         - deltaT * particle.getVelocityY()
                         + pow(deltaT, 2) * force.getForceX(0, particle) / (2*particle.getMass());
         double prevY = 0;
-        particle.setPosition(new Point2D.Double(prevX, prevY));
+        particle.setPrevPosition(new Point2D.Double(prevX, prevY));
 
-        particle.setVelocity(new Point2D.Double(
+        particle.setPrevVelocity(new Point2D.Double(
                 particle.getVelocityX() - (deltaT / particle.getMass()) * force.getForceX(0, particle),
                 0
         ));
     }
 
     public void initializeEquationsTables() {
-        particle.rListX[0] = particle.getPositionX();
-        particle.rListX[1] = particle.getVelocityX();
-        particle.rListX[2] = (force.getForceX(0, particle)) / particle.getMass();
-        particle.rListX[3] = -(k / mass) * particle.rListX[1] - (g / mass) * particle.rListX[2];
-        particle.rListX[4] = -(k / mass) * particle.rListX[2] - (g / mass) * particle.rListX[3];
-        particle.rListX[5] = -(k / mass) * particle.rListX[3] - (g / mass) * particle.rListX[4];
+        particle.equationListX[0] = particle.getPositionX();
+        particle.equationListX[1] = particle.getVelocityX();
+        particle.equationListX[2] = (force.getForceX(0, particle)) / particle.getMass();
+        particle.equationListX[3] = -(k / mass) * particle.equationListX[1] - (g / mass) * particle.equationListX[2];
+        particle.equationListX[4] = -(k / mass) * particle.equationListX[2] - (g / mass) * particle.equationListX[3];
+        particle.equationListX[5] = -(k / mass) * particle.equationListX[3] - (g / mass) * particle.equationListX[4];
     }
 
-    public void generateSimulationForVisualization(double deltaT2, double tf) {
-        double currentTime = 0;
+    private IntegralMethod initializeMethod(IntegralMethods method){
+        switch (method){
+            case GEAR_PREDICTOR_CORRECTOR:
+                return new GearMethodPredictor(this.deltaT, this.force);
+            case BEEMAN:
+                return new BeemanMethod(this.force, this.deltaT);
+            case VERLET_ORIGINAL:
+                return new VerletMethod(this.force, this.deltaT);
+            case ANALITICAL:
+                return new AnaliticalMethod(this.k, this.g);
+            default:
+                System.out.println("Invalid initialization method");
+                return null;
+        }
+    }
 
+    private static List<IntegralMethod> initializeIntegralMethods(double deltaT, Force force){
+        List<IntegralMethod> ret = new LinkedList<>();
+        ret.add(new GearMethodPredictor(deltaT, force));
+        ret.add(new VerletMethod(force, deltaT));
+        ret.add(new BeemanMethod(force, deltaT));
+
+        return ret;
+    }
+    public static void generateSimulationForVisualization(double deltaT2, double tf, List<Oscillator> oscillators) {
+        double currentTime = 0;
+        double systemDeltaT = 0;
         while( currentTime < tf){
+            // if (t/deltat2 ~= round(t/deltat2) ==> should print
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
             if(shouldPrint){
-                System.out.println(5);
+                System.out.println(NUMBER_OF_PARTICLES);
                 System.out.println("t " + Math.round(currentTime / deltaT2));
             }
-            IntegralMethod  integralMethod = new GearMethodPredictor(deltaT, force);
-            this.particle =  integralMethod.moveParticle(this.particle, currentTime);
-            if(shouldPrint){
-                System.out.println("0 " + this.particle.getPositionX() + " " + 0 + " " + 0.4);
-                printLimits();
+            for( Oscillator o: oscillators) {
+                o.particle = o.method.moveParticle(o.particle, currentTime);
+                if (shouldPrint) {
+                    System.out.println(String.format(
+                            "%d %f %d %f", o.id, o.particle.getPositionX(), o.id, 0.4
+                    ));
+                }
+                systemDeltaT = o.deltaT;
             }
-            currentTime+=deltaT;
+            if(shouldPrint)
+                printLimits();
+            currentTime += systemDeltaT;
         }
 
     }
 
-    private void printLimits(){
+    private static void printLimits(){
         System.out.println("1 -1.5 3 0");
         System.out.println("2 1.5 3 0");
         System.out.println("3 -1.5 -5 0");

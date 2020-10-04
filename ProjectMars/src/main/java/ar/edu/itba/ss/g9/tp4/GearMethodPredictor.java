@@ -26,18 +26,18 @@ public class GearMethodPredictor implements IntegralMethod{
         AcceleratedParticle nextParticle = new AcceleratedParticle(
                 p.getId(), p.getPosition(), p.getVelocity(), p.getRadius(), p.getMass()
         );
-        predictRListX(nextParticle, p);
+        predictRx(nextParticle, p);
 
-        nextParticle.setPositionX(nextParticle.rListX[0]);
-        nextParticle.setVelocityX(nextParticle.rListX[1]);
+        nextParticle.setPositionX(nextParticle.equationListX[0]);
+        nextParticle.setVelocityX(nextParticle.equationListX[1]);
 
         double realAcceleration = appliedForce.getForceX(time, nextParticle) / nextParticle.getMass();
-        double deltaR2 = (realAcceleration - nextParticle.rListX[2]) * (pow(deltaT, 2)/factorial(2));
+        double deltaR2 = (realAcceleration - nextParticle.equationListX[2]) * (pow(deltaT, 2)/factorial(2));
 
-        correctRListX(nextParticle, deltaR2);
+        correctRx(nextParticle, deltaR2);
 
-        nextParticle.setPositionX(nextParticle.rListX[0]);
-        nextParticle.setVelocityX(nextParticle.rListX[1]);
+        nextParticle.setPositionX(nextParticle.equationListX[0]);
+        nextParticle.setVelocityX(nextParticle.equationListX[1]);
         return nextParticle;
     }
 
@@ -47,24 +47,24 @@ public class GearMethodPredictor implements IntegralMethod{
     }
 
 
-    private void predictRListX(AcceleratedParticle nextParticle, AcceleratedParticle p){
-        nextParticle.rListX[0] = p.rListX[0] + p.rListX[1] * deltaT + p.rListX[2] * (pow(deltaT, 2) / factorial(2))
-                + p.rListX[3] * (pow(deltaT, 3) / factorial(3))
-                + p.rListX[4] * (pow(deltaT, 4) / factorial(4))
-                + p.rListX[5] * (pow(deltaT, 5) / factorial(5));
-        nextParticle.rListX[1] = p.rListX[1] + p.rListX[2] * deltaT + p.rListX[3] * (pow(deltaT, 2) / factorial(2))
-                + p.rListX[4] * (pow(deltaT, 3) / factorial(3))
-                + p.rListX[5] * (pow(deltaT, 4) / factorial(4));
-        nextParticle.rListX[2] = p.rListX[2] + p.rListX[3] * deltaT + p.rListX[4] * (pow(deltaT, 2) / factorial(2))
-                + p.rListX[5] * (pow(deltaT, 3) / factorial(3));
-        nextParticle.rListX[3] = p.rListX[3] + p.rListX[4] * deltaT + p.rListX[5] * (pow(deltaT, 2) / factorial(2));
-        nextParticle.rListX[4] = p.rListX[4] + p.rListX[5] * deltaT;
-        nextParticle.rListX[5] = p.rListX[5];
+    private void predictRx(AcceleratedParticle nextParticle, AcceleratedParticle p){
+        nextParticle.equationListX[0] = p.equationListX[0] + p.equationListX[1] * deltaT + p.equationListX[2] * (pow(deltaT, 2) / factorial(2))
+                + p.equationListX[3] * (pow(deltaT, 3) / factorial(3))
+                + p.equationListX[4] * (pow(deltaT, 4) / factorial(4))
+                + p.equationListX[5] * (pow(deltaT, 5) / factorial(5));
+        nextParticle.equationListX[1] = p.equationListX[1] + p.equationListX[2] * deltaT + p.equationListX[3] * (pow(deltaT, 2) / factorial(2))
+                + p.equationListX[4] * (pow(deltaT, 3) / factorial(3))
+                + p.equationListX[5] * (pow(deltaT, 4) / factorial(4));
+        nextParticle.equationListX[2] = p.equationListX[2] + p.equationListX[3] * deltaT + p.equationListX[4] * (pow(deltaT, 2) / factorial(2))
+                + p.equationListX[5] * (pow(deltaT, 3) / factorial(3));
+        nextParticle.equationListX[3] = p.equationListX[3] + p.equationListX[4] * deltaT + p.equationListX[5] * (pow(deltaT, 2) / factorial(2));
+        nextParticle.equationListX[4] = p.equationListX[4] + p.equationListX[5] * deltaT;
+        nextParticle.equationListX[5] = p.equationListX[5];
     }
 
-    private void correctRListX(AcceleratedParticle nextParticle, double deltaR2){
-        for (int i = 0; i < nextParticle.rListX.length; i++) {
-            nextParticle.rListX[i] = nextParticle.rListX[i] + (coef[i] * deltaR2 * (factorial(i) / pow(deltaT, i)));
+    private void correctRx(AcceleratedParticle nextParticle, double deltaR2){
+        for (int i = 0; i < nextParticle.equationListX.length; i++) {
+            nextParticle.equationListX[i] = nextParticle.equationListX[i] + (coef[i] * deltaR2 * (factorial(i) / pow(deltaT, i)));
         }
     }
 

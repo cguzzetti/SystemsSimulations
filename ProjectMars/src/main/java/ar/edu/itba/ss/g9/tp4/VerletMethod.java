@@ -1,5 +1,7 @@
 package ar.edu.itba.ss.g9.tp4;
 
+import java.awt.geom.Point2D;
+
 public class VerletMethod implements IntegralMethod{
     private Force force;
     private double deltaT;
@@ -28,17 +30,21 @@ public class VerletMethod implements IntegralMethod{
     }
 
     public void updatePosition(AcceleratedParticle nextParticle, AcceleratedParticle particle, double time) {
-        nextParticle.setPositionX(2.0 * particle.getPosition().getX()
+        double posX = 2.0 * particle.getPosition().getX()
                 - particle.getPrevPosition().getX()
-                + deltaT * deltaT * (force.getForceX(time, particle)/nextParticle.getMass()));
-        nextParticle.setPositionY(2.0 * particle.getPosition().getY()
+                + deltaT * deltaT * (force.getForceX(time, particle)/nextParticle.getMass());
+        double posY = 2.0 * particle.getPosition().getY()
                 - particle.getPrevPosition().getY()
-                + deltaT * deltaT * (force.getForceY(time, particle)/nextParticle.getMass()));
+                + deltaT * deltaT * (force.getForceY(time, particle)/nextParticle.getMass());
+
+        nextParticle.setPosition(new Point2D.Double(posX, posY));
     }
 
     public void updateVelocity(AcceleratedParticle nextParticle, AcceleratedParticle particle, double time) {
-        nextParticle.setVelocityX((nextParticle.getPosition().getX() - particle.getPrevPosition().getX())/(2 * deltaT));
-        nextParticle.setVelocityY((nextParticle.getPosition().getY() - particle.getPrevPosition().getY())/(2 * deltaT));
+        double vx = (nextParticle.getPosition().getX() - particle.getPrevPosition().getX())/(2 * deltaT);
+        double vy = (nextParticle.getPosition().getY() - particle.getPrevPosition().getY())/(2 * deltaT);
+
+        nextParticle.setVelocity(new Point2D.Double(vx, vy));
     }
 
 }

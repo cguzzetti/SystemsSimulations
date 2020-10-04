@@ -1,5 +1,7 @@
 package ar.edu.itba.ss.g9.tp4;
 
+import java.awt.geom.Point2D;
+
 public class BeemanMethod implements IntegralMethod{
     private Force force;
     private double deltaT;
@@ -29,28 +31,35 @@ public class BeemanMethod implements IntegralMethod{
 
     public void updatePosition(AcceleratedParticle nextParticle, AcceleratedParticle particle, double time) {
 
-        AcceleratedParticle prevP = new AcceleratedParticle(particle.getId(), particle.getPrevPosition(),particle.getRadius(), particle.getMass());
+        AcceleratedParticle prevP = new AcceleratedParticle(particle.getId(), particle.getPrevPosition(), particle.getPrevVelocity() ,particle.getRadius(), particle.getMass());
 
-        nextParticle.setPositionX(particle.getPosition().getX() + particle.getVelocity().getX() * deltaT
+        double posX = particle.getPosition().getX() + particle.getVelocity().getX() * deltaT
                 + (2.0/3) * (force.getForceX(time, particle)/nextParticle.getMass()) * deltaT * deltaT
-                - (1.0/6) * (force.getForceX(time - deltaT, prevP)/nextParticle.getMass()) * deltaT * deltaT);
-        nextParticle.setPositionY(particle.getPosition().getY() + particle.getVelocity().getY() * deltaT
+                - (1.0/6) * (force.getForceX(time - deltaT, prevP)/nextParticle.getMass()) * deltaT * deltaT;
+        double posY = particle.getPosition().getY() + particle.getVelocity().getY() * deltaT
                 + (2.0/3) * (force.getForceY(time, particle)/nextParticle.getMass()) * deltaT * deltaT
-                - (1.0/6) * (force.getForceY(time - deltaT, prevP)/nextParticle.getMass()) * deltaT * deltaT);
+                - (1.0/6) * (force.getForceY(time - deltaT, prevP)/nextParticle.getMass()) * deltaT * deltaT;
+
+        nextParticle.setPosition(new Point2D.Double(posX, posY));
     }
 
     public void updateVelocity(AcceleratedParticle nextParticle, AcceleratedParticle particle, double time) {
 
-        AcceleratedParticle prevP = new AcceleratedParticle(particle.getId(), particle.getPrevPosition(),particle.getRadius(), particle.getMass());
+        AcceleratedParticle prevP = new AcceleratedParticle(particle.getId(), particle.getPrevPosition(), particle.getPrevVelocity(), particle.getRadius(), particle.getMass());
 
-        nextParticle.setVelocityX(particle.getVelocity().getX()
-                + (1.0/3) * (force.getForceX(time, nextParticle)/nextParticle.getMass()) * deltaT
-                + (5.0/6) * (force.getForceX(time, particle)/nextParticle.getMass()) * deltaT
-                - (1.0/6) * (force.getForceX(time - deltaT, prevP)/nextParticle.getMass()) * deltaT);
-        nextParticle.setVelocityY(particle.getVelocity().getY()
-                + (1.0/3) * (force.getForceY(time, nextParticle)/nextParticle.getMass()) * deltaT
-                + (5.0/6) * (force.getForceY(time, particle)/nextParticle.getMass()) * deltaT
-                - (1.0/6) * (force.getForceY(time - deltaT, prevP)/nextParticle.getMass()) * deltaT);
+        AcceleratedParticle auxNextParticle = new AcceleratedParticle(nextParticle);
+        auxNextParticle.setVelocity(new Point2D.Double(0,0)); // Since we don't know the value yet.
+
+        double vx = particle.getVelocity().getX()
+                + (1.0/3) * (force.getForceX(time, auxNextParticle)/auxNextParticle.getMass()) * deltaT
+                + (5.0/6) * (force.getForceX(time, particle)/auxNextParticle.getMass()) * deltaT
+                - (1.0/6) * (force.getForceX(time - deltaT, prevP)/auxNextParticle.getMass()) * deltaT;
+        double vy = particle.getVelocity().getY()
+                + (1.0/3) * (force.getForceY(time, auxNextParticle)/auxNextParticle.getMass()) * deltaT
+                + (5.0/6) * (force.getForceY(time, particle)/auxNextParticle.getMass()) * deltaT
+                - (1.0/6) * (force.getForceY(time - deltaT, prevP)/auxNextParticle.getMass()) * deltaT;
+
+        nextParticle.setVelocity(new Point2D.Double(vx, vy));
     }
 
 

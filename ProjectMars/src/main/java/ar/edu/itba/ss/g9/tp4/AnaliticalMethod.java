@@ -1,5 +1,7 @@
 package ar.edu.itba.ss.g9.tp4;
 
+import java.awt.geom.Point2D;
+
 public class AnaliticalMethod implements IntegralMethod {
     private double k;
     private double gamma;
@@ -27,8 +29,11 @@ public class AnaliticalMethod implements IntegralMethod {
     }
 
     private void updatePosition(AcceleratedParticle nextParticle, AcceleratedParticle particle, double time) {
-        nextParticle.setPositionX(Math.exp(-(gamma/(2 * nextParticle.getMass()) * time))
-                * Math.cos(Math.pow(k/nextParticle.getMass() - (gamma*gamma)/(4 * nextParticle.getMass()*nextParticle.getMass()), 0.5) * time));
+        double posX = Math.exp(-(gamma/(2 * nextParticle.getMass()) * time))
+                * Math.cos(Math.pow(k/nextParticle.getMass() - (gamma*gamma)/(4 * nextParticle.getMass()*nextParticle.getMass()), 0.5) * time);
+        double posY = 0;
+
+        nextParticle.setPosition(new Point2D.Double(posX, posY));
     }
 
 }

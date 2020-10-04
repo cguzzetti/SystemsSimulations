@@ -11,18 +11,19 @@ public class AcceleratedParticle {
     private Point2D prevVelocity;
     private final double radius;
     private final double mass;
-    double[] rListY;
-    double[] rListX;
+    double[] equationListY;
+
+    // Has the list of equations where r[n] is the derivative of r[n-1]
+    double[] equationListX;
 
     public AcceleratedParticle(int id, double xPosition, double yPosition, double radius, double mass) {
         this.id = id;
         this.position    = new Point2D.Double(xPosition, yPosition);
         this.radius      = radius;
         this.mass        = mass;
-        this.rListX = new double[6];
-        this.rListY = new double[6];
+        this.equationListX = new double[6];
+        this.equationListY = new double[6];
     }
-
 
     public AcceleratedParticle(int id, Point2D position, double radius, double mass){
         this(id, position.getX(), position.getY(), radius, mass);
@@ -32,6 +33,11 @@ public class AcceleratedParticle {
         this(id, position, radius, mass);
         this.velocity = velocity;
     }
+
+    public AcceleratedParticle(AcceleratedParticle p){
+        this(p.id, p.position, p.velocity, p.radius, p.mass);
+    }
+
 
     public AcceleratedParticle(int id, double radius, double mass){
         this.id = id;
