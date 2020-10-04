@@ -3,6 +3,7 @@ package ar.edu.itba.ss.g9.tp4;
 import java.util.LinkedList;
 import java.util.List;
 
+import static ar.edu.itba.ss.g9.tp4.Oscillator.generateSimulationForSolution;
 import static ar.edu.itba.ss.g9.tp4.Oscillator.generateSimulationForVisualization;
 
 /**
@@ -43,7 +44,7 @@ public class Main {
                 generateSimulationForVisualization(deltaT2, tf, oscillators);
                 break;
             case SOLUTION:
-                System.out.println("IN SOLUTION MODE");
+                generateSimulationForSolution(deltaT, tf, oscillators);
                 break;
             case ERROR:
                 System.out.println("IN ERROR MODE");
