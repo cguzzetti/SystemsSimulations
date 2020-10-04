@@ -7,6 +7,7 @@ public enum IntegralMethods {
     BEEMAN ("Beeman Method"),
     VERLET_ORIGINAL ("Verlet Original Type Method"),
     GEAR_PREDICTOR_CORRECTOR ("Gear Predictor Corrector of order V"),
+    ANALITICAL ("Analitical Method")
     ;
 
     final String description;
