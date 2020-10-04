@@ -3,6 +3,23 @@
 GREEN='\033[0;34m'
 NORMAL='\033[0m'
 
+function prompt_solution_visualization() {
+    read -p "Do you want to run the visualization?[yN]" yn
+    case $yn in
+      [Yy]* )
+        python "$1";
+        ;;
+      [Nn]* )
+        echo "Exiting..."
+        exit
+        ;;
+      * )
+        echo "Unrecognized option $yn, exiting..."
+        ;;
+    esac
+
+}
+
 if [ $# -lt 2 ]; then
   echo "Error, usage: ./run.sh (OVITO|ERROR|SOLUTION) deltaT [deltaT2]"
   exit 1
@@ -21,3 +38,7 @@ mvn clean package
 FILE_PATH="src/main/java/ar/edu/itba/ss/g9/tp4/visualization"
 FILE_NAME="mars_output.txt"
 java -jar target/ProjectMars-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/$FILE_NAME"
+
+if [ "$MODE" == "SOLUTION" ]; then
+  prompt_solution_visualization "$FILE_PATH/visualization.py"
+fi
