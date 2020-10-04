@@ -104,7 +104,6 @@ public class Oscillator {
                 printLimits();
             currentTime += systemDeltaT;
         }
-
     }
 
     private static void printLimits(){
@@ -112,5 +111,20 @@ public class Oscillator {
         System.out.println("2 1.5 3 0");
         System.out.println("3 -1.5 -5 0");
         System.out.println("4 1.5 -5 0");
+    }
+
+    public static void generateSimulationForSolution(double deltaT, double tf, List<Oscillator> oscillators) {
+        double currentTime = 0;
+        while( currentTime < tf){
+            StringBuilder sb = new StringBuilder();
+            sb.append(currentTime);
+            sb.append(" ");
+            for( Oscillator o: oscillators) {
+                o.particle = o.method.moveParticle(o.particle, currentTime);
+                sb.append(String.format("%f ", o.particle.getPositionX()));
+            }
+            System.out.println(sb.toString());
+            currentTime += deltaT;
+        }
     }
 }
