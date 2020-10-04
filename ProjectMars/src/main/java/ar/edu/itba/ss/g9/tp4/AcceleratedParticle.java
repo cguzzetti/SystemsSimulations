@@ -59,6 +59,14 @@ public class AcceleratedParticle {
         this.setPosition(new Point2D.Double(this.position.getX(), y));
     }
 
+    public double getPositionX(){
+        return this.getPosition().getX();
+    }
+
+    public double getPositionY(){
+        return this.getPosition().getY();
+    }
+
     public Point2D getVelocity() {
         return velocity;
     }
@@ -74,6 +82,14 @@ public class AcceleratedParticle {
     public void setVelocityY(double vy) {
         this.setVelocity(new Point2D.Double(this.getVelocity().getX(), vy));
     }
+    public double getVelocityX(){
+        return this.getVelocity().getX();
+    }
+
+    public double getVelocityY(){
+        return this.getVelocity().getY();
+    }
+
 
     public double getRadius() {
         return radius;
