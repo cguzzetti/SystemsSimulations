@@ -3,8 +3,7 @@ package ar.edu.itba.ss.g9.tp4;
 import java.util.LinkedList;
 import java.util.List;
 
-import static ar.edu.itba.ss.g9.tp4.Oscillator.generateSimulationForSolution;
-import static ar.edu.itba.ss.g9.tp4.Oscillator.generateSimulationForVisualization;
+import static ar.edu.itba.ss.g9.tp4.Oscillator.*;
 
 /**
  * Main program excution
@@ -25,32 +24,49 @@ public class Main {
             deltaT2 = Double.parseDouble(args[2]);
 
         Force force = new OscillatorForce(k, g);
-        Oscillator oscillator;
-        List<Oscillator> oscillators = new LinkedList<>();
-        IntegralMethods[] methods = new IntegralMethods[]{
-                IntegralMethods.GEAR_PREDICTOR_CORRECTOR, IntegralMethods.VERLET_ORIGINAL,
-                IntegralMethods.BEEMAN, IntegralMethods.ANALITICAL
-        };
-        for(int i = 0 ; i< 4; i++){
-            oscillator = new Oscillator(i, force, methods[i], k, g, m, deltaT );
-            if(methods[i] == IntegralMethods.GEAR_PREDICTOR_CORRECTOR)
-                oscillator.initializeEquationsTables();
-            else if(methods[i] != IntegralMethods.ANALITICAL)
-                oscillator.initializePreviousValues();
-            oscillators.add(oscillator);
-        }
+
+        List<Oscillator> oscillators;
+
+
         switch (mode){
             case OVITO:
+                oscillators = generateOscillators(force, k, g, m, deltaT, false);
                 generateSimulationForVisualization(deltaT2, tf, oscillators);
                 break;
             case SOLUTION:
+                oscillators = generateOscillators(force, k, g, m, deltaT, false);
                 generateSimulationForSolution(deltaT, tf, oscillators);
                 break;
             case ERROR:
-                System.out.println("IN ERROR MODE");
+                oscillators = generateOscillators(force, k, g, m, deltaT, true);
+                Oscillator analyticalOscillator = new Oscillator(3, force, IntegralMethods.ANALITICAL, k, g, m, deltaT);
+                generateSimulationForErrors(deltaT, tf, oscillators, analyticalOscillator);
+
                 break;
         }
+    }
 
+    private static List<Oscillator> generateOscillators(Force force, double k, double g, double m, double deltaT, boolean isError){
+        List<Oscillator> ret = new LinkedList<>();
+        IntegralMethods[] methods = new IntegralMethods[]{
+                IntegralMethods.GEAR_PREDICTOR_CORRECTOR, IntegralMethods.VERLET_ORIGINAL,
+                IntegralMethods.BEEMAN
+        };
+        Oscillator oscillator;
+        int i;
+        for(i = 0 ; i< 3; i++){
+            oscillator = new Oscillator(i, force, methods[i], k, g, m, deltaT );
+            if(methods[i] == IntegralMethods.GEAR_PREDICTOR_CORRECTOR)
+                oscillator.initializeEquationsTables();
 
+            oscillator.initializePreviousValues();
+
+        }
+
+        // We don't add the Analytical oscillator when calculating errors
+        if(!isError){
+            ret.add(new Oscillator(i, force, IntegralMethods.ANALITICAL,  k, g, m, deltaT));
+        }
+        return ret;
     }
 }

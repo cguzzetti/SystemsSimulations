@@ -127,4 +127,17 @@ public class Oscillator {
             currentTime += deltaT;
         }
     }
+
+    /**
+     * Compare the results from the numerical methods with the analytical method
+     * @param deltaT
+     * @param tf
+     * @param oscillators
+     * @param analyticalOscillator
+     */
+    public static void generateSimulationForErrors(
+            double deltaT, double tf, List<Oscillator> oscillators, Oscillator analyticalOscillator) {
+        double currentTime = 0;
+
+    }
 }
