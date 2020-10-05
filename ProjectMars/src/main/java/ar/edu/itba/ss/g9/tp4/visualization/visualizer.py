@@ -28,9 +28,9 @@ def visualize_solution():
             line = line.split()
             print(line)
             x.append(float(line[0]))
-            y.append(float(line[i + 1]))
+            y.append(float(line[i+1]))
 
-        plt.plot(x, y, label='Método: ' + methods[i])
+        plt.plot(x, y, label =methods[i])
 
     plt.legend(loc ="lower right")
     plt.savefig("solution.png")
