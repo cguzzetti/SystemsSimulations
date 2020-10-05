@@ -1,10 +1,34 @@
 import matplotlib.pyplot as plt
 import sys
-
+import numpy as np
 
 def visualize_error():
-    print("NOT IMPLEMENTED")
-    pass
+    methods = [ "Gear", "Verlet", "Beeman"]
+    methods_dict = {key: [] for key in methods}
+    methods_delta = {key: [] for key in methods}
+    x = []
+    y = []
+    fig, ax = plt.subplots()
+    ax.set_xlabel('deltaT [s]')
+    ax.set_ylabel('Error [m?]')
+    with open("mars_ERROR.xyz", "r") as file:
+        lines = file.readlines()
+        for line in lines:
+            arr = line.split(";")
+            key = arr[0].split(" ")[0]
+            methods_dict[key].append(arr[2])
+            methods_delta[key].append(arr[1])
+
+        # plt.scatter(np.unique(x), methods_dict["Gear"])
+        plt.scatter(methods_dict["Gear"], methods_delta["Gear"], label="Gear Predictor(V)")
+        plt.scatter(methods_dict["Verlet"], methods_delta["Verlet"], label="Verlet")
+        plt.scatter(methods_dict["Beeman"], methods_delta["Beeman"], label="Beeman")
+        plt.legend(loc="lower right")
+#        from matplotlib import ticker
+#        formatter = ticker.ScalarFormatter(useMathText=True)
+#        formatter.set_scientific(True)
+#        ax.yaxis.set_major_formatter(formatter)
+        plt.show()
 
 
 def visualize_solution():

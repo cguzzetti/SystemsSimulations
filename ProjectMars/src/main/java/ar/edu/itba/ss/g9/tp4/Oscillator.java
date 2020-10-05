@@ -153,7 +153,7 @@ public class Oscillator {
 
         for(int i = 0; i< errorValues.length; i++){
             errorValues[i] /= (tf / deltaT);
-            System.out.println(String.format("%s, %f", oscillators.get(i).method.getMethod().description, errorValues[i]));
+            System.out.println(String.format("%s;%.4e;%.4e", oscillators.get(i).method.getMethod().description, errorValues[i], deltaT));
         }
     }
 }

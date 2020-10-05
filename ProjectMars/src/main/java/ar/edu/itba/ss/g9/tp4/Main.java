@@ -38,9 +38,12 @@ public class Main {
                 generateSimulationForSolution(deltaT, tf, oscillators);
                 break;
             case ERROR:
-                oscillators = generateOscillators(force, k, g, m, deltaT, true);
-                Oscillator analyticalOscillator = new Oscillator(3, force, IntegralMethods.ANALITICAL, k, g, m, deltaT);
-                generateSimulationForErrors(deltaT, tf, oscillators, analyticalOscillator);
+                double[] deltas = new double[]{0.0000001, 0.000001, 0.00001, 0.0001, 0.001};
+                for (double delta : deltas) {
+                    oscillators = generateOscillators(force, k, g, m, delta, true);
+                    Oscillator analyticalOscillator = new Oscillator(3, force, IntegralMethods.ANALITICAL, k, g, m, delta);
+                    generateSimulationForErrors(delta, tf, oscillators, analyticalOscillator);
+                }
                 break;
         }
     }
