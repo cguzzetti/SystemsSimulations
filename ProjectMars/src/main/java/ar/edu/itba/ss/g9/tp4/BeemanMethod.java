@@ -48,7 +48,7 @@ public class BeemanMethod implements IntegralMethod{
         AcceleratedParticle prevP = new AcceleratedParticle(particle.getId(), particle.getPrevPosition(), particle.getPrevVelocity(), particle.getRadius(), particle.getMass());
 
         AcceleratedParticle auxNextParticle = new AcceleratedParticle(nextParticle);
-        auxNextParticle.setVelocity(new Point2D.Double(0,0)); // Since we don't know the value yet.
+        auxNextParticle.setVelocity(new Point2D.Double(particle.getVelocityX(),particle.getVelocityY())); // Since we don't know the value yet.
 
         double vx = particle.getVelocity().getX()
                 + (1.0/3) * (force.getForceX(time, auxNextParticle)/auxNextParticle.getMass()) * deltaT

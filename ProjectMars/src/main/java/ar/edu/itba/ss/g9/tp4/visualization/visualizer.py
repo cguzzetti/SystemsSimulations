@@ -6,10 +6,14 @@ if __name__ == '__main__':
     ax.set_ylabel('Posición [m]')
 
     methods = ["Gear predictor", "Verlet original", "Beeman", "Analítico"]
-    # Read from file
-    file = open("mars_SOLUTION.xyz","r")
-    lines = file.readlines()
 
+    # plot_rows = 3
+    # for j in range(1,plot_rows+1):
+
+    # Read from file
+    file = open("mars_SOLUTION"+""+".xyz", "r")
+    lines = file.readlines()
+    # plt.subplot(plot_rows, 1, j)
     for i in range(0, len(methods)):
         x = []
         y = []
@@ -22,4 +26,5 @@ if __name__ == '__main__':
         plt.plot(x, y, label ='Método: '+methods[i])
 
     plt.legend(loc ="lower right")
-    plt.show()
+
+    plt.savefig("solution.png")
