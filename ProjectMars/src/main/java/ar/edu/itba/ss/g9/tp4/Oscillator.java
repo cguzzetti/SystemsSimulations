@@ -139,5 +139,21 @@ public class Oscillator {
             double deltaT, double tf, List<Oscillator> oscillators, Oscillator analyticalOscillator) {
         double currentTime = 0;
 
+        double[] errorValues = new double[3];
+
+        while(currentTime < tf){
+            analyticalOscillator.particle = analyticalOscillator.method.moveParticle(analyticalOscillator.particle, currentTime);
+            int counter = 0;
+            for(Oscillator o : oscillators){
+                o.particle = o.method.moveParticle(o.particle, currentTime);
+                errorValues[counter++]+= pow(analyticalOscillator.particle.getPositionX() - o.particle.getPositionX(), 2);
+            }
+            currentTime+=deltaT;
+        }
+
+        for(int i = 0; i< errorValues.length; i++){
+            errorValues[i] /= (tf / deltaT);
+            System.out.println(String.format("%s, %f", oscillators.get(i).method.getMethod().description, errorValues[i]));
+        }
     }
 }
