@@ -36,9 +36,9 @@ echo -e "\n\n${GREEN}Running Project Mars with arguments: $* ${NORMAL}\n\n"
 mvn clean package
 
 FILE_PATH="src/main/java/ar/edu/itba/ss/g9/tp4/visualization"
-FILE_NAME="mars_output.txt"
+FILE_NAME="mars_$1.xyz"
 java -jar target/ProjectMars-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/$FILE_NAME"
 
 if [ "$MODE" == "SOLUTION" ]; then
-  prompt_solution_visualization "$FILE_PATH/visualization.py"
+  prompt_solution_visualization "$FILE_PATH/visualizer.py"
 fi

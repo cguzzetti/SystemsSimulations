@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     methods = ["Gear predictor", "Verlet original", "Beeman", "Analítico"]
     # Read from file
-    file = open("mars_output.xyz","r")
+    file = open("mars_SOLUTION.xyz","r")
     lines = file.readlines()
 
     for i in range(0, len(methods)):
