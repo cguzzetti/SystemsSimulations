@@ -45,6 +45,9 @@ public class Main {
                     generateSimulationForErrors(delta, tf, oscillators, analyticalOscillator);
                 }
                 break;
+            case MARS:
+                SolarSystem solarSystem = new SolarSystem(force, IntegralMethods.GEAR_PREDICTOR_CORRECTOR, deltaT);
+                solarSystem.simulate(deltaT2, tf);
         }
     }
 

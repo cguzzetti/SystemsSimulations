@@ -45,4 +45,8 @@ public class SolarSystem {
         this.mars = new AcceleratedParticle(2, new Point2D.Double(2.059448551842169E+11, 4.023977946528339E+10)
                 , new Point2D.Double(-3.717406842095575E+3, 2.584914078301731E+4), 3389E3, 6.4171E23);
     }
+
+    public void simulate(double deltaT2, double tf) {
+
+    }
 }

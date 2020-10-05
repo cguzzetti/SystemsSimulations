@@ -146,7 +146,7 @@ public class Oscillator {
             int counter = 0;
             for(Oscillator o : oscillators){
                 o.particle = o.method.moveParticle(o.particle, currentTime);
-                errorValues[counter++]+= pow(analyticalOscillator.particle.getPositionX() - o.particle.getPositionX(), 2);
+                errorValues[counter++]+= (Math.pow(analyticalOscillator.particle.getPositionX() - o.particle.getPositionX(), 2));
             }
             currentTime+=deltaT;
         }
