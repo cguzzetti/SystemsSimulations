@@ -41,7 +41,6 @@ public class Main {
                 oscillators = generateOscillators(force, k, g, m, deltaT, true);
                 Oscillator analyticalOscillator = new Oscillator(3, force, IntegralMethods.ANALITICAL, k, g, m, deltaT);
                 generateSimulationForErrors(deltaT, tf, oscillators, analyticalOscillator);
-
                 break;
         }
     }
@@ -60,7 +59,7 @@ public class Main {
                 oscillator.initializeEquationsTables();
 
             oscillator.initializePreviousValues();
-
+            ret.add(oscillator);
         }
 
         // We don't add the Analytical oscillator when calculating errors
