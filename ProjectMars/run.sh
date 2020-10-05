@@ -7,7 +7,7 @@ function prompt_solution_visualization() {
     read -p "Do you want to run the visualization?[yN]" yn
     case $yn in
       [Yy]* )
-        python "$1";
+        python "$1" "$2";
         ;;
       [Nn]* )
         echo "Exiting..."
@@ -39,6 +39,7 @@ FILE_PATH="src/main/java/ar/edu/itba/ss/g9/tp4/visualization"
 FILE_NAME="mars_$1.xyz"
 java -jar target/ProjectMars-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/$FILE_NAME"
 
-if [ "$MODE" == "SOLUTION" ]; then
-  prompt_solution_visualization "$FILE_PATH/visualizer.py"
+if [ "$MODE" != "OVITO" ]; then
+  cd $FILE_PATH
+  prompt_solution_visualization "visualizer.py" "$MODE"
 fi
