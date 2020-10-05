@@ -16,14 +16,16 @@ def visualize_error():
         for line in lines:
             arr = line.split(";")
             key = arr[0].split(" ")[0]
-            methods_dict[key].append(arr[2])
-            methods_delta[key].append(arr[1])
+            methods_dict[key].append(float(arr[2]))
+            methods_delta[key].append(float(arr[1]))
 
         # plt.scatter(np.unique(x), methods_dict["Gear"])
         plt.scatter(methods_dict["Gear"], methods_delta["Gear"], label="Gear Predictor(V)")
         plt.scatter(methods_dict["Verlet"], methods_delta["Verlet"], label="Verlet")
         plt.scatter(methods_dict["Beeman"], methods_delta["Beeman"], label="Beeman")
         plt.legend(loc="lower right")
+        ax.set_yscale('log')
+        ax.set_xscale('log')
 #        from matplotlib import ticker
 #        formatter = ticker.ScalarFormatter(useMathText=True)
 #        formatter.set_scientific(True)
