@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 GREEN='\033[0;34m'
 NORMAL='\033[0m'
 
