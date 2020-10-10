@@ -35,10 +35,10 @@ fi
 
 echo -e "\n\n${GREEN}Running Project Mars with arguments: $* ${NORMAL}\n\n"
 
-mvn clean package
+# mvn clean package
 
 FILE_PATH="src/main/java/ar/edu/itba/ss/g9/tp4/visualization"
-FILE_NAME="mars_$1.xyz"
+FILE_NAME="mars_$1_$2.xyz"
 java -jar target/ProjectMars-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/$FILE_NAME"
 
 if [ "$MODE" != "OVITO" ]; then
