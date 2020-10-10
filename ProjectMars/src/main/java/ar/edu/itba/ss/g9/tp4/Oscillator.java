@@ -37,7 +37,7 @@ public class Oscillator {
     public void initializePreviousValues(){
         double prevX =
                 particle.getPositionX()
-                        - deltaT * particle.getVelocityY()
+                        - deltaT * particle.getVelocityX()
                         + pow(deltaT, 2) * force.getForceX(0, particle) / (2*particle.getMass());
         double prevY = 0;
         particle.setPrevPosition(new Point2D.Double(prevX, prevY));
