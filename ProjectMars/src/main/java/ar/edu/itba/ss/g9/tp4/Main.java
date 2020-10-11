@@ -1,12 +1,15 @@
 package ar.edu.itba.ss.g9.tp4;
 
+import ar.edu.itba.ss.g9.tp4.Mars.Gravity;
+import ar.edu.itba.ss.g9.tp4.Mars.SolarSystem;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import static ar.edu.itba.ss.g9.tp4.Oscillator.*;
 
 /**
- * Main program excution
+ * Main program execution
  *
  */
 public class Main {
@@ -27,7 +30,6 @@ public class Main {
 
         List<Oscillator> oscillators;
 
-
         switch (mode){
             case OVITO:
                 oscillators = generateOscillators(force, k, g, m, deltaT, false);
@@ -46,8 +48,9 @@ public class Main {
                 }
                 break;
             case MARS:
-                SolarSystem solarSystem = new SolarSystem(force, IntegralMethods.GEAR_PREDICTOR_CORRECTOR, deltaT);
+                SolarSystem solarSystem = new SolarSystem(new Gravity(), IntegralMethods.BEEMAN, deltaT);
                 solarSystem.simulate(deltaT2, tf);
+                break;
         }
     }
 

@@ -23,13 +23,13 @@ function prompt_solution_visualization() {
 }
 
 if [ $# -lt 2 ]; then
-  echo "Error, usage: ./run.sh (OVITO|ERROR|SOLUTION) deltaT [deltaT2]"
+  echo "Error, usage: ./run.sh (OVITO|ERROR|SOLUTION|MARS) deltaT [deltaT2]"
   exit 1
 fi
 MODE="$1";
 
-if [ "$MODE" != "OVITO" ] && [ "$MODE" != "ERROR" ] && [ "$MODE" != "SOLUTION" ]; then
-  echo "$MODE is not a valid mode. Options are: OVITO, ERROR and SOLUTION"
+if [ "$MODE" != "OVITO" ] && [ "$MODE" != "ERROR" ] && [ "$MODE" != "SOLUTION" ] && [ "$MODE" != "MARS" ]; then
+  echo "$MODE is not a valid mode. Options are: OVITO, ERROR, MARS and SOLUTION"
   exit 1
 fi
 
