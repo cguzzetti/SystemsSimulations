@@ -13,6 +13,8 @@ import static ar.edu.itba.ss.g9.tp4.Oscillator.*;
  *
  */
 public class Main {
+    private static int THREE_YEARS = 3 * 365 * 24 * 60 * 60;
+    private static int ONE_MONTH   = 31 * 24 * 60 * 60;
     public static void main( String[] args ) {
         double k = Math.pow(10, 4);
         double g = 100;
@@ -40,9 +42,13 @@ public class Main {
                 generateSimulationForSolution(deltaT, tf, oscillators);
                 break;
             case MARS:
-                tf = 3 * 365 * 24 * 60 * 60;
+                tf = THREE_YEARS;
+                deltaT2 = ONE_MONTH/4.0;
+                double launchTime = deltaT2 * 5;
+                double launchSpeed = 10; // km/s
+                double launchAngle = 90;
                 SolarSystem solarSystem = new SolarSystem(new Gravity(), IntegralMethods.BEEMAN, deltaT);
-                solarSystem.simulate(deltaT2, tf);
+                solarSystem.simulate(deltaT2, tf, launchTime, launchSpeed, launchAngle);
                 break;
         }
     }
