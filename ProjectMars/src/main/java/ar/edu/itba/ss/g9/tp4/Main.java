@@ -32,11 +32,11 @@ public class Main {
 
         switch (mode){
             case OVITO:
-                oscillators = generateOscillators(force, k, g, m, deltaT, false);
+                oscillators = generateOscillators(force, k, g, m, deltaT);
                 generateSimulationForVisualization(deltaT2, tf, oscillators);
                 break;
             case SOLUTION:
-                oscillators = generateOscillators(force, k, g, m, deltaT, false);
+                oscillators = generateOscillators(force, k, g, m, deltaT);
                 generateSimulationForSolution(deltaT, tf, oscillators);
                 break;
             case MARS:
@@ -47,7 +47,7 @@ public class Main {
         }
     }
 
-    private static List<Oscillator> generateOscillators(Force force, double k, double g, double m, double deltaT, boolean isError){
+    private static List<Oscillator> generateOscillators(Force force, double k, double g, double m, double deltaT){
         List<Oscillator> ret = new LinkedList<>();
         IntegralMethods[] methods = new IntegralMethods[]{
                 IntegralMethods.GEAR_PREDICTOR_CORRECTOR, IntegralMethods.VERLET_ORIGINAL,
