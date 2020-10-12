@@ -35,13 +35,13 @@ fi
 
 echo -e "\n\n${GREEN}Running Project Mars with arguments: $* ${NORMAL}\n\n"
 
-# mvn clean package
-
+mvn clean package
+INTERACTIVE=${4:-true}
 FILE_PATH="src/main/java/ar/edu/itba/ss/g9/tp4/visualization"
 FILE_NAME="mars_$1_$2.xyz"
 java -jar target/ProjectMars-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/$FILE_NAME"
 
-if [ "$MODE" != "MARS" ]; then
+if [ "$MODE" != "MARS" ] && [ $INTERACTIVE == true ]; then
   cd $FILE_PATH
   prompt_solution_visualization "visualizer.py" "$MODE" "$2"
 fi
