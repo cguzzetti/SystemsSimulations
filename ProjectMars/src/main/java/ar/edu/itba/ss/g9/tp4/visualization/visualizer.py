@@ -37,7 +37,7 @@ def visualize_error():
 #        formatter = ticker.ScalarFormatter(useMathText=True)
 #        formatter.set_scientific(True)
 #        ax.yaxis.set_major_formatter(formatter)
-    plt.savefig("error.png")
+    plt.savefig("error_new.png")
 
 
 def visualize_solution():
@@ -69,6 +69,23 @@ def visualize_solution():
     plt.savefig("solution.png")
 
 
+def visualize_specific_error(deltaT: float):
+    methods = ["Gear", "Verlet", "Beeman"]
+    errors = {key: [] for key in methods}
+
+    parser: ParserXYZ = ParserXYZ.initialize_parser(f"mars_OVITO_{deltaT}.xyz")
+    parser.parse_file()
+    values = parser.calculate_position_error()
+    analytical = values[3]
+    print(f"For deltaT = {deltaT}")
+    counter = 0
+    for method in methods:
+        sqr_err = mean_squared_error(analytical, values[counter])
+        print(f"\t{method}: {sqr_err}")
+        errors[method].append(sqr_err)
+        counter += 1
+
+
 if __name__ == '__main__':
     # Filename is always the first argument
     if len(sys.argv) == 1:
@@ -80,5 +97,7 @@ if __name__ == '__main__':
         visualize_solution()
     elif mode == "ERROR":
         visualize_error()
+    elif mode == "OVITO":
+        visualize_specific_error(sys.argv[2])
     else:
         print(f"{mode} is not a recognized mdoe :(")

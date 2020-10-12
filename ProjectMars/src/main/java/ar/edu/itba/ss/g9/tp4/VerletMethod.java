@@ -1,6 +1,7 @@
 package ar.edu.itba.ss.g9.tp4;
 
 import java.awt.geom.Point2D;
+import static java.lang.Math.pow;
 
 public class VerletMethod implements IntegralMethod{
     private Force force;
@@ -22,7 +23,7 @@ public class VerletMethod implements IntegralMethod{
     public AcceleratedParticle moveParticle(AcceleratedParticle particle, double time) {
         AcceleratedParticle nextParticle = new AcceleratedParticle(particle.getId(), particle.getRadius(), particle.getMass());
         nextParticle.setPrevPosition(particle.getPosition());
-        nextParticle.setPrevVelocity(particle.getVelocity());
+        // nextParticle.setPrevVelocity(particle.getVelocity());
 
         updatePosition(nextParticle, particle, time);
         updateVelocity(nextParticle, particle, time);
@@ -32,7 +33,7 @@ public class VerletMethod implements IntegralMethod{
     public void updatePosition(AcceleratedParticle nextParticle, AcceleratedParticle particle, double time) {
         double posX = 2.0 * particle.getPosition().getX()
                 - particle.getPrevPosition().getX()
-                + deltaT * deltaT * (force.getForceX(time, particle)/nextParticle.getMass());
+                + (pow(deltaT, 2) / nextParticle.getMass()) * force.getForceX(time, particle);
         double posY = 2.0 * particle.getPosition().getY()
                 - particle.getPrevPosition().getY()
                 + deltaT * deltaT * (force.getForceY(time, particle)/nextParticle.getMass());

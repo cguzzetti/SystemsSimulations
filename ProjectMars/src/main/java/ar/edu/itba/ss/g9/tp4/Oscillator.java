@@ -39,12 +39,12 @@ public class Oscillator {
                 particle.getPositionX()
                         - deltaT * particle.getVelocityX()
                         + pow(deltaT, 2) * force.getForceX(0, particle) / (2*particle.getMass());
-        double prevY = 0;
+        double prevY = 0; //particle.getPositionY();
         particle.setPrevPosition(new Point2D.Double(prevX, prevY));
 
         particle.setPrevVelocity(new Point2D.Double(
                 particle.getVelocityX() - (deltaT / particle.getMass()) * force.getForceX(0, particle),
-                0
+                0//particle.getVelocityY()
         ));
     }
 
@@ -92,10 +92,10 @@ public class Oscillator {
                 System.out.println("t " + Math.round(currentTime / deltaT2));
             }
             for( Oscillator o: oscillators) {
-                o.particle = o.method.moveParticle(o.particle, currentTime);
+                o.setParticle(o.method.moveParticle(o.particle, currentTime));
                 if (shouldPrint) {
                     System.out.println(String.format(
-                            "%d %f %d %f", o.id, o.particle.getPositionX(), o.id, 0.4
+                            "%d %f %d %f %s", o.id, o.particle.getPositionX(), o.id, 0.4, o.method
                     ));
                 }
                 systemDeltaT = o.deltaT;
@@ -107,10 +107,10 @@ public class Oscillator {
     }
 
     private static void printLimits(){
-        System.out.println("1 -1.5 3 0");
-        System.out.println("2 1.5 3 0");
-        System.out.println("3 -1.5 -5 0");
-        System.out.println("4 1.5 -5 0");
+        System.out.println("4 -1.5 3 0 LIMIT");
+        System.out.println("4 1.5 3 0 LIMIT");
+        System.out.println("4 -1.5 -5 0 LIMIT");
+        System.out.println("4 1.5 -5 0 LIMIT");
     }
 
     public static void generateSimulationForSolution(double deltaT, double tf, List<Oscillator> oscillators) {
@@ -128,6 +128,10 @@ public class Oscillator {
         }
     }
 
+    public void setParticle(AcceleratedParticle p){
+        this.particle = p;
+    }
+
     /**
      * Compare the results from the numerical methods with the analytical method
      * @param deltaT
@@ -142,11 +146,12 @@ public class Oscillator {
         double[] errorValues = new double[3];
 
         while(currentTime < tf){
-            analyticalOscillator.particle = analyticalOscillator.method.moveParticle(analyticalOscillator.particle, currentTime);
             int counter = 0;
+            analyticalOscillator.particle = analyticalOscillator.method.moveParticle(analyticalOscillator.particle, currentTime);
+
             for(Oscillator o : oscillators){
                 o.particle = o.method.moveParticle(o.particle, currentTime);
-                errorValues[counter++]+= (Math.pow(analyticalOscillator.particle.getPositionX() - o.particle.getPositionX(), 2));
+                errorValues[counter++]+= Math.pow(analyticalOscillator.particle.getPositionX() - o.particle.getPositionX(), 2);
             }
             currentTime+=deltaT;
         }

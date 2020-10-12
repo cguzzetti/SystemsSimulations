@@ -39,14 +39,6 @@ public class Main {
                 oscillators = generateOscillators(force, k, g, m, deltaT, false);
                 generateSimulationForSolution(deltaT, tf, oscillators);
                 break;
-            case ERROR:
-                double[] deltas = new double[]{0.0000001, 0.000001, 0.00001, 0.0001, 0.001};
-                for (double delta : deltas) {
-                    oscillators = generateOscillators(force, k, g, m, delta, true);
-                    Oscillator analyticalOscillator = new Oscillator(3, force, IntegralMethods.ANALITICAL, k, g, m, delta);
-                    generateSimulationForErrors(delta, tf, oscillators, analyticalOscillator);
-                }
-                break;
             case MARS:
                 tf = 3 * 365 * 24 * 60 * 60;
                 SolarSystem solarSystem = new SolarSystem(new Gravity(), IntegralMethods.BEEMAN, deltaT);
@@ -59,23 +51,20 @@ public class Main {
         List<Oscillator> ret = new LinkedList<>();
         IntegralMethods[] methods = new IntegralMethods[]{
                 IntegralMethods.GEAR_PREDICTOR_CORRECTOR, IntegralMethods.VERLET_ORIGINAL,
-                IntegralMethods.BEEMAN
+                IntegralMethods.BEEMAN, IntegralMethods.ANALITICAL
         };
         Oscillator oscillator;
         int i;
-        for(i = 0 ; i< 3; i++){
+        for(i = 0 ; i< 4; i++){
             oscillator = new Oscillator(i, force, methods[i], k, g, m, deltaT );
             if(methods[i] == IntegralMethods.GEAR_PREDICTOR_CORRECTOR)
                 oscillator.initializeEquationsTables();
+            else if(methods[i] != IntegralMethods.ANALITICAL)
+                oscillator.initializePreviousValues();
 
-            oscillator.initializePreviousValues();
             ret.add(oscillator);
         }
 
-        // We don't add the Analytical oscillator when calculating errors
-        if(!isError){
-            ret.add(new Oscillator(i, force, IntegralMethods.ANALITICAL,  k, g, m, deltaT));
-        }
         return ret;
     }
 }
