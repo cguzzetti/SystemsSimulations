@@ -63,13 +63,13 @@ public class SolarSystem {
                 System.out.println(3);
                 System.out.println("t " + Math.round(currentTime / deltaT2));
                 System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", sun.getId(), sun.getPositionX(), sun.getPositionY(), sun.getMass(), sun.getRadius(), 1, 1, 0
+                        "%d %f %f %f %f %d %d %d", sun.getId(), sun.getPositionX(), sun.getPositionY(), sun.getMass(), sun.getRadius() * 10, 1, 1, 0
                 ));
                 System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", mars.getId(), mars.getPositionX(), mars.getPositionY(), mars.getMass(), mars.getRadius(), 1, 0, 0
+                        "%d %f %f %f %f %d %d %d", mars.getId(), mars.getPositionX(), mars.getPositionY(), mars.getMass(), mars.getRadius() * 500, 1, 0, 0
                 ));
                 System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", earth.getId(), earth.getPositionX(), earth.getPositionY(), earth.getMass(), earth.getRadius(), 0, 0, 1
+                        "%d %f %f %f %f %d %d %d", earth.getId(), earth.getPositionX(), earth.getPositionY(), earth.getMass(), earth.getRadius() * 500, 0, 0, 1
                 ));
             }
 

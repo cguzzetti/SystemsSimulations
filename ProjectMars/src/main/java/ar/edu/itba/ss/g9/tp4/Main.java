@@ -48,6 +48,7 @@ public class Main {
                 }
                 break;
             case MARS:
+                tf = 3 * 365 * 24 * 60 * 60;
                 SolarSystem solarSystem = new SolarSystem(new Gravity(), IntegralMethods.BEEMAN, deltaT);
                 solarSystem.simulate(deltaT2, tf);
                 break;

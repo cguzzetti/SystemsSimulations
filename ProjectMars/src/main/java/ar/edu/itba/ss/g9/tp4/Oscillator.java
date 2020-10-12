@@ -84,7 +84,7 @@ public class Oscillator {
     public static void generateSimulationForVisualization(double deltaT2, double tf, List<Oscillator> oscillators) {
         double currentTime = 0;
         double systemDeltaT = 0;
-        while( currentTime < tf){
+        while( currentTime < tf ){
             // if (t/deltat2 ~= round(t/deltat2) ==> should print
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
             if(shouldPrint){
