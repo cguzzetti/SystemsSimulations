@@ -6,7 +6,7 @@ if [ $# -ne 1 ]; then
 fi
 project=$1
 
-mvn clean package
+# mvn clean package
 
 if [ $project == "OLA" ]; then
     cd LatticeAutomata
@@ -22,6 +22,11 @@ elif [ $project == "GAS" ]; then
     cd GasDiffusion
     ./run.sh
     echo Au revoir
+    exit 0
+elif [ $project == "MARS" ]; then
+    cd ProjectMars
+    ./run.sh
+    echo さようなら
     exit 0
 fi
 echo "Not found"

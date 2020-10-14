@@ -233,4 +233,8 @@ public class SolarSystem {
         this.shipParticles.add(earth);
 
     }
+
+    private boolean arrived(){
+        return Gravity.getDistance(this.mars, this.ship) - this.mars.getRadius() - ship.getRadius() < 0;
+    }
 }

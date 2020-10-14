@@ -86,6 +86,34 @@ def visualize_specific_error(deltaT: float):
         counter += 1
 
 
+def visualize_min_time():
+    with open("time.txt", "r") as file:
+        lines = file.readlines()
+        min_distances = []
+        departure_time = []
+        min_pair = {
+            "distance": None,
+            "departure_time": None
+        }
+        for line in lines[1:]:
+            elems = line.split(",")
+            min_distance = float(elems[0])
+            departure = int(elems[2])
+            if min_pair["distance"] is None or min_distance < min_pair["distance"]:
+                min_pair["distance"] = min_distance
+                min_pair["departure_time"] = departure
+            min_distances.append(min_distance)
+            departure_time.append(departure)
+
+    fig, ax = plt.subplots()
+    ax.set_xlabel('Departure time [days]')
+    ax.set_ylabel('Minimum distance [km]')
+
+    print(f'Min distance: {min_pair["distance"]} departed on day: {min_pair["departure_time"]}')
+    plt.plot(departure_time, min_distances)
+    plt.show()
+
+
 if __name__ == '__main__':
     # Filename is always the first argument
     if len(sys.argv) == 1:
@@ -99,5 +127,7 @@ if __name__ == '__main__':
         visualize_error()
     elif mode == "OVITO":
         visualize_specific_error(sys.argv[2])
+    elif mode == "MIN_TIME":
+        visualize_min_time()
     else:
         print(f"{mode} is not a recognized mdoe :(")
