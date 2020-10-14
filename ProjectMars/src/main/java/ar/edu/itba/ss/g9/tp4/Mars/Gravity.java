@@ -11,7 +11,7 @@ public class Gravity implements Force {
         return G * particle.getMass() * other.getMass() / (Math.pow(getDistance(particle, other),2));
     }
 
-    private double getDistance(AcceleratedParticle particle, AcceleratedParticle other) {
+    public double getDistance(AcceleratedParticle particle, AcceleratedParticle other) {
         return particle.getPosition().distance(other.getPosition());
     }
 

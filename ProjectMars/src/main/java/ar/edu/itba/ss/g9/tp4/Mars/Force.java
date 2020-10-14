@@ -7,4 +7,5 @@ import java.util.List;
 public interface Force {
     double getForceX(List<AcceleratedParticle> otherParticles, AcceleratedParticle particle);
     double getForceY(List<AcceleratedParticle> otherParticles, AcceleratedParticle particle);
+    double getDistance(AcceleratedParticle particle, AcceleratedParticle other);
 }

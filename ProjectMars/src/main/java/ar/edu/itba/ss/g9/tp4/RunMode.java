@@ -4,5 +4,6 @@ public enum RunMode {
     OVITO,
     ERROR,
     SOLUTION,
-    MARS
+    MARS_PLANETS,
+    MARS_FIND_LAUNCH
 }
