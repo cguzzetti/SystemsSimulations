@@ -95,14 +95,19 @@ public class SolarSystem {
                 locateShip();
             }
 
-            sun = method.moveParticle(sun, sunParticles);
-            earth = method.moveParticle(earth, earthParticles);
-            mars = method.moveParticle(mars, marsParticles);
+            AcceleratedParticle auxSun = method.moveParticle(sun, sunParticles);
+            AcceleratedParticle auxEarth = method.moveParticle(earth, earthParticles);
+            AcceleratedParticle auxMars = method.moveParticle(mars, marsParticles);
+            if(this.shipLaunched) {
+                AcceleratedParticle auxShip = method.moveParticle(ship, shipParticles);
+                this.ship = auxShip;
+            }
+            this.sun = auxSun;
+            this.earth = auxEarth;
+            this.mars = auxMars;
 
             if(this.shipLaunched) {
-                this.ship = method.moveParticle(this.ship, this.shipParticles);
-
-                double distance = force.getDistance(mars, ship);
+                double distance = force.getDistance(ship, mars);
 
                 if (minDistance > distance) {
                     minDistance = distance;
@@ -178,11 +183,16 @@ public class SolarSystem {
                 }
             }
 
-            sun = method.moveParticle(sun, sunParticles);
-            earth = method.moveParticle(earth, earthParticles);
-            mars = method.moveParticle(mars, marsParticles);
-            if(this.shipLaunched)
-                this.ship = method.moveParticle(this.ship, this.shipParticles);
+            AcceleratedParticle auxSun = method.moveParticle(sun, sunParticles);
+            AcceleratedParticle auxEarth = method.moveParticle(earth, earthParticles);
+            AcceleratedParticle auxMars = method.moveParticle(mars, marsParticles);
+            if(this.shipLaunched) {
+                AcceleratedParticle auxShip = method.moveParticle(ship, shipParticles);
+                this.ship = auxShip;
+            }
+            this.sun = auxSun;
+            this.earth = auxEarth;
+            this.mars = auxMars;
 
             currentTime += deltaT;
         }
@@ -206,7 +216,7 @@ public class SolarSystem {
         ship.setPosition(new Point2D.Double(x, y));
         ship.setVelocity(new Point2D.Double(speedX, speedY));
 
-        initializePreviousValues(ship, this.shipParticles);
+        initializePreviousValues(ship, shipParticles);
     }
 
 
