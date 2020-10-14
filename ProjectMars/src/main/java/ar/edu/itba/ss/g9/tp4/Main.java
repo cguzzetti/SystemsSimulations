@@ -13,8 +13,7 @@ import static ar.edu.itba.ss.g9.tp4.Oscillator.*;
  *
  */
 public class Main {
-    private static int YEAR = 3 * 365 * 24 * 60 * 60;
-    private static int ONE_MONTH   = 31 * 24 * 60 * 60;
+    private static int YEAR = 365 * 24 * 60 * 60;
     public static void main( String[] args ) {
         double k = Math.pow(10, 4);
         double g = 100;
@@ -32,10 +31,11 @@ public class Main {
 
         List<Oscillator> oscillators;
 
-
+        if(mode == RunMode.MARS_PLANETS || mode == RunMode.MARS_FIND_LAUNCH)
+            deltaT2 = 720;
         double launchTime = deltaT2 * 5;
-        double launchSpeed = 10; // km/s
-        double launchAngle = 90;
+        double launchSpeed = 8 * 1000; // m/s
+        double launchAngle = 0;
         SolarSystem solarSystem;
 
         switch (mode){
@@ -49,7 +49,6 @@ public class Main {
                 break;
             case MARS_PLANETS:
                 tf = 3 * YEAR;
-                deltaT2 = 720;
                 solarSystem = new SolarSystem(new Gravity(), IntegralMethods.BEEMAN, deltaT);
                 solarSystem.simulate(deltaT2, tf, launchTime, launchSpeed, launchAngle);
                 break;
