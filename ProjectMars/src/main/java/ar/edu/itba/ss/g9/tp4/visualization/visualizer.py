@@ -87,7 +87,7 @@ def visualize_specific_error(deltaT: float):
 
 
 def visualize_min_time():
-    with open("time.txt", "r") as file:
+    with open("mars_MARS_FIND_LAUNCH_360.xyz", "r") as file:
         lines = file.readlines()
         min_distances = []
         departure_time = []
@@ -96,7 +96,7 @@ def visualize_min_time():
             "departure_time": None
         }
         for line in lines[1:]:
-            elems = line.split(",")
+            elems = line.split(", ")
             min_distance = float(elems[0])
             departure = int(elems[2])
             if min_pair["distance"] is None or min_distance < min_pair["distance"]:
