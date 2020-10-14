@@ -28,7 +28,7 @@ if [ $# -lt 2 ]; then
 fi
 MODE="$1";
 
-if [ "$MODE" != "OVITO" ] && [ "$MODE" != "ERROR" ] && [ "$MODE" != "SOLUTION" ] && [ "$MODE" != "MARS" ]; then
+if [ "$MODE" != "OVITO" ] && [ "$MODE" != "ERROR" ] && [ "$MODE" != "SOLUTION" ] && [ "$MODE" != "MARS_PLANETS" ] && [ "$MODE" != "MARS_FIND_LAUNCH" ]; then
   echo "$MODE is not a valid mode. Options are: OVITO, ERROR, MARS and SOLUTION"
   exit 1
 fi
@@ -41,7 +41,7 @@ FILE_PATH="src/main/java/ar/edu/itba/ss/g9/tp4/visualization"
 FILE_NAME="mars_$1_$2.xyz"
 java -jar target/ProjectMars-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/$FILE_NAME"
 
-if [ "$MODE" != "MARS" ] && [ $INTERACTIVE == true ]; then
+if [ "$MODE" != "MARS_PLANETS" ] && [ "$MODE" != "MARS_FIND_LAUNCH" ] && [ "$INTERACTIVE" == true ]; then
   cd $FILE_PATH
   prompt_solution_visualization "visualizer.py" "$MODE" "$2"
 fi
