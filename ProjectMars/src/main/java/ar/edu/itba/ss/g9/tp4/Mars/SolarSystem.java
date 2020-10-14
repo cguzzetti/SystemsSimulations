@@ -14,6 +14,7 @@ public class SolarSystem {
     Force force;
     IntegralMethod method;
     double deltaT;
+    final static double STATION_SPEED = 7.12 * 1000;
     final static double LAUNCH_DISTANCE = 1500 * 1000;
     final static double ARRIVE_DISTANCE = 1000000 * 1000;
     final static double DAY = 60 * 60 * 24;
@@ -60,7 +61,7 @@ public class SolarSystem {
     public void runExperimentSimulations(double tf, double launchSpeed, double launchAngle) {
         System.out.println("minimum distance (m), days since launch, launch day");
 
-        for (double i = 0; i < 2*YEAR && i < tf; i += MONTH) {
+        for (double i = 0; i < 1*YEAR && i < tf; i += DAY) {
 
             updateParticlesLists();
 
@@ -102,17 +103,16 @@ public class SolarSystem {
                     minTime = currentTime;
                 }
                 if (arrived()) {
-                    System.out.println("Arrived:");
                     System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
                     double speed = Math.sqrt(Math.pow(ship.getVelocityX() / 1000, 2) + Math.pow(ship.getVelocityY() / 1000, 2));
-                    System.out.println(String.format("Speed: %f km/s", speed));
-                    System.out.println("********");
+                    System.out.println(String.format("Arrived at speed: %f km/s", speed));
                     return;
                 }
 
             }
             currentTime += deltaT;
         }
+        System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
     }
 
     private boolean arrived() {
@@ -188,9 +188,9 @@ public class SolarSystem {
         double x = earth.getPositionX() + ((earth.getRadius() + shipRadius + LAUNCH_DISTANCE) * Math.cos(angle));
         double y = earth.getPositionY() + ((earth.getRadius() + shipRadius + LAUNCH_DISTANCE) * Math.sin(angle));
 
-        double speed = launchSpeed * 1000; // m/s
-        double speedX = this.earth.getVelocityX() + speed * Math.cos((Math.PI / 2) + angle);
-        double speedY = this.earth.getVelocityY() + speed * Math.sin((Math.PI / 2) + angle);
+        double speed = launchSpeed;
+        double speedX = this.earth.getVelocityX() + (speed + STATION_SPEED) * Math.cos((Math.PI / 2) + angle);
+        double speedY = this.earth.getVelocityY() + (speed + STATION_SPEED) * Math.sin((Math.PI / 2) + angle);
 
         ship.setPosition(new Point2D.Double(x, y));
         ship.setVelocity(new Point2D.Double(speedX, speedY));
@@ -228,9 +228,14 @@ public class SolarSystem {
         this.sunParticles.add(earth);
 
         this.shipParticles = new LinkedList<>();
-        this.shipParticles.add(mars);
-        this.shipParticles.add(sun);
-        this.shipParticles.add(earth);
+        if(this.shipLaunched) {
+            this.shipParticles.add(mars);
+            this.shipParticles.add(sun);
+            this.shipParticles.add(earth);
 
+            this.sunParticles.add(ship);
+            this.marsParticles.add(ship);
+            this.earthParticles.add(ship);
+        }
     }
 }
