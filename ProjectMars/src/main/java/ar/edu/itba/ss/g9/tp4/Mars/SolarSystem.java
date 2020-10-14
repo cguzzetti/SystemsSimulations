@@ -16,7 +16,7 @@ public class SolarSystem {
     double deltaT;
     final static double STATION_SPEED = 7.12 * 1000;
     final static double LAUNCH_DISTANCE = 1500 * 1000;
-    final static double ARRIVE_DISTANCE = 1000000 * 1000;
+    final static double ARRIVE_DISTANCE = 1000 * 1000;
     final static double DAY = 60 * 60 * 24;
     final static double MONTH = 30 * DAY;
     final static double YEAR = DAY * 365;
@@ -61,7 +61,7 @@ public class SolarSystem {
     public void runExperimentSimulations(double tf, double launchSpeed, double launchAngle) {
         System.out.println("minimum distance (m), days since launch, launch day");
 
-        for (double i = 0; i < 1*YEAR && i < tf; i += DAY) {
+        for (double i = 0; i < 3*YEAR && i < tf; i += DAY) {
 
             updateParticlesLists();
 

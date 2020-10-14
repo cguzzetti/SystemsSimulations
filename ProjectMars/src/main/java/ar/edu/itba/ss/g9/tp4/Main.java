@@ -13,8 +13,7 @@ import static ar.edu.itba.ss.g9.tp4.Oscillator.*;
  *
  */
 public class Main {
-    private static int YEAR = 3 * 365 * 24 * 60 * 60;
-    private static int ONE_MONTH   = 31 * 24 * 60 * 60;
+    private static int YEAR = 365 * 24 * 60 * 60;
     public static void main( String[] args ) {
         double k = Math.pow(10, 4);
         double g = 100;
