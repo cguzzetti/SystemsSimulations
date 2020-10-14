@@ -15,6 +15,7 @@ public class SolarSystem {
     IntegralMethod method;
     double deltaT;
     final static double LAUNCH_DISTANCE = 1500 * 1000;
+    final static double ARRIVE_DISTANCE = 1000000 * 1000;
     final static double DAY = 60 * 60 * 24;
     final static double MONTH = 30 * DAY;
     final static double YEAR = DAY * 365;
@@ -115,7 +116,7 @@ public class SolarSystem {
     }
 
     private boolean arrived() {
-        return force.getDistance(mars, ship) - mars.getRadius() - ship.getRadius() < 0;
+        return force.getDistance(mars, ship) - mars.getRadius() - ship.getRadius() < ARRIVE_DISTANCE;
     }
 
     public void simulate(double deltaT2, double tf, double launchTime, double launchSpeed, double launchAngle) {
@@ -160,7 +161,7 @@ public class SolarSystem {
                 ));
                 if(this.shipLaunched) {
                     System.out.println(String.format(
-                            "%d %f %f %f %f %d %d %d", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 500, 1, 0, 1
+                            "%d %f %f %f %f %d %d %d", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7*2, 1, 0, 1
                     ));
                 }
             }
@@ -180,8 +181,8 @@ public class SolarSystem {
     private void locateShip(){
         double diffX = this.earth.getPositionX() - this.sun.getPositionX();
         double diffY = this.earth.getPositionY() - this.sun.getPositionY();
-        double shipRadius = 6371E3;
-        this.ship = new AcceleratedParticle(SPACE_SHIP.getId(), shipRadius, 2E5);
+        double shipRadius = 50;
+        this.ship = new AcceleratedParticle(SPACE_SHIP.getId(), shipRadius, 5E5);
         double angle = Math.atan2(diffY, diffX) + Math.toRadians(this.launchAngle);
 
         double x = earth.getPositionX() + ((earth.getRadius() + shipRadius + LAUNCH_DISTANCE) * Math.cos(angle));
