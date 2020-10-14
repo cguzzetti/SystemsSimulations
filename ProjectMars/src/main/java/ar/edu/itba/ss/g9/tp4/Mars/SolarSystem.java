@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static ar.edu.itba.ss.g9.tp4.Mars.CelestialBodies.*;
+import static java.lang.Math.min;
 import static java.lang.Math.pow;
 
 public class SolarSystem {
@@ -102,12 +103,13 @@ public class SolarSystem {
                 this.ship = method.moveParticle(this.ship, this.shipParticles);
 
                 double distance = force.getDistance(mars, ship);
+
                 if (minDistance > distance) {
                     minDistance = distance;
                     minTime = currentTime;
                 }
                 if (arrived()) {
-                    System.out.println(String.format("%f, %d, %d", minDistance / 1000, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
+                    System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
                     double speed = Math.sqrt(Math.pow(ship.getVelocityX() / 1000, 2) + Math.pow(ship.getVelocityY() / 1000, 2));
                     System.out.println(String.format("Arrived at speed: %f km/s", speed));
                     return;
@@ -116,7 +118,7 @@ public class SolarSystem {
             }
             currentTime += deltaT;
         }
-        System.out.println(String.format("%f, %d, %d", minDistance /1000 , (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
+        System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
     }
 
     private boolean shipPassedMarsOrbit() {
@@ -171,7 +173,7 @@ public class SolarSystem {
                 ));
                 if(this.shipLaunched) {
                     System.out.println(String.format(
-                            "%d %f %f %f %f %d %d %d", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7*2, 1, 0, 1
+                            "%d %f %f %f %f %d %d %d %f", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7*2, 1, 0, 1, force.getDistance(ship,mars)
                     ));
                 }
             }

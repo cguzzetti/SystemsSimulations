@@ -52,7 +52,7 @@ public class Main {
             case MARS_PLANETS:
                 tf = 3 * YEAR;
                 solarSystem = new SolarSystem(new Gravity(), deltaT);
-                solarSystem.simulate(deltaT2, tf, 459 * DAY, launchSpeed, launchAngle);
+                solarSystem.simulate(deltaT2, tf, 156 * DAY, launchSpeed, launchAngle);
                 break;
             case MARS_FIND_LAUNCH:
                 tf = 3 * YEAR;
