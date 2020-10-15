@@ -7,7 +7,7 @@ import java.util.List;
 public class Gravity implements Force {
     static final double G = 6.693E-11;
 
-    private double getForce(AcceleratedParticle particle, AcceleratedParticle other) {
+    public double getForce(AcceleratedParticle particle, AcceleratedParticle other) {
         return G * particle.getMass() * other.getMass() / (Math.pow(getDistance(particle, other),2));
     }
 

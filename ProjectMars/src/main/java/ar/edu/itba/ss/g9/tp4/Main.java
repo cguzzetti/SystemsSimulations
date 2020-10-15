@@ -41,7 +41,7 @@ public class Main {
         double launchAngle = 0;
         SolarSystem solarSystem;
 
-        boolean jupiterAsDestiny = true;
+        boolean jupiterAsDestiny = false;
 
         switch (mode){
             case OVITO:
@@ -53,18 +53,18 @@ public class Main {
                 generateSimulationForSolution(deltaT, tf, oscillators);
                 break;
             case MARS_PLANETS:
-                tf = 20 * YEAR;
+                tf = 3 * YEAR;
                 deltaT2 = 360 * 300;
                 solarSystem = new SolarSystem(new Gravity(), deltaT, jupiterAsDestiny);
-                double launchTime = MARS_BEST_LAUNCH_TIME;
+                double launchTime = 5 * tf;//MARS_BEST_LAUNCH_TIME;
                 if(jupiterAsDestiny)
                   launchTime = JUPITER_BEST_LAUNCH_TIME;
                 solarSystem.simulate(deltaT2, tf, launchTime, launchSpeed, launchAngle, mode);
                 break;
             case FIND_LAUNCH:
-                tf = 7 * YEAR;
+                tf = 3 * YEAR;
                 System.out.println("minimum distance (m), days since launch, launch day, arrival speed (km/s) (in case of arrival)");
-                for (double i = 0; i < 2 * YEAR && i < tf; i += DAY) {
+                for (double i = 0; i < 3 * YEAR && i < tf; i += DAY) {
                     solarSystem = new SolarSystem(new Gravity(), deltaT, jupiterAsDestiny);
                     solarSystem.simulate(deltaT2, tf, i, launchSpeed, launchAngle, mode);
                 }
