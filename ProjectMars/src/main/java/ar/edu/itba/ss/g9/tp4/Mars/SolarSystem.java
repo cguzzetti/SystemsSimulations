@@ -19,7 +19,7 @@ public class SolarSystem {
     final static double SHIP_MASS = 5E5;
     final static double STATION_SPEED = 7.12 * 1000;
     final static double LAUNCH_DISTANCE = 1500 * 1000;
-    final static double ARRIVE_DISTANCE = 100000 * 1000;
+    final static double ARRIVE_DISTANCE = 300 * 1000;
     final static double DAY = 60 * 60 * 24;
     final static double MONTH = 30 * DAY;
     final static double YEAR = DAY * 365;
@@ -62,70 +62,6 @@ public class SolarSystem {
                 , new Point2D.Double(-3.717406842095575E+3, 2.584914078301731E+4), 3389E3, 6.4171E23);
     }
 
-    public void runExperimentSimulations(double tf, double launchSpeed, double launchAngle) {
-        System.out.println("minimum distance (m), days since launch, launch day");
-
-        for (double i = 0; i < 3*YEAR && i < tf; i += DAY) {
-
-            updateParticlesLists();
-
-            initializePreviousValues(sun, sunParticles);
-            initializePreviousValues(mars, marsParticles);
-            initializePreviousValues(earth, earthParticles);
-
-            this.launchAngle = launchAngle;
-            this.launchSpeed = launchSpeed;
-            this.launchTime = i;
-            this.shipLaunched = false;
-
-            simulateWithDistance(tf);
-        }
-    }
-
-    private void simulateWithDistance(double tf) {
-        double currentTime = 0;
-
-        double minDistance = Double.MAX_VALUE;
-        double minTime = 0;
-
-        while(currentTime < tf && !shipPassedMarsOrbit()) {
-            updateParticlesLists();
-            if (!this.shipLaunched && Math.abs(currentTime - this.launchTime) < EPSILON) {
-                this.shipLaunched = true;
-                locateShip();
-            }
-
-            AcceleratedParticle auxSun = method.moveParticle(sun, sunParticles);
-            AcceleratedParticle auxEarth = method.moveParticle(earth, earthParticles);
-            AcceleratedParticle auxMars = method.moveParticle(mars, marsParticles);
-            if(this.shipLaunched) {
-                AcceleratedParticle auxShip = method.moveParticle(ship, shipParticles);
-                this.ship = auxShip;
-            }
-            this.sun = auxSun;
-            this.earth = auxEarth;
-            this.mars = auxMars;
-
-            if(this.shipLaunched) {
-                double distance = force.getDistance(ship, mars);
-
-                if (minDistance > distance) {
-                    minDistance = distance;
-                    minTime = currentTime;
-                }
-                if (arrived()) {
-                    System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
-                    double speed = Math.sqrt(Math.pow(ship.getVelocityX() / 1000, 2) + Math.pow(ship.getVelocityY() / 1000, 2));
-                    System.out.println(String.format("Arrived at speed: %f km/s", speed));
-                    return;
-                }
-
-            }
-            currentTime += deltaT;
-        }
-        System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
-    }
-
     private boolean shipPassedMarsOrbit() {
         if(!this.shipLaunched)
             return false;
@@ -136,7 +72,7 @@ public class SolarSystem {
         return force.getDistance(mars, ship) - mars.getRadius() - ship.getRadius() < ARRIVE_DISTANCE;
     }
 
-    public void simulate(double deltaT2, double tf, double launchTime, double launchSpeed, double launchAngle) {
+    public void simulate(double deltaT2, double tf, double launchTime, double launchSpeed, double launchAngle, boolean printPosition) {
         this.launchAngle = launchAngle;
         this.launchSpeed = launchSpeed;
         this.launchTime  = launchTime;
@@ -150,6 +86,9 @@ public class SolarSystem {
 
         double currentTime = 0;
 
+        double minDistance = Double.MAX_VALUE;
+        double minTime = 0;
+
         while(currentTime < tf && !shipPassedMarsOrbit()) {
             updateParticlesLists();
             if (!this.shipLaunched && Math.abs(currentTime - this.launchTime) < EPSILON) {
@@ -159,8 +98,7 @@ public class SolarSystem {
 
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
 
-            if(shouldPrint) {
-
+            if(shouldPrint && printPosition) {
                 if(this.shipLaunched)
                     System.out.println(4);
                 else
@@ -183,6 +121,21 @@ public class SolarSystem {
                 }
             }
 
+            if(!printPosition) { // print minDistance
+                if(this.shipLaunched) {
+                    double distance = force.getDistance(ship, mars);
+                    if (minDistance > distance) {
+                        minDistance = distance;
+                        minTime = currentTime;
+                    }
+                    if (arrived()) {
+                        double arrivalSpeed = Math.sqrt(Math.pow(ship.getVelocityX() / 1000, 2) + Math.pow(ship.getVelocityY() / 1000, 2));
+                        System.out.println(String.format("%f, %d, %d, %f", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY), arrivalSpeed));
+                        return;
+                    }
+                }
+            }
+
             AcceleratedParticle auxSun = method.moveParticle(sun, sunParticles);
             AcceleratedParticle auxEarth = method.moveParticle(earth, earthParticles);
             AcceleratedParticle auxMars = method.moveParticle(mars, marsParticles);
@@ -196,6 +149,8 @@ public class SolarSystem {
 
             currentTime += deltaT;
         }
+        if(!printPosition) //print minDistance
+            System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
 
     }
 

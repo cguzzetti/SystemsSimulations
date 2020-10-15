@@ -52,12 +52,15 @@ public class Main {
             case MARS_PLANETS:
                 tf = 3 * YEAR;
                 solarSystem = new SolarSystem(new Gravity(), deltaT);
-                solarSystem.simulate(deltaT2, tf, 156 * DAY, launchSpeed, launchAngle);
+                solarSystem.simulate(deltaT2, tf, 719 * DAY, launchSpeed, launchAngle, true);
                 break;
             case MARS_FIND_LAUNCH:
                 tf = 3 * YEAR;
-                solarSystem = new SolarSystem(new Gravity(), deltaT);
-                solarSystem.runExperimentSimulations( tf, launchSpeed, launchAngle);
+                System.out.println("minimum distance (m), days since launch, launch day, arrival speed (km/s) (in case of arrival)");
+                for (double i = 0; i < 3*YEAR && i < tf; i += DAY) {
+                    solarSystem = new SolarSystem(new Gravity(), deltaT);
+                    solarSystem.simulate(deltaT2, tf, i, launchSpeed, launchAngle, false);
+                }
                 break;
         }
     }
