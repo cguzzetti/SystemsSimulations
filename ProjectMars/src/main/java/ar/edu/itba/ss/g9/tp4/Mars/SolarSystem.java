@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static ar.edu.itba.ss.g9.tp4.Mars.CelestialBodies.*;
+import static ar.edu.itba.ss.g9.tp4.RunMode.*;
 import static java.lang.Math.min;
 import static java.lang.Math.pow;
 
@@ -25,6 +26,7 @@ public class SolarSystem {
     final static double MONTH = 30 * DAY;
     final static double YEAR = DAY * 365;
     final static double MARS_MAX_DISTANCE_FROM_SUN = 249000000E3;
+    final static double MARS_RADIUS = 3389E3;
     AcceleratedParticle sun;
     AcceleratedParticle earth;
     AcceleratedParticle mars;
@@ -60,7 +62,7 @@ public class SolarSystem {
                 , new Point2D.Double(-3.113279917782445E+3, 2.955205189256462E+4), 6371E3, 5.97219E24);
 
         this.mars = new AcceleratedParticle(MARS.getId(), new Point2D.Double(2.059448551842169E+11, 4.023977946528339E+10)
-                , new Point2D.Double(-3.717406842095575E+3, 2.584914078301731E+4), 3389E3, 6.4171E23);
+                , new Point2D.Double(-3.717406842095575E+3, 2.584914078301731E+4), MARS_RADIUS, 6.4171E23);
     }
 
     private boolean shipPassedMarsOrbit() {
@@ -70,10 +72,12 @@ public class SolarSystem {
     }
 
     private boolean arrived() {
+        if(!this.shipLaunched)
+            return false;
         return force.getDistance(mars, ship) - mars.getRadius() - ship.getRadius() < ARRIVE_DISTANCE;
     }
 
-    public void simulate(double deltaT2, double tf, double launchTime, double launchSpeed, double launchAngle, boolean printPosition) {
+    public void simulate(double deltaT2, double tf, double launchTime, double launchSpeed, double launchAngle, RunMode mode) {
         this.launchAngle = launchAngle;
         this.launchSpeed = launchSpeed;
         this.launchTime  = launchTime;
@@ -90,7 +94,7 @@ public class SolarSystem {
         double minDistance = Double.MAX_VALUE;
         double minTime = 0;
 
-        while(currentTime < tf && !shipPassedMarsOrbit()) {
+        while(currentTime < tf && !shipPassedMarsOrbit() && !arrived()) {
             updateParticlesLists();
             if (!this.shipLaunched && Math.abs(currentTime - this.launchTime) < EPSILON) {
                 this.shipLaunched = true;
@@ -99,38 +103,47 @@ public class SolarSystem {
 
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
 
-            if(shouldPrint && printPosition) {
-                if(this.shipLaunched)
-                    System.out.println(4);
-                else
-                    System.out.println(3);
+            if(shouldPrint) {
+                if(mode == MARS_PLANETS) {
+                    if (this.shipLaunched)
+                        System.out.println(4);
+                    else
+                        System.out.println(3);
 
-                System.out.println("t " + Math.round(currentTime / deltaT2));
-                System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", sun.getId(), sun.getPositionX(), sun.getPositionY(), sun.getMass(), sun.getRadius() * 10 * 2, 1, 1, 0
-                ));
-                System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", mars.getId(), mars.getPositionX(), mars.getPositionY(), mars.getMass(), mars.getRadius() * 500 * 2, 1, 0, 0
-                ));
-                System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", earth.getId(), earth.getPositionX(), earth.getPositionY(), earth.getMass(), earth.getRadius() * 500 * 2, 0, 0, 1
-                ));
-                if(this.shipLaunched) {
+                    System.out.println("t " + Math.round(currentTime / deltaT2));
                     System.out.println(String.format(
-                            "%d %f %f %f %f %d %d %d %f", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7*2 * 3, 1, 0, 1, force.getDistance(ship,mars)
+                            "%d %f %f %f %f %d %d %d", sun.getId(), sun.getPositionX(), sun.getPositionY(), sun.getMass(), sun.getRadius() * 10 * 2, 1, 1, 0
                     ));
+                    System.out.println(String.format(
+                            "%d %f %f %f %f %d %d %d", mars.getId(), mars.getPositionX(), mars.getPositionY(), mars.getMass(), mars.getRadius() * 500 * 2, 1, 0, 0
+                    ));
+                    System.out.println(String.format(
+                            "%d %f %f %f %f %d %d %d", earth.getId(), earth.getPositionX(), earth.getPositionY(), earth.getMass(), earth.getRadius() * 500 * 2, 0, 0, 1
+                    ));
+                    if (this.shipLaunched) {
+                        System.out.println(String.format(
+                                "%d %f %f %f %f %d %d %d %f", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7 * 2 * 3, 1, 0, 1, force.getDistance(ship, mars)
+                        ));
+                    }
+                }
+                else if(this.shipLaunched && mode == MARS_SHIP_VELOCITY) {
+                    if(!arrived()) {
+                        System.out.println(String.format(
+                                "%d %f", (int) ((currentTime - launchTime) / DAY), Math.sqrt(pow(ship.getVelocityX() / 1000, 2) + pow(ship.getVelocityY() / 1000, 2)) // km/s
+                        ));
+                    }
                 }
             }
 
-            if(!printPosition) { // print minDistance
-                if(this.shipLaunched) {
+            if(this.shipLaunched) { // print minDistance
+                if(mode == MARS_FIND_LAUNCH) {
                     double distance = force.getDistance(ship, mars);
                     if (minDistance > distance) {
                         minDistance = distance;
                         minTime = currentTime;
                     }
                     if (arrived()) {
-                        double arrivalSpeed = Math.sqrt(Math.pow(ship.getVelocityX() / 1000, 2) + Math.pow(ship.getVelocityY() / 1000, 2));
+                        double arrivalSpeed = Math.sqrt(Math.pow(ship.getVelocityX() / 1000, 2) + Math.pow(ship.getVelocityY() / 1000, 2)); // km/s
                         System.out.println(String.format("%f, %d, %d, %f", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY), arrivalSpeed));
                      //   System.out.println(String.format("%f, %d, %d, %d, %f", minDistance, (int) ((minTime - launchTime)/ HOUR), (int) (launchTime / HOUR), (int) (launchTime / DAY), arrivalSpeed));
                      //   System.out.println(String.format("%f, %d, %d, %d, %f", minDistance, (int) ((minTime - launchTime)/ 60), (int) (launchTime / 60), (int) (launchTime / HOUR), arrivalSpeed));
@@ -152,10 +165,15 @@ public class SolarSystem {
 
             currentTime += deltaT;
         }
-        if(!printPosition && this.shipLaunched) { //print minDistance
+        if(mode == MARS_FIND_LAUNCH && this.shipLaunched) { //print minDistance
               System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime) / DAY), (int) (launchTime / DAY)));
            // System.out.println(String.format("%f, %d, %d, %d", minDistance, (int) ((minTime - launchTime)/ HOUR), (int) (launchTime / HOUR), (int) (launchTime / DAY)));
            // System.out.println(String.format("%f, %d, %d, %d", minDistance, (int) ((minTime - launchTime)/ 60), (int) (launchTime / 60), (int) (launchTime / HOUR)));
+        }
+        if(mode == MARS_SHIP_VELOCITY && arrived()) {
+            System.out.println(String.format(
+                    "%d %f %f %f", (int) ((currentTime - launchTime) / DAY), ship.getVelocityX() / 1000, ship.getVelocityY() / 1000, force.getDistance(mars, ship) - mars.getRadius() - ship.getRadius() // km/s
+            ));
         }
     }
 

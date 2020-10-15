@@ -113,6 +113,28 @@ def visualize_min_time():
     plt.plot(departure_time, min_distances)
     plt.show()
 
+def visualize_velocity():
+    with open("mars_MARS_SHIP_VELOCITY_360.xyz", "r") as file:
+        lines = file.readlines()
+        velocities = []
+        time = []
+        for line in lines[:len(lines)-2]:
+            elems = line.split(" ")
+            vel = float(elems[1])
+            t = int(elems[0])
+            velocities.append(vel)
+            time.append(t)
+
+    fig, ax = plt.subplots()
+    ax.set_xlabel('Días a partir del 16/09/2022')
+    ax.set_ylabel('Rapidez de la nave [km/s]')
+
+    elems = lines[len(lines)-1].split()
+    print(f'Aterriza el día {elems[0]} despues de haber despegado con vx: {elems[1]} y vy: {elems[2]}')
+    print(f'La distancia entre los bordes de la nave y marte en ese instante es de {elems[3]} m')
+    plt.plot(time, velocities)
+    plt.show()
+
 
 if __name__ == '__main__':
     # Filename is always the first argument
@@ -129,5 +151,7 @@ if __name__ == '__main__':
         visualize_specific_error(sys.argv[2])
     elif mode == "MIN_TIME":
         visualize_min_time()
+    elif mode == "VEL":
+        visualize_velocity()
     else:
         print(f"{mode} is not a recognized mdoe :(")

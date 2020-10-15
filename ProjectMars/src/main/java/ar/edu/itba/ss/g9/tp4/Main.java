@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static ar.edu.itba.ss.g9.tp4.Oscillator.*;
+import static ar.edu.itba.ss.g9.tp4.RunMode.MARS_SHIP_VELOCITY;
 
 /**
  * Main program execution
@@ -34,9 +35,6 @@ public class Main {
 
         List<Oscillator> oscillators;
 
-        if(mode == RunMode.MARS_PLANETS)
-            deltaT2 = 360 * 100;
-        double launchTime = deltaT2 * 5;
         double launchSpeed = 8 * 1000; // m/s
         double launchAngle = 0;
         SolarSystem solarSystem;
@@ -52,16 +50,25 @@ public class Main {
                 break;
             case MARS_PLANETS:
                 tf = 3 * YEAR;
+                deltaT2 = 360 * 100;
                 solarSystem = new SolarSystem(new Gravity(), deltaT);
-                solarSystem.simulate(deltaT2, tf, 1035198 * 60, launchSpeed, launchAngle, true);
+                double launchTime = 1035198 * 60; // most specific time found in MARS_FIND_LAUNCH
+                solarSystem.simulate(deltaT2, tf, launchTime, launchSpeed, launchAngle, mode);
                 break;
             case MARS_FIND_LAUNCH:
                 tf = 3 * YEAR;
                 System.out.println("minimum distance (m), days since launch, launch day, arrival speed (km/s) (in case of arrival)");
                 for (double i = 0; i < 3 * YEAR && i < tf; i += DAY) {
                     solarSystem = new SolarSystem(new Gravity(), deltaT);
-                    solarSystem.simulate(deltaT2, tf, i, launchSpeed, launchAngle, false);
+                    solarSystem.simulate(deltaT2, tf, i, launchSpeed, launchAngle, mode);
                 }
+                break;
+            case MARS_SHIP_VELOCITY:
+                tf = 3 * YEAR;
+                deltaT2 = 360 * 400;
+                double assuredArrivalLaunchTime = 1035198 * 60; // most specific time found in MARS_FIND_LAUNCH
+                solarSystem = new SolarSystem(new Gravity(), deltaT);
+                solarSystem.simulate(deltaT2, tf, assuredArrivalLaunchTime, launchSpeed, launchAngle, mode);
                 break;
         }
     }
