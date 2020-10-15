@@ -20,7 +20,8 @@ public class SolarSystem {
     final static double STATION_SPEED = 7.12 * 1000;
     final static double LAUNCH_DISTANCE = 1500 * 1000;
     final static double ARRIVE_DISTANCE = 300 * 1000;
-    final static double DAY = 60 * 60 * 24;
+    final static double HOUR = 60 * 60;
+    final static double DAY = HOUR * 24;
     final static double MONTH = 30 * DAY;
     final static double YEAR = DAY * 365;
     final static double MARS_MAX_DISTANCE_FROM_SUN = 249000000E3;
@@ -106,17 +107,17 @@ public class SolarSystem {
 
                 System.out.println("t " + Math.round(currentTime / deltaT2));
                 System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", sun.getId(), sun.getPositionX(), sun.getPositionY(), sun.getMass(), sun.getRadius() * 10, 1, 1, 0
+                        "%d %f %f %f %f %d %d %d", sun.getId(), sun.getPositionX(), sun.getPositionY(), sun.getMass(), sun.getRadius() * 10 * 2, 1, 1, 0
                 ));
                 System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", mars.getId(), mars.getPositionX(), mars.getPositionY(), mars.getMass(), mars.getRadius() * 500, 1, 0, 0
+                        "%d %f %f %f %f %d %d %d", mars.getId(), mars.getPositionX(), mars.getPositionY(), mars.getMass(), mars.getRadius() * 500 * 2, 1, 0, 0
                 ));
                 System.out.println(String.format(
-                        "%d %f %f %f %f %d %d %d", earth.getId(), earth.getPositionX(), earth.getPositionY(), earth.getMass(), earth.getRadius() * 500, 0, 0, 1
+                        "%d %f %f %f %f %d %d %d", earth.getId(), earth.getPositionX(), earth.getPositionY(), earth.getMass(), earth.getRadius() * 500 * 2, 0, 0, 1
                 ));
                 if(this.shipLaunched) {
                     System.out.println(String.format(
-                            "%d %f %f %f %f %d %d %d %f", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7*2, 1, 0, 1, force.getDistance(ship,mars)
+                            "%d %f %f %f %f %d %d %d %f", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7*2 * 3, 1, 0, 1, force.getDistance(ship,mars)
                     ));
                 }
             }
@@ -131,6 +132,8 @@ public class SolarSystem {
                     if (arrived()) {
                         double arrivalSpeed = Math.sqrt(Math.pow(ship.getVelocityX() / 1000, 2) + Math.pow(ship.getVelocityY() / 1000, 2));
                         System.out.println(String.format("%f, %d, %d, %f", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY), arrivalSpeed));
+                     //   System.out.println(String.format("%f, %d, %d, %d, %f", minDistance, (int) ((minTime - launchTime)/ HOUR), (int) (launchTime / HOUR), (int) (launchTime / DAY), arrivalSpeed));
+                     //   System.out.println(String.format("%f, %d, %d, %d, %f", minDistance, (int) ((minTime - launchTime)/ 60), (int) (launchTime / 60), (int) (launchTime / HOUR), arrivalSpeed));
                         return;
                     }
                 }
@@ -149,9 +152,11 @@ public class SolarSystem {
 
             currentTime += deltaT;
         }
-        if(!printPosition) //print minDistance
-            System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime)/ DAY), (int) (launchTime / DAY)));
-
+        if(!printPosition && this.shipLaunched) { //print minDistance
+              System.out.println(String.format("%f, %d, %d", minDistance, (int) ((minTime - launchTime) / DAY), (int) (launchTime / DAY)));
+           // System.out.println(String.format("%f, %d, %d, %d", minDistance, (int) ((minTime - launchTime)/ HOUR), (int) (launchTime / HOUR), (int) (launchTime / DAY)));
+           // System.out.println(String.format("%f, %d, %d, %d", minDistance, (int) ((minTime - launchTime)/ 60), (int) (launchTime / 60), (int) (launchTime / HOUR)));
+        }
     }
 
     private void locateShip(){

@@ -13,6 +13,7 @@ import static ar.edu.itba.ss.g9.tp4.Oscillator.*;
  *
  */
 public class Main {
+    final static double HOUR = 60 * 60;
     final static double DAY = 60 * 60 * 24;
     final static double MONTH = 30 * DAY;
     final static double YEAR = DAY * 365;
@@ -34,7 +35,7 @@ public class Main {
         List<Oscillator> oscillators;
 
         if(mode == RunMode.MARS_PLANETS)
-            deltaT2 = 720;
+            deltaT2 = 360 * 100;
         double launchTime = deltaT2 * 5;
         double launchSpeed = 8 * 1000; // m/s
         double launchAngle = 0;
@@ -52,12 +53,12 @@ public class Main {
             case MARS_PLANETS:
                 tf = 3 * YEAR;
                 solarSystem = new SolarSystem(new Gravity(), deltaT);
-                solarSystem.simulate(deltaT2, tf, 719 * DAY, launchSpeed, launchAngle, true);
+                solarSystem.simulate(deltaT2, tf, 1035198 * 60, launchSpeed, launchAngle, true);
                 break;
             case MARS_FIND_LAUNCH:
                 tf = 3 * YEAR;
                 System.out.println("minimum distance (m), days since launch, launch day, arrival speed (km/s) (in case of arrival)");
-                for (double i = 0; i < 3*YEAR && i < tf; i += DAY) {
+                for (double i = 0; i < 3 * YEAR && i < tf; i += DAY) {
                     solarSystem = new SolarSystem(new Gravity(), deltaT);
                     solarSystem.simulate(deltaT2, tf, i, launchSpeed, launchAngle, false);
                 }

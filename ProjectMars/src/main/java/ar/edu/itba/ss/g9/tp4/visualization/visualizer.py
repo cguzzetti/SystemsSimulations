@@ -106,8 +106,8 @@ def visualize_min_time():
             departure_time.append(departure)
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('Departure time [days]')
-    ax.set_ylabel('Minimum distance [km]')
+    ax.set_xlabel('Día de salida a partir del 28/09/2020')
+    ax.set_ylabel('Distancia mínima a Marte [m]')
 
     print(f'Min distance: {min_pair["distance"]} departed on day: {min_pair["departure_time"]}')
     plt.plot(departure_time, min_distances)
