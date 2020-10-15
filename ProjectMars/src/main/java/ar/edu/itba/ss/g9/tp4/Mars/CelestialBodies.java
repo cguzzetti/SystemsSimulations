@@ -5,6 +5,7 @@ public enum CelestialBodies {
     EARTH(1),
     MARS(2),
     SPACE_SHIP(3),
+    JUPITER(4),
     ;
     final int id;
     CelestialBodies(int id){

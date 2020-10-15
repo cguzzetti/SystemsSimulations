@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static ar.edu.itba.ss.g9.tp4.Oscillator.*;
-import static ar.edu.itba.ss.g9.tp4.RunMode.MARS_SHIP_VELOCITY;
 
 /**
  * Main program execution
@@ -18,6 +17,9 @@ public class Main {
     final static double DAY = 60 * 60 * 24;
     final static double MONTH = 30 * DAY;
     final static double YEAR = DAY * 365;
+
+    final static double MARS_BEST_LAUNCH_TIME = 1035198 * 60; // most specific time found in FIND_LAUNCH
+    final static double JUPITER_BEST_LAUNCH_TIME = 616 * DAY; // most specific time found in FIND_LAUNCH
     public static void main( String[] args ) {
         double k = Math.pow(10, 4);
         double g = 100;
@@ -39,6 +41,8 @@ public class Main {
         double launchAngle = 0;
         SolarSystem solarSystem;
 
+        boolean jupiterAsDestiny = true;
+
         switch (mode){
             case OVITO:
                 oscillators = generateOscillators(force, k, g, m, deltaT);
@@ -49,25 +53,29 @@ public class Main {
                 generateSimulationForSolution(deltaT, tf, oscillators);
                 break;
             case MARS_PLANETS:
-                tf = 3 * YEAR;
-                deltaT2 = 360 * 100;
-                solarSystem = new SolarSystem(new Gravity(), deltaT);
-                double launchTime = 1035198 * 60; // most specific time found in MARS_FIND_LAUNCH
+                tf = 20 * YEAR;
+                deltaT2 = 360 * 300;
+                solarSystem = new SolarSystem(new Gravity(), deltaT, jupiterAsDestiny);
+                double launchTime = MARS_BEST_LAUNCH_TIME;
+                if(jupiterAsDestiny)
+                  launchTime = JUPITER_BEST_LAUNCH_TIME;
                 solarSystem.simulate(deltaT2, tf, launchTime, launchSpeed, launchAngle, mode);
                 break;
-            case MARS_FIND_LAUNCH:
-                tf = 3 * YEAR;
+            case FIND_LAUNCH:
+                tf = 7 * YEAR;
                 System.out.println("minimum distance (m), days since launch, launch day, arrival speed (km/s) (in case of arrival)");
                 for (double i = 0; i < 3 * YEAR && i < tf; i += DAY) {
-                    solarSystem = new SolarSystem(new Gravity(), deltaT);
+                    solarSystem = new SolarSystem(new Gravity(), deltaT, jupiterAsDestiny);
                     solarSystem.simulate(deltaT2, tf, i, launchSpeed, launchAngle, mode);
                 }
                 break;
-            case MARS_SHIP_VELOCITY:
+            case SHIP_VELOCITY:
                 tf = 3 * YEAR;
                 deltaT2 = 360 * 400;
-                double assuredArrivalLaunchTime = 1035198 * 60; // most specific time found in MARS_FIND_LAUNCH
-                solarSystem = new SolarSystem(new Gravity(), deltaT);
+                double assuredArrivalLaunchTime = MARS_BEST_LAUNCH_TIME;
+                if(jupiterAsDestiny)
+                    assuredArrivalLaunchTime = JUPITER_BEST_LAUNCH_TIME;
+                solarSystem = new SolarSystem(new Gravity(), deltaT, jupiterAsDestiny);
                 solarSystem.simulate(deltaT2, tf, assuredArrivalLaunchTime, launchSpeed, launchAngle, mode);
                 break;
         }

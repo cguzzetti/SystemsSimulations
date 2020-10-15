@@ -87,7 +87,7 @@ def visualize_specific_error(deltaT: float):
 
 
 def visualize_min_time():
-    with open("mars_MARS_FIND_LAUNCH_360.xyz", "r") as file:
+    with open("mars_FIND_LAUNCH_360.xyz", "r") as file:
         lines = file.readlines()
         min_distances = []
         departure_time = []
@@ -107,14 +107,14 @@ def visualize_min_time():
 
     fig, ax = plt.subplots()
     ax.set_xlabel('Día de salida a partir del 28/09/2020')
-    ax.set_ylabel('Distancia mínima a Marte [m]')
+    ax.set_ylabel('Distancia mínima a Júpiter [m]')
 
     print(f'Min distance: {min_pair["distance"]} departed on day: {min_pair["departure_time"]}')
     plt.plot(departure_time, min_distances)
     plt.show()
 
 def visualize_velocity():
-    with open("mars_MARS_SHIP_VELOCITY_360.xyz", "r") as file:
+    with open("mars_SHIP_VELOCITY_360.xyz", "r") as file:
         lines = file.readlines()
         velocities = []
         time = []

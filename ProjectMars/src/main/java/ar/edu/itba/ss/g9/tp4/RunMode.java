@@ -5,6 +5,6 @@ public enum RunMode {
     ERROR,
     SOLUTION,
     MARS_PLANETS,
-    MARS_FIND_LAUNCH,
-    MARS_SHIP_VELOCITY
+    FIND_LAUNCH,
+    SHIP_VELOCITY
 }
