@@ -64,7 +64,7 @@ public class Main {
             case FIND_LAUNCH:
                 tf = 7 * YEAR;
                 System.out.println("minimum distance (m), days since launch, launch day, arrival speed (km/s) (in case of arrival)");
-                for (double i = 0; i < 3 * YEAR && i < tf; i += DAY) {
+                for (double i = 0; i < 2 * YEAR && i < tf; i += DAY) {
                     solarSystem = new SolarSystem(new Gravity(), deltaT, jupiterAsDestiny);
                     solarSystem.simulate(deltaT2, tf, i, launchSpeed, launchAngle, mode);
                 }

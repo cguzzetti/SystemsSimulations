@@ -135,22 +135,22 @@ public class SolarSystem {
 
                     System.out.println("t " + Math.round(currentTime / deltaT2));
                     System.out.println(String.format(
-                            "%d %f %f %f %f %d %d %d", sun.getId(), sun.getPositionX(), sun.getPositionY(), sun.getMass(), sun.getRadius() * 10 * 2, 1, 1, 0
+                            "%d %f %f %f %f %f %f %f", sun.getId(), sun.getPositionX(), sun.getPositionY(), sun.getMass(), sun.getRadius() * 10 * 2, 1.0, 1.0, 0.0
                     ));
                     System.out.println(String.format(
-                            "%d %f %f %f %f %d %d %d", mars.getId(), mars.getPositionX(), mars.getPositionY(), mars.getMass(), mars.getRadius() * 500 * 2, 1, 0, 0
+                            "%d %f %f %f %f %f %f %f", mars.getId(), mars.getPositionX(), mars.getPositionY(), mars.getMass(), mars.getRadius() * 500 * 2, 1.0, 0.0, 0.0
                     ));
                     System.out.println(String.format(
-                            "%d %f %f %f %f %d %d %d", earth.getId(), earth.getPositionX(), earth.getPositionY(), earth.getMass(), earth.getRadius() * 500 * 2, 0, 0, 1
+                            "%d %f %f %f %f %f %f %f", earth.getId(), earth.getPositionX(), earth.getPositionY(), earth.getMass(), earth.getRadius() * 500 * 2, 0.0, 0.0, 1.0
                     ));
                     if(jupiterAsDestiny) {
                         System.out.println(String.format(
-                                "%d %f %f %f %f %d %d %d", jupiter.getId(), jupiter.getPositionX(), jupiter.getPositionY(), jupiter.getMass(), jupiter.getRadius() * 100, 1, 0, 0
+                                "%d %f %f %f %f %f %f %f", jupiter.getId(), jupiter.getPositionX(), jupiter.getPositionY(), jupiter.getMass(), jupiter.getRadius() * 100, 1.0, 0.65, 0.0
                         ));
                     }
                     if (this.shipLaunched) {
                         System.out.println(String.format(
-                                "%d %f %f %f %f %d %d %d %f", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7 * 2 * 3, 1, 0, 1, force.getDistance(ship, mars)
+                                "%d %f %f %f %f %f %f %f %f", ship.getId(), ship.getPositionX(), ship.getPositionY(), ship.getMass(), ship.getRadius() * 1E7 * 2 * 3, 1.0, 0.0, 1.0, force.getDistance(ship, mars)
                         ));
                     }
                 }

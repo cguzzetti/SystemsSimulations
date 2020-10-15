@@ -126,7 +126,7 @@ def visualize_velocity():
             time.append(t)
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('Días a partir del 16/09/2022')
+    ax.set_xlabel('Días a partir del 06/06/2022')
     ax.set_ylabel('Rapidez de la nave [km/s]')
 
     elems = lines[len(lines)-1].split()
@@ -154,4 +154,4 @@ if __name__ == '__main__':
     elif mode == "VEL":
         visualize_velocity()
     else:
-        print(f"{mode} is not a recognized mdoe :(")
+        print(f"{mode} is not a recognized mode :(")
