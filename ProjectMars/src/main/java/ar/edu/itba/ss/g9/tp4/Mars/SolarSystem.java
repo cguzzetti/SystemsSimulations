@@ -151,15 +151,11 @@ public class SolarSystem {
 
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
 
-            //esto vuela perror
-            if(shouldPrint && mode == MARS_PLANETS) {
-                double currEnergy = calculateTotalEnergy();
-                double diff = currEnergy - prevEnergy;
-                System.out.println(String.format("%2.35e %2.35e", currEnergy, diff));
-                prevEnergy = currEnergy;
-            }
-
-            shouldPrint = false;
+//            //Energy calc
+//            double currEnergy = calculateTotalEnergy();
+//            double diff = currEnergy - prevEnergy;
+//            System.out.println(String.format("%2.35e %2.35e", currEnergy, diff));
+//            prevEnergy = currEnergy;
 
             if(shouldPrint) {
                 if(mode == MARS_PLANETS) {
@@ -200,8 +196,6 @@ public class SolarSystem {
                     }
                 }
             }
-
-
 
             if(this.shipLaunched) { // print minDistance
                 if(mode == FIND_LAUNCH) {

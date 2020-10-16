@@ -41,7 +41,7 @@ public class Main {
         double launchAngle = 0;
         SolarSystem solarSystem;
 
-        boolean jupiterAsDestiny = false;
+        boolean jupiterAsDestiny = true;
 
         switch (mode){
             case OVITO:
@@ -56,7 +56,7 @@ public class Main {
                 tf = 3 * YEAR;
                 deltaT2 = 360 * 300;
                 solarSystem = new SolarSystem(new Gravity(), deltaT, jupiterAsDestiny);
-                double launchTime = 5 * tf;//MARS_BEST_LAUNCH_TIME;
+                double launchTime = MARS_BEST_LAUNCH_TIME;
                 if(jupiterAsDestiny)
                   launchTime = JUPITER_BEST_LAUNCH_TIME;
                 solarSystem.simulate(deltaT2, tf, launchTime, launchSpeed, launchAngle, mode);
