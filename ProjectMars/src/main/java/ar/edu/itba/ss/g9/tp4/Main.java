@@ -41,7 +41,7 @@ public class Main {
         double launchAngle = 0;
         SolarSystem solarSystem;
 
-        boolean jupiterAsDestiny = true;
+        boolean jupiterAsDestiny = false;
 
         switch (mode){
             case OVITO:
