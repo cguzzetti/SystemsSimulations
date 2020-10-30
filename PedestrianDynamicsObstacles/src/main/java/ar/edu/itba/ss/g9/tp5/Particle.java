@@ -1,9 +1,7 @@
 package ar.edu.itba.ss.g9.tp5;
 
-import javax.lang.model.element.VariableElement;
 import java.awt.geom.Point2D;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Particle {
     final int id;
@@ -12,6 +10,10 @@ public class Particle {
     Point2D position;
     Point2D velocity;
     final double mass;
+
+    // Ephemereal velocity for Predictive Collision Avoidance
+    private double dummyVx;
+    private double dummyVy;
 
 
 
@@ -103,5 +105,21 @@ public class Particle {
 
     public boolean collidesWithInX(ObstacleParticle p){
         return Math.abs(this.getPosX() - p.getPosX()) < this.radius + p.radius;
+    }
+
+    public double getDummyVx() {
+        return dummyVx;
+    }
+
+    public void setDummyVx(double dummyVx) {
+        this.dummyVx = dummyVx;
+    }
+
+    public double getDummyVy() {
+        return dummyVy;
+    }
+
+    public void setDummyVy(double dummyVy) {
+        this.dummyVy = dummyVy;
     }
 }
