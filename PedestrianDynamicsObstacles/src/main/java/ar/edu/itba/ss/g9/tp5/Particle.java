@@ -102,6 +102,6 @@ public class Particle {
     }
 
     public boolean collidesWithInX(ObstacleParticle p){
-        return this.getPosX() - p.getPosX() < this.radius - p.radius;
+        return Math.abs(this.getPosX() - p.getPosX()) < this.radius + p.radius;
     }
 }

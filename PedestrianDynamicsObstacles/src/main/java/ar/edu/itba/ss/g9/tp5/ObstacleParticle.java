@@ -21,4 +21,9 @@ public class ObstacleParticle extends Particle {
         }
         this.setPosition(this.getPosition().getX(), y +  vy);
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " 1 0 0";
+    }
 }

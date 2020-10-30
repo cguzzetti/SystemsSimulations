@@ -45,11 +45,11 @@ public class PredictiveCollisionAvoidance {
         // We only want the first {NUMBER_OF_CRASHES} crashes
         for(int i = 0; i < NUMBER_OF_CRASHES && i < crashes.size();  i++){
             Crash crash = crashes.get(i);
-            Point2D elusiveForce = elusion(p, crash.getParticle(), crash.getTime());
+            Point2D evasiveForce = evade(p, crash.getParticle(), crash.getTime());
             // We want the avg of the force
-            elusiveForce.setLocation(elusiveForce.getX() * (1.0/i+1), elusiveForce.getY() * (1.0/i+1));
+            evasiveForce.setLocation(evasiveForce.getX() * (1.0/i+1), evasiveForce.getY() * (1.0/i+1));
 
-            force.setLocation(force.getX() + elusiveForce.getX(), force.getY() + elusiveForce.getY());
+            force.setLocation(force.getX() + evasiveForce.getX(), force.getY() + evasiveForce.getY());
         }
 
 
@@ -84,7 +84,7 @@ public class PredictiveCollisionAvoidance {
 
     }
 
-    private static Point2D elusion(Particle p, Particle otherP, double time){
+    private static Point2D evade(Particle p, Particle otherP, double time){
 
         // Apply avoidance maneuver
         double cix = p.getPosX() +  p.getVx() * time;

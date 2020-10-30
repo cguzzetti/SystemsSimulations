@@ -20,4 +20,9 @@ public class PedestrianParticle extends Particle {
         double y = this.getPosY() + vy*dt;
         this.setPosition(x, y);
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " 0 1 0";
+    }
 }

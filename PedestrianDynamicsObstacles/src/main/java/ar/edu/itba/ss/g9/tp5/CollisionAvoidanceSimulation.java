@@ -33,10 +33,10 @@ public class CollisionAvoidanceSimulation {
     public void simulate() {
         this.pedestrian = new PedestrianParticle(0, 0, HEIGHT/2,1,1, PED_MASS, PED_RADIUS); // TODO: check appropiate values
         this.obstacles = createObstacleParticles();
-        startSimualtion();
+        startSimulation();
     }
 
-    private void startSimualtion() {
+    private void startSimulation() {
         // Algorithm for pedestrian p
         // 1. Compute the set of pedestrians that are on collision course with p with anticipation time t
         // 2. Select first N pedestrians that will collide by sorting in order of increasing collision time
@@ -48,7 +48,7 @@ public class CollisionAvoidanceSimulation {
         double lengthTraveled = 0.0;
         double meanSpeed;
         Point2D goalForce;
-        Point2D elusiveForce;
+        Point2D evasiveForce;
 
         double currentTime = 0.0;
 
@@ -58,26 +58,27 @@ public class CollisionAvoidanceSimulation {
 
             if(shouldPrint) {
                 System.out.println(this.obstaclesAmount + 2);
+                System.out.println(String.format("t %f", currentTime));
                 System.out.println(pedestrian.toString());
                 this.obstacles.forEach(System.out::println);
                 System.out.println(String.format(
-                        "%d %.3f %.3f %.5f %.5f 0 0",
+                        "%d %.3f %.3f %.5f %.5f 0 0 0 0 1",
                         this.obstaclesAmount+1, OBS_RADIUS, OBS_MASS, goal.getX(), goal.getY())
                 );
             }
 
-            //(1 & 2) computeCollisionsAndSelectTopN()
-            //(3 & 4) computeGoalForceAndEvasiceForce()
             goalForce = applyAutopropulsiveForce(this.pedestrian, goal);
-            elusiveForce = applyElusiveForce(goalForce, this.pedestrian, this.obstacles, deltaT);
+            evasiveForce = applyElusiveForce(goalForce, this.pedestrian, this.obstacles, deltaT);
 
             // update variables for point c of the assigment
 
-            //move all obstacles and pedestrian
-
+            // move all obstacles and pedestrian
+            this.pedestrian.move(evasiveForce, deltaT);
+            for (ObstacleParticle obs : obstacles){
+                obs.move(goalForce, deltaT);
+            }
             currentTime += deltaT;
         }
-
     }
 
     private boolean pedestrianReachedGoal() {
