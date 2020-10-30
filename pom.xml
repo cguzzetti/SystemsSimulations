@@ -12,6 +12,7 @@
     <module>commons</module>
     <module>GasDiffusion</module>
     <module>ProjectMars</module>
+    <module>PedestrianDynamicsObstacles</module>
   </modules>
   <properties>
     <slf4j.version>1.7.12</slf4j.version>
