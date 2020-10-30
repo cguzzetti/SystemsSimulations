@@ -96,4 +96,12 @@ public class Particle {
     public void setPosition(double x, double y){
         this.position = new Point2D.Double(x, y);
     }
+
+    public boolean isValid(Set<ObstacleParticle> obstacles){
+        return obstacles.parallelStream().noneMatch(this::collidesWithInX);
+    }
+
+    public boolean collidesWithInX(ObstacleParticle p){
+        return this.getPosX() - p.getPosX() < this.radius - p.radius;
+    }
 }
