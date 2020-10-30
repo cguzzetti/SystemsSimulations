@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static ar.edu.itba.ss.g9.tp5.PredictiveCollisionAvoidance.applyAutopropulsiveForce;
+import static ar.edu.itba.ss.g9.tp5.PredictiveCollisionAvoidance.applyElusiveForce;
+
 public class CollisionAvoidanceSimulation {
     private Point2D.Double goal;
     private int obstaclesAmount;
@@ -44,6 +47,8 @@ public class CollisionAvoidanceSimulation {
         double timeTraveled = 0.0;
         double lengthTraveled = 0.0;
         double meanSpeed;
+        Point2D goalForce;
+        Point2D elusiveForce;
 
         double currentTime = 0.0;
 
@@ -57,6 +62,8 @@ public class CollisionAvoidanceSimulation {
 
             //(1 & 2) computeCollisionsAndSelectTopN()
             //(3 & 4) computeGoalForceAndEvasiceForce()
+            goalForce = applyAutopropulsiveForce(this.pedestrian, goal);
+            elusiveForce = applyElusiveForce(goalForce, this.pedestrian, this.obstacles, deltaT);
 
             // update variables for point c of the assigment
 
