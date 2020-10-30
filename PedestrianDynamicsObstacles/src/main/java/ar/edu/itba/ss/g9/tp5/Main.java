@@ -4,7 +4,7 @@ package ar.edu.itba.ss.g9.tp5;
  * Hello world!
  *
  */
-public class App 
+public class Main
 {
     public static void main( String[] args )
     {
