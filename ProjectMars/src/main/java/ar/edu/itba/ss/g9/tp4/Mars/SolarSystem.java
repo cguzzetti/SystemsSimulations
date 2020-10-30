@@ -8,8 +8,7 @@ import java.util.List;
 
 import static ar.edu.itba.ss.g9.tp4.Mars.CelestialBodies.*;
 import static ar.edu.itba.ss.g9.tp4.RunMode.*;
-import static java.lang.Math.min;
-import static java.lang.Math.pow;
+import static java.lang.Math.*;
 
 public class SolarSystem {
 
@@ -51,6 +50,8 @@ public class SolarSystem {
 
     final static double EPSILON = Math.pow(10, -6);
 
+    List<AcceleratedParticle> mainBodies;
+    final static double ENERGY_ERROR = Math.pow(10,-3);
 
     public SolarSystem(Force force, double deltaT, boolean jupiterAsDestiny) {
         this.force = force;
@@ -59,6 +60,11 @@ public class SolarSystem {
         this.jupiterAsDestiny = jupiterAsDestiny;
 
         initializeBodies();
+
+        this.mainBodies = new LinkedList<>();
+        this.mainBodies.add(earth);
+        this.mainBodies.add(mars);
+        this.mainBodies.add(sun);
     }
 
     private void initializeBodies() {
@@ -95,6 +101,26 @@ public class SolarSystem {
         return force.getDistance(jupiter, ship) - jupiter.getRadius() - ship.getRadius() < ARRIVE_DISTANCE_JUPITER;
     }
 
+    private double calculateTotalEnergy() {
+        return calculateKineticEnergy() + caclulatePotentialEnergy();
+    }
+
+    private double calculateKineticEnergy() {
+        double ke = 0;
+        for(AcceleratedParticle p: mainBodies) {
+            ke += 1/2.0 * p.getMass() * pow(sqrt(pow(p.getVelocityX(),2)+pow(p.getVelocityY(),2)),2);
+        }
+        return ke;
+    }
+
+    private double caclulatePotentialEnergy() {
+        double pe = 0;
+        pe += force.getForce(earth,mars);
+        pe += force.getForce(earth,sun);
+        pe += force.getForce(sun,mars);
+        return pe;
+    }
+
     public void simulate(double deltaT2, double tf, double launchTime, double launchSpeed, double launchAngle, RunMode mode) {
         this.launchAngle = launchAngle;
         this.launchSpeed = launchSpeed;
@@ -114,6 +140,8 @@ public class SolarSystem {
         double minDistance = Double.MAX_VALUE;
         double minTime = 0;
 
+        double prevEnergy = 0;
+
         while(currentTime < tf && !shipPassedDestinyOrbit() && !arrived()) {
             updateParticlesLists();
             if (!this.shipLaunched && Math.abs(currentTime - this.launchTime) < EPSILON) {
@@ -122,6 +150,12 @@ public class SolarSystem {
             }
 
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
+
+//            //Energy calc
+//            double currEnergy = calculateTotalEnergy();
+//            double diff = currEnergy - prevEnergy;
+//            System.out.println(String.format("%2.35e %2.35e", currEnergy, diff));
+//            prevEnergy = currEnergy;
 
             if(shouldPrint) {
                 if(mode == MARS_PLANETS) {

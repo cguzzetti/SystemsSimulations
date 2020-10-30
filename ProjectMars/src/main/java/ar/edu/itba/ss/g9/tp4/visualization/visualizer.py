@@ -107,10 +107,11 @@ def visualize_min_time():
 
     fig, ax = plt.subplots()
     ax.set_xlabel('Día de salida a partir del 28/09/2020')
-    ax.set_ylabel('Distancia mínima a Júpiter [m]')
+    ax.set_ylabel('Distancia mínima a Marte [m]')
 
     print(f'Min distance: {min_pair["distance"]} departed on day: {min_pair["departure_time"]}')
     plt.plot(departure_time, min_distances)
+    plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
     plt.show()
 
 def visualize_velocity():
