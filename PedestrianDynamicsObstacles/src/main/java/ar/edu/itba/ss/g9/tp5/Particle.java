@@ -73,7 +73,7 @@ public class Particle {
     @Override
     public String toString(){
         return String.format(
-                "Particle{id=%d, radius=%.2f, mass=%.2f, pos=(%.3f, %.3f), vel=(%.3f, %.3f)",
+                "%d %.3f %.3f %.5f %.5f %.5f, %.5f",
                 this.id, this.radius, this.mass, this.position.getX(), this.position.getY(),
                 this.velocity.getX(), this.velocity.getY()
         );

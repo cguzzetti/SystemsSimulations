@@ -13,10 +13,9 @@ public class Main
         final int obstaclesNum  = Integer.parseInt(args[0]);
         final double deltaT     = Double.parseDouble(args[1]);
         final double deltaT2    = Double.parseDouble(args[2]);
-        System.out.println(obstaclesNum);
-        System.out.println(deltaT);
-        System.out.println(deltaT2);
-        System.out.println("Done!");
+
+        CollisionAvoidanceSimulation simulation = new CollisionAvoidanceSimulation(obstaclesNum, deltaT, deltaT2);
+        simulation.simulate();
 
     }
 }

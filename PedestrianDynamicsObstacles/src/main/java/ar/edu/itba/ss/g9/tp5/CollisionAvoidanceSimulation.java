@@ -57,7 +57,13 @@ public class CollisionAvoidanceSimulation {
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
 
             if(shouldPrint) {
-                // print pedestrian, obstacles and goal;
+                System.out.println(this.obstaclesAmount + 2);
+                System.out.println(pedestrian.toString());
+                this.obstacles.forEach(System.out::println);
+                System.out.println(String.format(
+                        "%d %.3f %.3f %.5f %.5f 0 0",
+                        this.obstaclesAmount+1, OBS_RADIUS, OBS_MASS, goal.getX(), goal.getY())
+                );
             }
 
             //(1 & 2) computeCollisionsAndSelectTopN()
@@ -85,7 +91,7 @@ public class CollisionAvoidanceSimulation {
             ThreadLocalRandom rand = ThreadLocalRandom.current();
             double x = rand.nextDouble(SHIFT, WIDTH-SHIFT);
             double y = rand.nextDouble(SHIFT, HEIGHT-SHIFT);
-            ObstacleParticle obstacle = new ObstacleParticle(createdParticles, x, y, 0.0, OBS_SPEED, OBS_MASS, OBS_RADIUS);
+            ObstacleParticle obstacle = new ObstacleParticle(createdParticles+1, x, y, 0.0, OBS_SPEED, OBS_MASS, OBS_RADIUS);
             if(obstacle.isValid(obstacles)) {
                 obstacles.add(obstacle);
                 createdParticles++;
