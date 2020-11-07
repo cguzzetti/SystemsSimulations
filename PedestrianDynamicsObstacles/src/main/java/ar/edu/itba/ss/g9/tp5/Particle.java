@@ -122,4 +122,8 @@ public class Particle {
     public void setDummyVy(double dummyVy) {
         this.dummyVy = dummyVy;
     }
+
+    public double getDistanceFrom(ObstacleParticle otherP) {
+        return Math.sqrt(Math.abs(otherP.getPosX() - this.getPosX()) + Math.abs(otherP.getPosY() - this.getPosY()));
+    }
 }

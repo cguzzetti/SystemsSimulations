@@ -35,7 +35,7 @@ public class PredictiveCollisionAvoidance {
         List<Crash> crashes = new ArrayList<>();
         otherParticles.parallelStream().forEach((otherP)-> {
             double crashTime = predictCrashTime(p, otherP); //TODO Change
-            double dij = Math.abs(p.getPosition().distance(otherP.position));
+            double dij = Math.abs(p.getDistanceFrom(otherP));
             if(crashTime >= 0 && dij <= PERSONAL_SPACE + otherP.getRadius())
                 crashes.add(new Crash(otherP, crashTime));
         });
@@ -44,7 +44,7 @@ public class PredictiveCollisionAvoidance {
 
         boolean noCrashesLeft = false;
         // We only want the first {NUMBER_OF_CRASHES} crashes
-        for(int i = 0; i < NUMBER_OF_CRASHES && i < crashes.size() && noCrashesLeft;  i++){
+        for(int i = 0; i < NUMBER_OF_CRASHES && i < crashes.size() && !noCrashesLeft;  i++){
             noCrashesLeft = true;
             Crash crash = crashes.get(i);
             Point2D evasiveForce = evade(p, crash.getParticle(), crash.getTime());
