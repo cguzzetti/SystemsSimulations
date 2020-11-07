@@ -51,7 +51,7 @@ public class CollisionAvoidanceSimulation {
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
 
             if(shouldPrint) {
-                System.out.println(this.obstaclesAmount + 2);
+                System.out.println(this.obstaclesAmount + 2 + 4);
                 System.out.println(String.format("t %f", currentTime));
                 System.out.println(pedestrian.toString());
                 this.obstacles.forEach(System.out::println);
@@ -59,6 +59,11 @@ public class CollisionAvoidanceSimulation {
                         "%d %.3f %.3f %.5f %.5f 0 0 0 0 1",
                         this.obstaclesAmount+1, OBS_RADIUS, OBS_MASS, goal.getX(), goal.getY())
                 );
+                int initCount = this.obstaclesAmount + 2;
+                System.out.println(String.format("%d 0 1 0 0 0 0 1 1 1", initCount));
+                System.out.println(String.format("%d 0 1 0 %f 0 0 1 1 1", initCount+1, HEIGHT));
+                System.out.println(String.format("%d 0 1 %f 0 0 0 1 1 1", initCount+2, WIDTH));
+                System.out.println(String.format("%d 0 1 %f %f 0 0 1 1 1", initCount+3, WIDTH, HEIGHT));
             }
 
 
@@ -69,6 +74,7 @@ public class CollisionAvoidanceSimulation {
 
             // move all obstacles and pedestrian
             this.pedestrian.move(Vector.add(PredictiveCollisionAvoidance.getWallForce(this.pedestrian), Vector.add(evasiveForce, goalForce)), deltaT);
+            //this.pedestrian.move( Vector.add(evasiveForce, goalForce), deltaT);
             for (ObstacleParticle obs : obstacles){
                 obs.move(goalForce, deltaT);
             }

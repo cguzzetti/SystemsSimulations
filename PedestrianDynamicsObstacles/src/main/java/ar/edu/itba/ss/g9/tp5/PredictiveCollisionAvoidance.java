@@ -12,12 +12,12 @@ public class PredictiveCollisionAvoidance {
 
     private static final double TIME_LIMIT          = 1.5;
     // Personal space valid range: [1.2m, 3.6m]
-    private static final double PERSONAL_SPACE      = 0.5;  // TODO: chequear
+    private static final double PERSONAL_SPACE      = 0.4;  // TODO: chequear
     // Take the first 5 as seen in class
-    private static final int NUMBER_OF_CRASHES      = 5;
+    private static final int NUMBER_OF_CRASHES      = 3;
     // Velocity desired by pedestrian
-    private static final double DESIRED_VELOCITY    = 1.3; // TODO: chequear
-    private static final double TAU                 = 0.5;
+    private static final double DESIRED_VELOCITY    = 1.2; // TODO: chequear
+    private static final double TAU                 = 0.3;
 
     // Algorithm for pedestrian p
     // 1. Compute the set of pedestrians that are on collision course with p with anticipation time t
@@ -48,16 +48,16 @@ public class PredictiveCollisionAvoidance {
         Point2D wallForce = new Point2D.Double(0,0);
         Point2D normalUnitVector;
         double wallForceMagnitude;
-        double WALL_SAFE_DISTANCE = 0.01;
+        double WALL_SAFE_DISTANCE = 0.05;
 
         /* Height walls */
         normalUnitVector = new Point2D.Double(0, 1);
-        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), particle.getPosition().getY(), WALL_SAFE_DISTANCE);
+        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), particle.getPosY(), WALL_SAFE_DISTANCE);
         wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
 
 
         normalUnitVector = new Point2D.Double(0, -1);
-        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), CollisionAvoidanceSimulation.HEIGHT - particle.getPosition().getY(), WALL_SAFE_DISTANCE);
+        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), CollisionAvoidanceSimulation.HEIGHT - particle.getPosY(), WALL_SAFE_DISTANCE);
         wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
 
         /* Width walls */
@@ -65,9 +65,6 @@ public class PredictiveCollisionAvoidance {
         wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), particle.getPosX(), WALL_SAFE_DISTANCE);
         wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
 
-        normalUnitVector = new Point2D.Double(-1, 0);
-        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), CollisionAvoidanceSimulation.WIDTH - particle.getPosX(), WALL_SAFE_DISTANCE);
-        wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
 
         return wallForce;
     }
@@ -80,7 +77,7 @@ public class PredictiveCollisionAvoidance {
 
         double D = Vector.getNorm(Vector.substract(c_i, particle.getPosition())) + Vector.getNorm(Vector.substract(c_i, c_j))
                 - particle.getRadius() - otherP.getRadius();
-        double d_min = particle.getRadius(); //PERSONAL_SPACE - particle.getRadius();
+        double d_min = particle.getRadius(); // PERSONAL_SPACE - particle.getRadius();
         double d_mid = 1; //d_min * 1.5;
         double d_max = 2;// d_min * 2;
         double forceMagnitude = 0;
@@ -101,6 +98,7 @@ public class PredictiveCollisionAvoidance {
         List<Crash> crashes = new ArrayList<>();
         // v_i^des = v_i + (sum[F_walls] + F_goal)*deltaT
         Point2D desiredVelocity = Vector.add(p.getVelocity(), Vector.scalarMultiplication(Vector.add(getWallForce(p), force), deltaT));
+        //Point2D desiredVelocity = Vector.add(p.getVelocity(), Vector.scalarMultiplication(force, deltaT));
         for(ObstacleParticle otherP : otherParticles){
             Crash crash = predictCrash(p, otherP, desiredVelocity);
             if(crash != null)
