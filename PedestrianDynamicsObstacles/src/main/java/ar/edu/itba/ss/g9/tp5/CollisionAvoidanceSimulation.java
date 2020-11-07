@@ -13,7 +13,7 @@ public class CollisionAvoidanceSimulation {
     private int obstaclesAmount;
     private double deltaT;
     private double deltaT2;
-    private static double HEIGHT = 7, WIDTH = 15, SHIFT = 2;
+    static double HEIGHT = 7, WIDTH = 15, SHIFT = 2;
     private Set<ObstacleParticle> obstacles;
     private PedestrianParticle pedestrian;
     private static double OBS_RADIUS = 0.2;
@@ -68,7 +68,7 @@ public class CollisionAvoidanceSimulation {
             // update variables for point c of the assigment
 
             // move all obstacles and pedestrian
-            this.pedestrian.move(evasiveForce, deltaT);
+            this.pedestrian.move(Vector.add(evasiveForce, goalForce), deltaT);
             for (ObstacleParticle obs : obstacles){
                 obs.move(goalForce, deltaT);
             }

@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Math.sqrt;
-import static java.lang.Math.pow;
+import static java.lang.Math.*;
+
 public class PredictiveCollisionAvoidance {
 
     private static final double TIME_LIMIT = 1.5;
@@ -38,72 +38,108 @@ public class PredictiveCollisionAvoidance {
         return new Point2D.Double(xValue, yValue);
     }
 
+    private static double getWallForceMagnitude(double radius, double distance, double safeDistance) {
+        if(Double.compare(distance - radius, safeDistance) >= 0)
+            return 0;
+        return (safeDistance + radius - distance) / Math.pow(distance - radius, 2);
+    }
+
+    private static Point2D getWallForce(Particle particle){
+        Point2D wallForce = new Point2D.Double(0,0);
+        Point2D normalUnitVector;
+        double wallForceMagnitude;
+        double WALL_SAFE_DISTANCE = 10;
+
+        /* Height walls */
+        normalUnitVector = new Point2D.Double(0, 1);
+        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), particle.getPosition().getY(), WALL_SAFE_DISTANCE);
+        wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
+
+
+        normalUnitVector = new Point2D.Double(0, -1);
+        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), CollisionAvoidanceSimulation.HEIGHT - particle.getPosition().getY(), WALL_SAFE_DISTANCE);
+        wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
+
+        /* Width walls */
+        normalUnitVector = new Point2D.Double(1, 0);
+        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), particle.getPosX(), WALL_SAFE_DISTANCE);
+        wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
+
+        normalUnitVector = new Point2D.Double(-1, 0);
+        wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), CollisionAvoidanceSimulation.WIDTH - particle.getPosX(), WALL_SAFE_DISTANCE);
+        wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
+
+        return wallForce;
+    }
+
+    private static Point2D getEvasiveForce(Particle particle, ObstacleParticle otherP, double crashTime, Point2D desiredVelocity){
+        Point2D c_i = Vector.add(particle.getPosition(), Vector.scalarMultiplication(desiredVelocity, crashTime));
+        Point2D c_j = Vector.add(otherP.getPosition(), Vector.scalarMultiplication(otherP.getVelocity(), crashTime));
+
+        Point2D forceDirection = Vector.normalize(Vector.substract(c_i, c_j));
+
+        double D = Vector.getNorm(Vector.substract(c_i, particle.getPosition())) + Vector.getNorm(Vector.substract(c_i, c_j))
+                - particle.getRadius() - otherP.getRadius();
+        double d_min = particle.getRadius();//PERSONAL_SPACE - particle.getRadius();
+        double d_mid = 1; //d_min * 1.5;
+        double d_max = 2; //d_min * 2;
+        double forceMagnitude = 0;
+        double multiplier = 4;
+        if(D < d_min) {
+            forceMagnitude = 1/(D*D) * multiplier;
+        } else if(D < d_mid) {
+            forceMagnitude = 1/(d_min*d_min) * multiplier;
+        } else if(D < d_max) {
+            forceMagnitude = (D - d_max) / (d_min*d_min * (d_mid - d_max)) * multiplier;
+        }
+
+        return Vector.scalarMultiplication(forceDirection, forceMagnitude);
+
+    }
     public static Point2D applyElusiveForce(Point2D force, Particle p, Set<ObstacleParticle> otherParticles, double deltaT){
         // Step 1 of algorithm
         List<Crash> crashes = new ArrayList<>();
-        otherParticles.stream().forEach((otherP)-> { // TODO: parallel stream
-            Point2D desiredVelocity =  new Point2D.Double(p.getVx() + force.getX() * deltaT,p.getVy() + force.getY() * deltaT);
+        // v_i^des = v_i + (sum[F_walls] + F_goal)*deltaT
+        Point2D desiredVelocity = Vector.add(p.getVelocity(), Vector.scalarMultiplication(force, deltaT));
+        for(ObstacleParticle otherP : otherParticles){
             Crash crash = predictCrash(p, otherP, desiredVelocity);
             if(crash != null)
                 crashes.add(crash);
-        });
-
+        }
+        /*
         if(crashes.size()>0)
             System.out.println(crashes.size());
 
+         */
+
         Collections.sort(crashes);
+        if(crashes.size() > NUMBER_OF_CRASHES)
+            crashes = crashes.subList(0, NUMBER_OF_CRASHES);
 
-        boolean noCrashesLeft = false;
-        // We only want the first {NUMBER_OF_CRASHES} crashes
-        for(int i = 0; i < NUMBER_OF_CRASHES && i < crashes.size() && !noCrashesLeft;  i++){
-            noCrashesLeft = true;
-            Crash crash = crashes.get(i);
-            Point2D evasiveForce = evade(p, crash.getParticle(), crash.getTime());
-            // We want the avg of the force
-            evasiveForce.setLocation(evasiveForce.getX() * (1.0/i+1), evasiveForce.getY() * (1.0/i+1));
+        Point2D accumulatedEvasiveForce = new Point2D.Double(0,0);
+        int processedCollisions = 0;
 
-            force.setLocation(force.getX() + evasiveForce.getX(), force.getY() + evasiveForce.getY());
-            setDummyValues(p, force, deltaT);
-            for (int j = i + 1; j < crashes.size() && noCrashesLeft; j++){
-                noCrashesLeft = (crashTest(p, crashes.get(j).getParticle()) == -1);
+        for(Crash crash: crashes){
+            /* Collisions may now not occur due to evasive action in others */
+            Crash reprocessedCrash = predictCrash(p, crash.getParticle(), desiredVelocity);
+            if(reprocessedCrash != null) {
+                Point2D evasiveForce = getEvasiveForce(p, crash.getParticle(),
+                        crash.getTime(), desiredVelocity);
+
+                desiredVelocity = Vector.add(desiredVelocity, Vector.scalarMultiplication(evasiveForce, deltaT));
+                accumulatedEvasiveForce = Vector.add(accumulatedEvasiveForce, evasiveForce);
+                processedCollisions++;
             }
         }
 
-        return force;
+        if(processedCollisions == 0)
+            return accumulatedEvasiveForce;
+
+        return Vector.scalarDivsion(accumulatedEvasiveForce, processedCollisions);
     }
 
-    private static void setDummyValues(Particle p, Point2D force, double deltaT){
-        p.setDummyVx(p.getVx() + force.getX() * deltaT);
-        p.setDummyVy(p.getVy() + force.getY() * deltaT);
-    }
 
-    private static double crashTest(Particle p, Particle otherP){
-
-        double xDifference = otherP.getPosX() - p.getPosX();
-        double yDifference = otherP.getPosY() - p.getPosY();
-
-        double xSpeedDifference = otherP.getVx() - p.getDummyVx();
-        double ySpeedDifference = otherP.getVy() - p.getDummyVy();
-
-        double XdotV = xSpeedDifference*xDifference + ySpeedDifference*yDifference;
-
-        if(XdotV >= 0 ){
-            return -1;
-        }
-
-        double modV = pow(xSpeedDifference,2) + pow(ySpeedDifference,2);
-        double modX = pow(xDifference, 2) + pow(yDifference, 2);
-
-        double d = XdotV*XdotV - modV*(modX - pow(PERSONAL_SPACE + otherP.getRadius(), 2));
-        if(d < 0 ){
-            return -1;
-        }
-        double dSquared = Math.sqrt(d);
-
-        return -(XdotV + dSquared)/modV;
-    }
-
-    private static Crash predictCrash(Particle particle, Particle other, Point2D desiredVelocity) {
+    private static Crash predictCrash(Particle particle, ObstacleParticle other, Point2D desiredVelocity) {
         Point2D vel = new Point2D.Double(desiredVelocity.getX()-other.getVx(),desiredVelocity.getY()-other.getVy());
 
         Point2D diffPos = new Point2D.Double(particle.getPosX() - other.getPosX(), particle.getPosY() - other.getPosY());
@@ -129,90 +165,5 @@ public class PredictiveCollisionAvoidance {
             }
         }
         return null;
-    }
-
-    private static double predictCrashTime(Particle p, Particle otherP){
-        double xDiff = otherP.getPosX() - p.getPosX();
-        double yDiff = otherP.getPosY() - p.getPosY();
-
-        double vxDiff = otherP.getVx() - p.getVx();
-        double vyDiff = otherP.getVy() - p.getVy();
-
-        double XdotV = xDiff*vxDiff + yDiff * vyDiff;
-
-        if( XdotV >= 0){
-            // Collision won't happen
-            return -1;
-        }
-
-        double modulusV = pow(vxDiff,2) + pow(vyDiff, 2);
-        double modulusX = pow(xDiff, 2) + pow(yDiff, 2);
-
-        double d = pow(XdotV, 2) - modulusV *(modulusX - pow((PERSONAL_SPACE + otherP.getRadius()), 2));
-        double dSquared = sqrt(d);
-        if(d < 0) {
-            return -1;
-        }
-
-        return -(XdotV + dSquared)/ modulusV;
-    }
-
-    private static Point2D evade(Particle p, Particle otherP, double time){
-
-        // Apply avoidance maneuver
-        double cix = p.getPosX() +  p.getVx() * time;
-        double ciy = p.getPosY() + p.getVy() * time;
-        double cjx = otherP.getPosX() + otherP.getVx() * time;
-        double cjy = otherP.getPosY() + otherP.getVy() * time;
-
-        double xDifference = cix - cjx;
-        double yDifference = ciy - cjy;
-        // ||c_i - c_j ||
-        double distance = sqrt(pow(xDifference, 2) + pow(yDifference, 2));
-
-
-        double rx = cix - p.getPosX();
-        double ry = ciy - p.getPosY();
-
-        // || c_i - x_i ||
-        double modR = sqrt(pow(rx, 2) + pow(ry, 2));
-
-        //TODO: Is this OK? Or should it be this.getRadius()
-        final double D = modR + (distance - PERSONAL_SPACE - otherP.getRadius());
-
-        /*
-            We need to specify 3 values: d_min d_max and d_mid
-            For more information check page 47 of
-            https://www.researchgate.net/publication/221252067_A_Predictive_Collision_Avoidance_Model_for_Pedestrian_Simulation
-            (this is part of the course lecture, the teacher should've given you the PDF).
-            This also corresponds to slide 14 in Theory7
-            We define the first decreasing part with D < d_min as: 1/D
-            Te constant part, we define it as: 1/d_min
-            The last segment, with d_mid < D < d_max: d_max/(d_min * (d_max - d_mid)) - D/(d_min*(d_max - d_mid))
-
-         */
-        double dmid = 1;
-        double dmax = 2;
-        double dmin = p.getRadius();
-
-        // Get the Unit Vectors to specify direction
-        double xDirection = xDifference / distance;
-        double yDirection = yDifference / distance;
-
-        if(D > dmax) {
-            return new Point2D.Double(0,0);
-        }
-        else if(D > dmid) {
-            double forceMagnitude = dmax/(dmin*(dmax - dmid)) - D/(dmin*(dmax - dmid));
-            return new Point2D.Double(forceMagnitude*xDirection,forceMagnitude*yDirection);
-        }
-        else if(D > dmin) {
-            double forceMagnitude = (1/dmin);
-            return new Point2D.Double(forceMagnitude*xDirection,forceMagnitude*yDirection);
-        } else {
-            double forceMagnitude = (1/D);
-            return new Point2D.Double(forceMagnitude*xDirection,forceMagnitude*yDirection);
-        }
-
     }
 }

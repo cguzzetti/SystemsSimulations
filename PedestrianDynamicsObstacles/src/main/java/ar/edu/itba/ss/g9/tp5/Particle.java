@@ -59,6 +59,9 @@ public class Particle {
     }
 
 
+    public Point2D getVelocity(){
+        return velocity;
+    }
     public double getVx() {
         return this.velocity.getX();
     }

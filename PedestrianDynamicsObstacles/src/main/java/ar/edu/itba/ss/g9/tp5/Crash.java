@@ -6,15 +6,15 @@ import java.util.Comparator;
  * Save the particle along with its time for collision
  */
 public class Crash implements Comparable<Crash> {
-    private Particle particle;
+    private ObstacleParticle particle;
     private double time;
 
-    Crash(Particle p, double time){
+    Crash(ObstacleParticle p, double time){
         this.particle   = p;
         this.time       = time;
     }
 
-    public Particle getParticle() {
+    public ObstacleParticle getParticle() {
         return particle;
     }
 
