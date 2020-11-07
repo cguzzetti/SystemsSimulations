@@ -50,18 +50,17 @@ public class CollisionAvoidanceSimulation {
 
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
 
-//            if(shouldPrint) {
-//                System.out.println(this.obstaclesAmount + 2);
-//                System.out.println(String.format("t %f", currentTime));
-//                System.out.println(pedestrian.toString());
-//                this.obstacles.forEach(System.out::println);
-//                System.out.println(String.format(
-//                        "%d %.3f %.3f %.5f %.5f 0 0 0 0 1",
-//                        this.obstaclesAmount+1, OBS_RADIUS, OBS_MASS, goal.getX(), goal.getY())
-//                );
-//            }
+            if(shouldPrint) {
+                System.out.println(this.obstaclesAmount + 2);
+                System.out.println(String.format("t %f", currentTime));
+                System.out.println(pedestrian.toString());
+                this.obstacles.forEach(System.out::println);
+                System.out.println(String.format(
+                        "%d %.3f %.3f %.5f %.5f 0 0 0 0 1",
+                        this.obstaclesAmount+1, OBS_RADIUS, OBS_MASS, goal.getX(), goal.getY())
+                );
+            }
 
-//            System.out.println(this.obstacles.size());
 
             goalForce = applyAutopropulsiveForce(this.pedestrian, goal);
             Point2D evasiveForce = applyElusiveForce(goalForce, this.pedestrian, this.obstacles, deltaT);

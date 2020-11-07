@@ -10,6 +10,7 @@ import static java.lang.Math.sqrt;
 import static java.lang.Math.pow;
 public class PredictiveCollisionAvoidance {
 
+    private static final double TIME_LIMIT = 1.5;
     // Personal space valid range: [1.2m, 3.6m]
     private static final double PERSONAL_SPACE      = 1.2;
     // Take the first 5 as seen in class
@@ -41,17 +42,14 @@ public class PredictiveCollisionAvoidance {
         // Step 1 of algorithm
         List<Crash> crashes = new ArrayList<>();
         otherParticles.stream().forEach((otherP)-> { // TODO: parallel stream
-            double crashTime = predictCrashTime(p, otherP);
-            double dij = p.getPosition().distance(otherP.getPosition());
-            boolean aux = dij <= (PERSONAL_SPACE + otherP.getRadius());
-            if(crashTime > 0)
-                System.out.println(crashTime +" "+ dij + " " + aux);
-            if(crashTime >= 0 && dij <= (PERSONAL_SPACE + otherP.getRadius())) {
-                crashes.add(new Crash(otherP, crashTime));
-            }
+            Point2D desiredVelocity =  new Point2D.Double(p.getVx() + force.getX() * deltaT,p.getVy() + force.getY() * deltaT);
+            Crash crash = predictCrash(p, otherP, desiredVelocity);
+            if(crash != null)
+                crashes.add(crash);
         });
 
-        System.out.println(crashes);
+        if(crashes.size()>0)
+            System.out.println(crashes.size());
 
         Collections.sort(crashes);
 
@@ -103,6 +101,34 @@ public class PredictiveCollisionAvoidance {
         double dSquared = Math.sqrt(d);
 
         return -(XdotV + dSquared)/modV;
+    }
+
+    private static Crash predictCrash(Particle particle, Particle other, Point2D desiredVelocity) {
+        Point2D vel = new Point2D.Double(desiredVelocity.getX()-other.getVx(),desiredVelocity.getY()-other.getVy());
+
+        Point2D diffPos = new Point2D.Double(particle.getPosX() - other.getPosX(), particle.getPosY() - other.getPosY());
+
+        double a = vel.getX() * vel.getX() + vel.getY() * vel.getY();
+        double b = 2 * (vel.getX() * diffPos.getX() + vel.getY() * diffPos.getY());
+        double c = diffPos.getX() * diffPos.getX() + diffPos.getY() * diffPos.getY()
+                - Math.pow(PERSONAL_SPACE + other.getRadius(), 2);
+
+        double det = b*b - 4*a*c;
+        /* Collision may take place */
+        if(Double.compare(det, 0) > 0) {
+            double t1 = (-b + Math.sqrt(det)) / (2*a);
+            double t2 = (-b - Math.sqrt(det)) / (2*a);
+
+            if((t1 < 0 && t2 > 0) || (t2 < 0 && t1 > 0)) {
+                return new Crash(other, 0);
+            } else if(Double.compare(t1, 0) >= 0 && Double.compare(t2, 0) >= 0) {
+                double minT = Math.min(t1, t2);
+                if(minT < TIME_LIMIT) {
+                    return new Crash(other, minT);
+                }
+            }
+        }
+        return null;
     }
 
     private static double predictCrashTime(Particle p, Particle otherP){
