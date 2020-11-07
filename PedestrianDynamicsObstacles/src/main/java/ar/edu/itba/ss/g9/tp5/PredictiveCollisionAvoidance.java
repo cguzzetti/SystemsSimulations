@@ -10,9 +10,9 @@ import static java.lang.Math.*;
 
 public class PredictiveCollisionAvoidance {
 
-    private static final double TIME_LIMIT = 1.5;
+    private static final double TIME_LIMIT          = 1.5;
     // Personal space valid range: [1.2m, 3.6m]
-    private static final double PERSONAL_SPACE      = 1.2;
+    private static final double PERSONAL_SPACE      = 0.5;  // TODO: chequear
     // Take the first 5 as seen in class
     private static final int NUMBER_OF_CRASHES      = 5;
     // Velocity desired by pedestrian
@@ -44,11 +44,11 @@ public class PredictiveCollisionAvoidance {
         return (safeDistance + radius - distance) / Math.pow(distance - radius, 2);
     }
 
-    private static Point2D getWallForce(Particle particle){
+    public static Point2D getWallForce(Particle particle){
         Point2D wallForce = new Point2D.Double(0,0);
         Point2D normalUnitVector;
         double wallForceMagnitude;
-        double WALL_SAFE_DISTANCE = 10;
+        double WALL_SAFE_DISTANCE = 0.01;
 
         /* Height walls */
         normalUnitVector = new Point2D.Double(0, 1);
@@ -80,9 +80,9 @@ public class PredictiveCollisionAvoidance {
 
         double D = Vector.getNorm(Vector.substract(c_i, particle.getPosition())) + Vector.getNorm(Vector.substract(c_i, c_j))
                 - particle.getRadius() - otherP.getRadius();
-        double d_min = particle.getRadius();//PERSONAL_SPACE - particle.getRadius();
+        double d_min = particle.getRadius(); //PERSONAL_SPACE - particle.getRadius();
         double d_mid = 1; //d_min * 1.5;
-        double d_max = 2; //d_min * 2;
+        double d_max = 2;// d_min * 2;
         double forceMagnitude = 0;
         double multiplier = 4;
         if(D < d_min) {
@@ -100,7 +100,7 @@ public class PredictiveCollisionAvoidance {
         // Step 1 of algorithm
         List<Crash> crashes = new ArrayList<>();
         // v_i^des = v_i + (sum[F_walls] + F_goal)*deltaT
-        Point2D desiredVelocity = Vector.add(p.getVelocity(), Vector.scalarMultiplication(force, deltaT));
+        Point2D desiredVelocity = Vector.add(p.getVelocity(), Vector.scalarMultiplication(Vector.add(getWallForce(p), force), deltaT));
         for(ObstacleParticle otherP : otherParticles){
             Crash crash = predictCrash(p, otherP, desiredVelocity);
             if(crash != null)

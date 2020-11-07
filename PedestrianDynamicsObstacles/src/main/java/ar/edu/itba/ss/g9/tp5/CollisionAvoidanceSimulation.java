@@ -68,7 +68,7 @@ public class CollisionAvoidanceSimulation {
             // update variables for point c of the assigment
 
             // move all obstacles and pedestrian
-            this.pedestrian.move(Vector.add(evasiveForce, goalForce), deltaT);
+            this.pedestrian.move(Vector.add(PredictiveCollisionAvoidance.getWallForce(this.pedestrian), Vector.add(evasiveForce, goalForce)), deltaT);
             for (ObstacleParticle obs : obstacles){
                 obs.move(goalForce, deltaT);
             }
