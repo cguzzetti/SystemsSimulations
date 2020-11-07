@@ -37,18 +37,12 @@ public class CollisionAvoidanceSimulation {
     }
 
     private void startSimulation() {
-        // Algorithm for pedestrian p
-        // 1. Compute the set of pedestrians that are on collision course with p with anticipation time t
-        // 2. Select first N pedestrians that will collide by sorting in order of increasing collision time
-        // 3. Show how the pedestrian p can avoid a potential collision with another pedestrian by selecting the evasive force
-        // 4. Compute the total evasive force that is applied to p
-
         // Variables for point c of the assignment
         double timeTraveled = 0.0;
         double lengthTraveled = 0.0;
         double meanSpeed;
         Point2D goalForce;
-        Point2D evasiveForce;
+//        Point2D evasiveForce;
 
         double currentTime = 0.0;
 
@@ -56,19 +50,21 @@ public class CollisionAvoidanceSimulation {
 
             boolean shouldPrint = Math.abs(currentTime / deltaT2 - Math.round(currentTime / deltaT2)) < EPSILON;
 
-            if(shouldPrint) {
-                System.out.println(this.obstaclesAmount + 2);
-                System.out.println(String.format("t %f", currentTime));
-                System.out.println(pedestrian.toString());
-                this.obstacles.forEach(System.out::println);
-                System.out.println(String.format(
-                        "%d %.3f %.3f %.5f %.5f 0 0 0 0 1",
-                        this.obstaclesAmount+1, OBS_RADIUS, OBS_MASS, goal.getX(), goal.getY())
-                );
-            }
+//            if(shouldPrint) {
+//                System.out.println(this.obstaclesAmount + 2);
+//                System.out.println(String.format("t %f", currentTime));
+//                System.out.println(pedestrian.toString());
+//                this.obstacles.forEach(System.out::println);
+//                System.out.println(String.format(
+//                        "%d %.3f %.3f %.5f %.5f 0 0 0 0 1",
+//                        this.obstaclesAmount+1, OBS_RADIUS, OBS_MASS, goal.getX(), goal.getY())
+//                );
+//            }
+
+//            System.out.println(this.obstacles.size());
 
             goalForce = applyAutopropulsiveForce(this.pedestrian, goal);
-            evasiveForce = applyElusiveForce(goalForce, this.pedestrian, this.obstacles, deltaT);
+            Point2D evasiveForce = applyElusiveForce(goalForce, this.pedestrian, this.obstacles, deltaT);
 
             // update variables for point c of the assigment
 

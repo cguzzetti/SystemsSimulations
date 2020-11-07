@@ -15,8 +15,14 @@ public class PredictiveCollisionAvoidance {
     // Take the first 5 as seen in class
     private static final int NUMBER_OF_CRASHES      = 5;
     // Velocity desired by pedestrian
-    private static final double DESIRED_VELOCITY    = 1.3;
+    private static final double DESIRED_VELOCITY    = 1.3; // TODO: chequear
     private static final double TAU                 = 0.5;
+
+    // Algorithm for pedestrian p
+    // 1. Compute the set of pedestrians that are on collision course with p with anticipation time t
+    // 2. Select first N pedestrians that will collide by sorting in order of increasing collision time
+    // 3. Show how the pedestrian p can avoid a potential collision with another pedestrian by selecting the evasive force
+    // 4. Compute the total evasive force that is applied to p
 
     // The pedestrian always moves towards the goal
     public static Point2D applyAutopropulsiveForce(Particle p, Point2D goal){
@@ -32,13 +38,20 @@ public class PredictiveCollisionAvoidance {
     }
 
     public static Point2D applyElusiveForce(Point2D force, Particle p, Set<ObstacleParticle> otherParticles, double deltaT){
+        // Step 1 of algorithm
         List<Crash> crashes = new ArrayList<>();
-        otherParticles.parallelStream().forEach((otherP)-> {
-            double crashTime = predictCrashTime(p, otherP); //TODO Change
-            double dij = Math.abs(p.getDistanceFrom(otherP));
-            if(crashTime >= 0 && dij <= PERSONAL_SPACE + otherP.getRadius())
+        otherParticles.stream().forEach((otherP)-> { // TODO: parallel stream
+            double crashTime = predictCrashTime(p, otherP);
+            double dij = p.getPosition().distance(otherP.getPosition());
+            boolean aux = dij <= (PERSONAL_SPACE + otherP.getRadius());
+            if(crashTime > 0)
+                System.out.println(crashTime +" "+ dij + " " + aux);
+            if(crashTime >= 0 && dij <= (PERSONAL_SPACE + otherP.getRadius())) {
                 crashes.add(new Crash(otherP, crashTime));
+            }
         });
+
+        System.out.println(crashes);
 
         Collections.sort(crashes);
 
@@ -57,7 +70,6 @@ public class PredictiveCollisionAvoidance {
                 noCrashesLeft = (crashTest(p, crashes.get(j).getParticle()) == -1);
             }
         }
-
 
         return force;
     }
@@ -112,13 +124,11 @@ public class PredictiveCollisionAvoidance {
 
         double d = pow(XdotV, 2) - modulusV *(modulusX - pow((PERSONAL_SPACE + otherP.getRadius()), 2));
         double dSquared = sqrt(d);
-        if(d < 0 ) {
+        if(d < 0) {
             return -1;
         }
 
         return -(XdotV + dSquared)/ modulusV;
-
-
     }
 
     private static Point2D evade(Particle p, Particle otherP, double time){

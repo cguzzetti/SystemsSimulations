@@ -124,6 +124,6 @@ public class Particle {
     }
 
     public double getDistanceFrom(ObstacleParticle otherP) {
-        return Math.sqrt(Math.abs(otherP.getPosX() - this.getPosX()) + Math.abs(otherP.getPosY() - this.getPosY()));
+        return Math.sqrt(Math.pow(otherP.getPosX() - this.getPosX(),2) + Math.pow(otherP.getPosY() - this.getPosY(),2));
     }
 }
