@@ -15,7 +15,7 @@ public class Vector {
         return scalarMultiplication(point, 1/alpha);
     }
 
-    public static Point2D substract(Point2D point1, Point2D point2){
+    public static Point2D subtract(Point2D point1, Point2D point2){
         return new Point2D.Double(point1.getX() - point2.getX(), point1.getY() - point2.getY());
     }
 
@@ -25,5 +25,9 @@ public class Vector {
 
     public static Point2D normalize(Point2D point1) {
         return scalarDivsion(point1, getNorm(point1));
+    }
+
+    public static double getDotProduct(Point2D point1, Point2D point2) {
+        return point1.getX() * point2.getX() + point1.getY() * point2.getY();
     }
 }

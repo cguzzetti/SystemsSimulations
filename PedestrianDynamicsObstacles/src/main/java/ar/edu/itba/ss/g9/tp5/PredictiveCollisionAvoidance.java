@@ -50,7 +50,7 @@ public class PredictiveCollisionAvoidance {
         Point2D normalUnitVector;
         double wallForceMagnitude;
 
-        /* Height walls */
+        /* Horizontal walls */
         normalUnitVector = new Point2D.Double(0, 1);
         wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), particle.getPosY(), WALL_SAFE_DISTANCE);
         wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
@@ -59,7 +59,7 @@ public class PredictiveCollisionAvoidance {
         wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), CollisionAvoidanceSimulation.HEIGHT - particle.getPosY(), WALL_SAFE_DISTANCE);
         wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
 
-        /* Width walls */
+        /* Vertical walls */
         normalUnitVector = new Point2D.Double(1, 0);
         wallForceMagnitude = getWallForceMagnitude(particle.getRadius(), particle.getPosX(), WALL_SAFE_DISTANCE);
         wallForce = Vector.add(wallForce, Vector.scalarMultiplication(normalUnitVector, wallForceMagnitude));
@@ -75,9 +75,9 @@ public class PredictiveCollisionAvoidance {
         Point2D c_i = Vector.add(particle.getPosition(), Vector.scalarMultiplication(desiredVelocity, crashTime));
         Point2D c_j = Vector.add(otherP.getPosition(), Vector.scalarMultiplication(otherP.getVelocity(), crashTime));
 
-        Point2D forceDirection = Vector.normalize(Vector.substract(c_i, c_j));
+        Point2D forceDirection = Vector.normalize(Vector.subtract(c_i, c_j));
 
-        double D = Vector.getNorm(Vector.substract(c_i, particle.getPosition())) + Vector.getNorm(Vector.substract(c_i, c_j))
+        double D = Vector.getNorm(Vector.subtract(c_i, particle.getPosition())) + Vector.getNorm(Vector.subtract(c_i, c_j))
                 - particle.getRadius() - otherP.getRadius();
         double d_min = particle.getRadius(); // PERSONAL_SPACE - particle.getRadius();
         double d_mid = 1; //d_min * 1.5;
@@ -96,21 +96,18 @@ public class PredictiveCollisionAvoidance {
 
     }
     public static Point2D applyElusiveForce(Point2D force, Particle p, Set<ObstacleParticle> otherParticles, double deltaT){
-        // Step 1 of algorithm
+
+        // 1. Compute the set of pedestrians that are on collision course with p with anticipation time t
         List<Crash> crashes = new ArrayList<>();
-        // v_i^des = v_i + (sum[F_walls] + F_goal)*deltaT
+
+        // v_i^des = v_i + (sum[F_walls] + F_goal) * deltaT
         Point2D desiredVelocity = Vector.add(p.getVelocity(), Vector.scalarMultiplication(Vector.add(getWallForce(p), force), deltaT));
-        //Point2D desiredVelocity = Vector.add(p.getVelocity(), Vector.scalarMultiplication(force, deltaT));
+
         for(ObstacleParticle otherP : otherParticles){
             Crash crash = predictCrash(p, otherP, desiredVelocity);
             if(crash != null)
                 crashes.add(crash);
         }
-        /*
-        if(crashes.size()>0)
-            System.out.println(crashes.size());
-
-         */
 
         Collections.sort(crashes);
         if(crashes.size() > NUMBER_OF_CRASHES)
@@ -140,16 +137,16 @@ public class PredictiveCollisionAvoidance {
 
 
     private static Crash predictCrash(Particle particle, ObstacleParticle other, Point2D desiredVelocity) {
-        Point2D vel = new Point2D.Double(desiredVelocity.getX()-other.getVx(),desiredVelocity.getY()-other.getVy());
+        Point2D vel = Vector.subtract(desiredVelocity, other.getVelocity());
 
-        Point2D diffPos = new Point2D.Double(particle.getPosX() - other.getPosX(), particle.getPosY() - other.getPosY());
+        Point2D diffPos = Vector.subtract(particle.getPosition(), other.getPosition());
 
-        double a = vel.getX() * vel.getX() + vel.getY() * vel.getY();
-        double b = 2 * (vel.getX() * diffPos.getX() + vel.getY() * diffPos.getY());
-        double c = diffPos.getX() * diffPos.getX() + diffPos.getY() * diffPos.getY()
-                - Math.pow(PERSONAL_SPACE + other.getRadius(), 2);
+        double a = pow(Vector.getNorm(vel), 2);
+        double b = 2 * Vector.getDotProduct(vel, diffPos);
+        double c = pow(Vector.getNorm(diffPos), 2) - Math.pow(PERSONAL_SPACE + other.getRadius(), 2);
 
         double det = b*b - 4*a*c;
+
         /* Collision may take place */
         if(Double.compare(det, 0) > 0) {
             double t1 = (-b + Math.sqrt(det)) / (2*a);
