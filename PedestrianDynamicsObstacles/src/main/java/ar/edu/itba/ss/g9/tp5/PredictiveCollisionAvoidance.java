@@ -77,7 +77,8 @@ public class PredictiveCollisionAvoidance {
 
         Point2D forceDirection = Vector.normalize(Vector.subtract(c_i, c_j));
 
-        double D = Vector.getNorm(Vector.subtract(c_i, particle.getPosition())) + Vector.getNorm(Vector.subtract(c_i, c_j))
+        double D = Vector.getNorm(Vector.subtract(c_i, particle.getPosition()))
+                + Vector.getNorm(Vector.subtract(c_i, c_j))
                 - particle.getRadius() - otherP.getRadius();
         double d_min = particle.getRadius(); // PERSONAL_SPACE - particle.getRadius();
         double d_mid = 1; //d_min * 1.5;
@@ -97,18 +98,21 @@ public class PredictiveCollisionAvoidance {
     }
     public static Point2D applyElusiveForce(Point2D force, Particle p, Set<ObstacleParticle> otherParticles, double deltaT){
 
-        // 1. Compute the set of pedestrians that are on collision course with p with anticipation time t
         List<Crash> crashes = new ArrayList<>();
 
         // v_i^des = v_i + (sum[F_walls] + F_goal) * deltaT
         Point2D desiredVelocity = Vector.add(p.getVelocity(), Vector.scalarMultiplication(Vector.add(getWallForce(p), force), deltaT));
 
+        // 1. Compute the set of pedestrians that are on
+        // collision course with p with anticipation time TIME_LIMIT
         for(ObstacleParticle otherP : otherParticles){
             Crash crash = predictCrash(p, otherP, desiredVelocity);
             if(crash != null)
                 crashes.add(crash);
         }
 
+        // 2. Select first N pedestrians that will collide
+        // by sorting in order of increasing collision time
         Collections.sort(crashes);
         if(crashes.size() > NUMBER_OF_CRASHES)
             crashes = crashes.subList(0, NUMBER_OF_CRASHES);
@@ -116,6 +120,9 @@ public class PredictiveCollisionAvoidance {
         Point2D accumulatedEvasiveForce = new Point2D.Double(0,0);
         int processedCollisions = 0;
 
+        // 3. Show how the pedestrian p can avoid a potential
+        // collision with another pedestrian by selecting the
+        // evasive force
         for(Crash crash: crashes){
             /* Collisions may now not occur due to evasive action in others */
             Crash reprocessedCrash = predictCrash(p, crash.getParticle(), desiredVelocity);
@@ -132,6 +139,7 @@ public class PredictiveCollisionAvoidance {
         if(processedCollisions == 0)
             return accumulatedEvasiveForce;
 
+        // 4. Compute the total evasive force that is applied to p
         return Vector.scalarDivsion(accumulatedEvasiveForce, processedCollisions);
     }
 
