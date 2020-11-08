@@ -60,10 +60,10 @@ public class CollisionAvoidanceSimulation {
                         this.obstaclesAmount+1, OBS_RADIUS, OBS_MASS, goal.getX(), goal.getY())
                 );
                 int initCount = this.obstaclesAmount + 2;
-                System.out.println(String.format("%d 0 1 0 0 0 0 1 1 1", initCount));
-                System.out.println(String.format("%d 0 1 0 %f 0 0 1 1 1", initCount+1, HEIGHT));
-                System.out.println(String.format("%d 0 1 %f 0 0 0 1 1 1", initCount+2, WIDTH));
-                System.out.println(String.format("%d 0 1 %f %f 0 0 1 1 1", initCount+3, WIDTH, HEIGHT));
+                System.out.println(String.format("%d 0.0001 1 0 0 0 0 1 1 1", initCount));
+                System.out.println(String.format("%d 0.0001 1 0 %f 0 0 1 1 1", initCount+1, HEIGHT));
+                System.out.println(String.format("%d 0.0001 1 %f 0 0 0 1 1 1", initCount+2, WIDTH));
+                System.out.println(String.format("%d 0.0001 1 %f %f 0 0 1 1 1", initCount+3, WIDTH, HEIGHT));
             }
 
 
