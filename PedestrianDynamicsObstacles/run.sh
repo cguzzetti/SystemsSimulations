@@ -17,26 +17,47 @@ MIN_ARGS=3
 
 if (( "$#" < "$MIN_ARGS" )); then
   echo -e "${RED}Error: $# is not a valid number of arguments. You need at least $MIN_ARGS${NORMAL}"
-  echo "Usage: $0 <num_of_obstacles> deltaT deltaT2 [number_of_iterations]"
+  echo "Usage: $0 <num_of_obstacles> deltaT deltaT2 [OBSERVABLE_VARIABLE]"
   exit 1
 fi
 
-iterations=${4:-1}
-echo -e "\n\n${GREEN}Running Project Mars with arguments: $* ${NORMAL}\n\n"
+dmin=( "0.2" "0.3" "0.4" "0.5" "0.6" "0.7" "0.8" "0.9")
+dmid=( "1.0" "1.1" "1.2" "1.3" "1.4" "1.5" "1.6" "1.7" "1.8" "1.9")
+rad=( "0.2" "0.3" "0.4" "0.5" "0.6" "0.7" "0.8" "0.9")
+
+if [ "$4" == "DMIN" ]; then
+  echo "lel"
+  observable=(${dmin[@]})
+  iterations=${#observable[@]}
+elif [ "$4" == "DMID" ]; then
+  observable=(${dmid[@]})
+  iterations=${#observable[@]}
+elif [ "$4" == "RAD" ]; then
+  observable=(${rad[@]})
+  iterations=${#observable[@]}
+else
+  observable=-1
+  iterations=1
+fi
+
+echo "${observable[@]}"
+echo "$iterations"
+
+echo -e "\n\n${GREEN}Running Pedestrian Dynamics with arguments: $* ${NORMAL}\n\n"
 
 mvn clean package
 FILE_PATH="src/visualization"
 check_visualization_dir "$FILE_PATH"
 if [ "$iterations" -eq 1 ]; then
     FILE_NAME="pedestrian_output.xyz"
-    java -jar target/PedestrianDynamicsObstacles-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/$FILE_NAME"
+    java -jar target/PedestrianDynamicsObstacles-1.0-SNAPSHOT.jar "$1" "$2" "$3" > "$FILE_PATH/$FILE_NAME"
 else
     if [ ! -d "$FILE_PATH/bulk" ]; then
         mkdir "$FILE_PATH/bulk"
     fi
     for i in $(seq "$iterations"); do
       FILE_NAME="pedestrian_output_$i.xyz"
-      java -jar target/PedestrianDynamicsObstacles-1.0-SNAPSHOT.jar "$@" > "$FILE_PATH/bulk/$FILE_NAME"
+      java -jar target/PedestrianDynamicsObstacles-1.0-SNAPSHOT.jar "$1" "$2" "$3" "$4" "${observable[i-1]}" > "$FILE_PATH/bulk/$FILE_NAME"
       echo "$FILE_NAME"
     done
 fi

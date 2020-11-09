@@ -2,6 +2,7 @@ package ar.edu.itba.ss.g9.tp5;
 
 import java.awt.geom.Point2D;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -22,12 +23,23 @@ public class CollisionAvoidanceSimulation {
     private static double PED_RADIUS = OBS_RADIUS;
     private static double PED_MASS = OBS_MASS;
     final static double EPSILON = Math.pow(10, -6);
+    static double DMIN = OBS_RADIUS;
+    static double DMID = 1;
 
-    public CollisionAvoidanceSimulation(int obstaclesAmount, double deltaT, double deltaT2) {
+    public CollisionAvoidanceSimulation(int obstaclesAmount, double deltaT, double deltaT2, Optional<Double> dmin, Optional<Double> dmid, Optional<Double> radius) {
         this.obstaclesAmount = obstaclesAmount;
         this.goal = new Point2D.Double(WIDTH-0.5, HEIGHT/2);
         this.deltaT = deltaT;
         this.deltaT2 = deltaT2;
+        if (radius.isPresent()) {
+            OBS_RADIUS = radius.get();
+        }
+        if (dmin.isPresent()) {
+            DMIN = dmin.get();
+        }
+        if (dmid.isPresent()) {
+            DMID = dmid.get();
+        }
     }
 
     public void simulate() {

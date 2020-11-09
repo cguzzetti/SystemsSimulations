@@ -79,8 +79,8 @@ public class PredictiveCollisionAvoidance {
         double D = Vector.getNorm(Vector.subtract(c_i, particle.getPosition()))
                 + Vector.getNorm(Vector.subtract(c_i, c_j))
                 - particle.getRadius() - otherP.getRadius();
-        double d_min = particle.getRadius(); // PERSONAL_SPACE - particle.getRadius();
-        double d_mid = 1; //d_min * 1.5;
+        double d_min = CollisionAvoidanceSimulation.DMIN;//particle.getRadius(); // PERSONAL_SPACE - particle.getRadius();
+        double d_mid = CollisionAvoidanceSimulation.DMID;//1; //d_min * 1.5;
         double d_max = 2;// d_min * 2;
         double forceMagnitude = 0;
         double multiplier = 4;
