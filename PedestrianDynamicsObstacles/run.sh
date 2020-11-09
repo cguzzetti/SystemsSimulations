@@ -55,10 +55,13 @@ else
     if [ ! -d "$FILE_PATH/bulk" ]; then
         mkdir "$FILE_PATH/bulk"
     fi
+    repetitions=4
     for i in $(seq "$iterations"); do
-      FILE_NAME="pedestrian_output_$i.xyz"
-      java -jar target/PedestrianDynamicsObstacles-1.0-SNAPSHOT.jar "$1" "$2" "$3" "$4" "${observable[i-1]}" > "$FILE_PATH/bulk/$FILE_NAME"
-      echo "$FILE_NAME"
+       for j in $(seq "$repetitions"); do
+          FILE_NAME="pedestrian_output_${observable[i-1]}_$j.xyz"
+          java -jar target/PedestrianDynamicsObstacles-1.0-SNAPSHOT.jar "$1" "$2" "$3" "$4" "${observable[i-1]}" > "$FILE_PATH/bulk/$FILE_NAME"
+          echo "$FILE_NAME"
+       done
     done
 fi
 
