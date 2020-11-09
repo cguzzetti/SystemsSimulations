@@ -11,7 +11,6 @@ import static java.lang.Math.*;
 public class PredictiveCollisionAvoidance {
 
     private static final double TIME_LIMIT          = 1.5;
-    // Personal space valid range: [1.2m, 3.6m]
     private static final double PERSONAL_SPACE      = 0.4;  // TODO: chequear
     // Take the first 5 as seen in class
     private static final int NUMBER_OF_CRASHES      = 3;
