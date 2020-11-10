@@ -33,6 +33,7 @@ public class CollisionAvoidanceSimulation {
         this.deltaT2 = deltaT2;
         if (radius.isPresent()) {
             OBS_RADIUS = radius.get();
+            PED_RADIUS = radius.get();
         }
         if (dmin.isPresent()) {
             DMIN = dmin.get();

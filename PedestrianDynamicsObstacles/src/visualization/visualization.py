@@ -16,6 +16,16 @@ def velocity_over_time(velocities: np.ndarray, t: float):
     plt.plot(times, velocities)
     plt.savefig("velocities.png")
 
+def show_velocity(velocities: dict, label: str):
+    dmins = velocities.keys()
+    vels = velocities.values()
+
+    fig, ax = plt.subplots()
+    ax.set_xlabel('dmins')
+    ax.set_ylabel(label)
+    plt.plot(dmins, vels)
+    plt.show()
+
 
 def get_mean_velocity(parser: ParserXYZ):
     v_index = 5
@@ -71,30 +81,52 @@ if __name__ == '__main__':
         print(f"Distance travelled: {get_distance(_parser)} m")
         print(f"Time spent: {len(_parser.blocks)/100 } seconds")
     elif mode == "BULK":
-        pattern = sys.argv[1]
-        filenames = glob(f"bulk/{pattern}*")
-        velocities = np.zeros(len(filenames), dtype=np.float)
-        distances = np.zeros(len(filenames), dtype=np.float)
-        times = np.zeros(len(filenames), dtype=np.float)
-        index = 0
-        for filename in filenames:
-            _parser = ParserXYZ.initialize_parser(filename)
-            _parser.parse_file()
+        vel_dict = dict()
+        dist_dict = dict()
+        time_dict = dict()
+        dmin = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        dmid = [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
+        rad = [0.2, 0.3, 0.4]  #, 0.5, 0.6, 0.7, 0.8, 0.9]
+        chosen_observable = "rad"
+        if chosen_observable == "dmin":
+            observables = dmin
+        elif chosen_observable == "dmid":
+            observables = dmid
+        else:
+            observables = rad
 
-            velocities[index] = get_mean_velocity(_parser)
-            distances[index] = get_distance(_parser)
-            times[index] = len(_parser.blocks)/100
-            index += 1
+        for observable in observables:
+            pattern = sys.argv[1]
+            filenames = glob(f"bulk/{pattern}{observable}_*")
+            velocities = np.zeros(len(filenames), dtype=np.float)
+            distances = np.zeros(len(filenames), dtype=np.float)
+            times = np.zeros(len(filenames), dtype=np.float)
+            index = 0
+            for filename in filenames:
+                _parser = ParserXYZ.initialize_parser(filename)
+                _parser.parse_file()
 
-        print(" ----------- Velocities --------------")
-        print(velocities)
-        print(" ----------- distance travelled --------------")
-        print(distances)
-        print(" ----------- times --------------")
-        print(times)
-        print(f"Mean velocity: {velocities.mean()} with std {velocities.std()}")
-        print(f"Mean distance travelled: {distances.mean()} with std {distances.std()}")
-        print(f"Mean time spent: {times.mean()} with std {times.std()}")
+                velocities[index] = get_mean_velocity(_parser)
+                distances[index] = get_distance(_parser)
+                times[index] = len(_parser.blocks)/100
+                index += 1
+            vel_dict[observable] = velocities.mean()
+            dist_dict[observable] = distances.mean()
+            time_dict[observable] = times.mean()
+
+        show_velocity(vel_dict, "velocity [m/s]")
+        show_velocity(dist_dict, "distance [m/s]")
+        show_velocity(time_dict, "time [s]", )
+
+        # print(" ----------- Velocities --------------")
+        # print(velocities)
+        # print(" ----------- distance travelled --------------")
+        # print(distances)
+        # print(" ----------- times --------------")
+        # print(times)
+        # print(f"Mean velocity: {velocities.mean()} with std {velocities.std()}")
+        # print(f"Mean distance travelled: {distances.mean()} with std {distances.std()}")
+        # print(f"Mean time spent: {times.mean()} with std {times.std()}")
 
     else:
         print("Error")
