@@ -6,21 +6,20 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static ar.edu.itba.ss.g9.tp5.PredictiveCollisionAvoidance.applyAutopropulsiveForce;
-import static ar.edu.itba.ss.g9.tp5.PredictiveCollisionAvoidance.applyElusiveForce;
+import static ar.edu.itba.ss.g9.tp5.PredictiveCollisionAvoidance.*;
 
 public class CollisionAvoidanceSimulation {
     private Point2D.Double goal;
     private int obstaclesAmount;
     private double deltaT;
     private double deltaT2;
-    static double HEIGHT = 7, WIDTH = 15, SHIFT = 2;
+    static double HEIGHT = 7, WIDTH = 25, SHIFT = 2;
     private Set<ObstacleParticle> obstacles;
     private PedestrianParticle pedestrian;
     private static double OBS_RADIUS = 0.2;
     private static double OBS_MASS = 1;
     private static double OBS_SPEED = 1;
-    private static double PED_RADIUS = OBS_RADIUS;
+    static double PED_RADIUS = OBS_RADIUS;
     private static double PED_MASS = OBS_MASS;
     final static double EPSILON = Math.pow(10, -6);
     static double DMIN = OBS_RADIUS;
@@ -44,19 +43,12 @@ public class CollisionAvoidanceSimulation {
     }
 
     public void simulate() {
-        this.pedestrian = new PedestrianParticle(0, 0, HEIGHT/2,1,1, PED_MASS, PED_RADIUS); // TODO: check appropiate values
+        this.pedestrian = new PedestrianParticle(0, 0, HEIGHT/2,1,0, PED_MASS, PED_RADIUS); // TODO: check appropiate values
         this.obstacles = createObstacleParticles();
         startSimulation();
     }
 
     private void startSimulation() {
-        // Variables for point c of the assignment
-        double timeTraveled = 0.0;
-        double lengthTraveled = 0.0;
-        double meanSpeed;
-        Point2D goalForce;
-//        Point2D evasiveForce;
-
         double currentTime = 0.0;
 
         while(!pedestrianReachedGoal()) {
@@ -80,16 +72,16 @@ public class CollisionAvoidanceSimulation {
             }
 
 
-            goalForce = applyAutopropulsiveForce(this.pedestrian, goal);
-            Point2D evasiveForce = applyElusiveForce(goalForce, this.pedestrian, this.obstacles, deltaT);
+            Point2D goalForce = getAutopropulsiveForce(this.pedestrian, goal);
+            Point2D wallForce = getWallForce(this.pedestrian);
+            Point2D evasiveForce = getElusiveForce(goalForce, wallForce, this.pedestrian, this.obstacles, deltaT);
 
-            // update variables for point c of the assigment
+            Point2D totalForce = Vector.add(goalForce, Vector.add(wallForce, evasiveForce));
 
             // move all obstacles and pedestrian
-            this.pedestrian.move(Vector.add(PredictiveCollisionAvoidance.getWallForce(this.pedestrian), Vector.add(evasiveForce, goalForce)), deltaT);
-            //this.pedestrian.move( Vector.add(evasiveForce, goalForce), deltaT);
+            this.pedestrian.move(totalForce, deltaT);
             for (ObstacleParticle obs : obstacles){
-                obs.move(goalForce, deltaT);
+                obs.move(deltaT);
             }
             currentTime += deltaT;
         }
@@ -102,15 +94,13 @@ public class CollisionAvoidanceSimulation {
     private Set<ObstacleParticle> createObstacleParticles() {
         Set<ObstacleParticle> obstacles = new HashSet<>();
         int createdParticles = 0;
-        while( createdParticles < obstaclesAmount){
+        while(createdParticles < obstaclesAmount){
             ThreadLocalRandom rand = ThreadLocalRandom.current();
             double x = rand.nextDouble(SHIFT, WIDTH-SHIFT);
-            double y = rand.nextDouble(SHIFT, HEIGHT);
-            double speed;
+            double y = rand.nextDouble(SHIFT, HEIGHT-SHIFT);
+            double speed = rand.nextDouble(1,2);
             if (rand.nextInt() % 2 == 0 )
-                speed = -OBS_SPEED;
-            else
-                speed = OBS_SPEED;
+                speed = -speed;
             ObstacleParticle obstacle = new ObstacleParticle(createdParticles+1, x, y, 0.0, speed, OBS_MASS, OBS_RADIUS);
             if(obstacle.isValid(obstacles)) {
                 obstacles.add(obstacle);

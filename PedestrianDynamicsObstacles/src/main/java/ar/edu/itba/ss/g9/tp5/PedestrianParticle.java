@@ -18,8 +18,6 @@ public class PedestrianParticle extends Particle {
 
         double x = this.getPosX() + vx*dt;
         double y = this.getPosY() + vy*dt;
-        //if (y + 0.01 > CollisionAvoidanceSimulation.HEIGHT)
-        //    this.setVelocity(vx, -vy);
         this.setPosition(x, y);
     }
 
