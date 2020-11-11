@@ -20,10 +20,11 @@ public class CollisionAvoidanceSimulation {
     private static double OBS_MASS = 1;
     private static double OBS_SPEED = 1;
     static double PED_RADIUS = OBS_RADIUS;
-    private static double PED_MASS = OBS_MASS;
+    private static double PED_MASS = 60;
     final static double EPSILON = Math.pow(10, -6);
     static double DMIN = OBS_RADIUS;
-    static double DMID = 1;
+    static double DMID = 2;
+    static double UMAX = 3;
 
     public CollisionAvoidanceSimulation(int obstaclesAmount, double deltaT, double deltaT2, Optional<Double> dmin, Optional<Double> dmid, Optional<Double> radius) {
         this.obstaclesAmount = obstaclesAmount;
@@ -43,7 +44,7 @@ public class CollisionAvoidanceSimulation {
     }
 
     public void simulate() {
-        this.pedestrian = new PedestrianParticle(0, 0, HEIGHT/2,1,0, PED_MASS, PED_RADIUS); // TODO: check appropiate values
+        this.pedestrian = new PedestrianParticle(0, 0, HEIGHT/2,2,0, PED_MASS, PED_RADIUS); // TODO: check appropiate values
         this.obstacles = createObstacleParticles();
         startSimulation();
     }
@@ -76,6 +77,8 @@ public class CollisionAvoidanceSimulation {
             Point2D wallForce = getWallForce(this.pedestrian);
             Point2D evasiveForce = getElusiveForce(goalForce, wallForce, this.pedestrian, this.obstacles, deltaT);
 
+//            System.out.println(Vector.getNorm(goalForce) +" "+ Vector.getNorm(wallForce)+" "+Vector.getNorm(evasiveForce));
+
             Point2D totalForce = Vector.add(goalForce, Vector.add(wallForce, evasiveForce));
 
             // move all obstacles and pedestrian
@@ -94,11 +97,12 @@ public class CollisionAvoidanceSimulation {
     private Set<ObstacleParticle> createObstacleParticles() {
         Set<ObstacleParticle> obstacles = new HashSet<>();
         int createdParticles = 0;
+        double distanceBeetwenObstacles = (WIDTH-SHIFT*2)/obstaclesAmount;
         while(createdParticles < obstaclesAmount){
             ThreadLocalRandom rand = ThreadLocalRandom.current();
-            double x = rand.nextDouble(SHIFT, WIDTH-SHIFT);
+            double x = SHIFT + distanceBeetwenObstacles * createdParticles;
             double y = rand.nextDouble(SHIFT, HEIGHT-SHIFT);
-            double speed = rand.nextDouble(1,2);
+            double speed = rand.nextDouble(2,2.5);
             if (rand.nextInt() % 2 == 0 )
                 speed = -speed;
             ObstacleParticle obstacle = new ObstacleParticle(createdParticles+1, x, y, 0.0, speed, OBS_MASS, OBS_RADIUS);
