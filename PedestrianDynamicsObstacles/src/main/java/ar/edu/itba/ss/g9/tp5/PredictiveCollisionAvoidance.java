@@ -18,6 +18,8 @@ public class PredictiveCollisionAvoidance {
     private static final double DESIRED_VELOCITY    = 2;
     private static final double TAU                 = 0.5;
     private static final double WALL_SAFE_DISTANCE  = 0.05;
+    private static final double DMAX                = 2;
+    private static final double MULTIPLIER          = 4;
 
     // Algorithm for pedestrian p
     // 1. Compute the set of pedestrians that are on collision course with p with anticipation time t
@@ -81,9 +83,9 @@ public class PredictiveCollisionAvoidance {
                 - particle.getRadius() - otherP.getRadius();
         double d_min = CollisionAvoidanceSimulation.DMIN;//particle.getRadius(); // PERSONAL_SPACE - particle.getRadius();
         double d_mid = CollisionAvoidanceSimulation.DMID;//1; //d_min * 1.5;
-        double d_max = 2;// d_min * 2;
+        double d_max = DMAX;// d_min * 2;
         double forceMagnitude = 0;
-        double multiplier = 4;
+        double multiplier = MULTIPLIER;
         if(D < d_min) {
             forceMagnitude = 1/(D*D) * multiplier;
         } else if(D < d_mid) {
