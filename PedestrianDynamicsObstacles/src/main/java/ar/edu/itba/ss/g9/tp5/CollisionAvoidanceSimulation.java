@@ -1,9 +1,7 @@
 package ar.edu.itba.ss.g9.tp5;
 
 import java.awt.geom.Point2D;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static ar.edu.itba.ss.g9.tp5.PredictiveCollisionAvoidance.*;
@@ -13,11 +11,11 @@ public class CollisionAvoidanceSimulation {
     private int obstaclesAmount;
     private double deltaT;
     private double deltaT2;
-    static double HEIGHT = 7, WIDTH = 25, SHIFT = 2;
+    static double HEIGHT = 7, WIDTH = 25, SHIFT = 0.5;
     private Set<ObstacleParticle> obstacles;
     private PedestrianParticle pedestrian;
     private static double OBS_RADIUS = 0.2;
-    private static double OBS_MASS = 1;
+    private static double OBS_MASS = 60;
     private static double OBS_SPEED = 1;
     static double PED_RADIUS = OBS_RADIUS;
     private static double PED_MASS = 60;
@@ -25,6 +23,7 @@ public class CollisionAvoidanceSimulation {
     static double DMIN = OBS_RADIUS;
     static double DMID = 2;
     static double UMAX = 3;
+    public static List<Integer> collidedIds = new LinkedList<>();
 
     public CollisionAvoidanceSimulation(int obstaclesAmount, double deltaT, double deltaT2, Optional<Double> dmin, Optional<Double> dmid, Optional<Double> radius) {
         this.obstaclesAmount = obstaclesAmount;
@@ -72,12 +71,13 @@ public class CollisionAvoidanceSimulation {
                 System.out.println(String.format("%d 0.0001 1 %f %f 0 0 1 1 1", initCount+3, WIDTH, HEIGHT));
             }
 
+            collidedIds = new LinkedList<>();
 
             Point2D goalForce = getAutopropulsiveForce(this.pedestrian, goal);
             Point2D wallForce = getWallForce(this.pedestrian);
             Point2D evasiveForce = getElusiveForce(goalForce, wallForce, this.pedestrian, this.obstacles, deltaT);
-
-//            System.out.println(Vector.getNorm(goalForce) +" "+ Vector.getNorm(wallForce)+" "+Vector.getNorm(evasiveForce));
+            
+            //System.out.println(currentTime + " " + Vector.getNorm(goalForce) +" "+ Vector.getNorm(wallForce)+" "+Vector.getNorm(evasiveForce));
 
             Point2D totalForce = Vector.add(goalForce, Vector.add(wallForce, evasiveForce));
 

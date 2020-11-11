@@ -22,6 +22,8 @@ public class ObstacleParticle extends Particle {
 
     @Override
     public String toString() {
-        return super.toString() + " 1 0 0";
+        if( CollisionAvoidanceSimulation.collidedIds.contains(this.id))
+            return super.toString() + " 1 0 0";
+        return super.toString() + " 1 1 1";
     }
 }

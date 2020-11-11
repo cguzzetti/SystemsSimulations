@@ -133,6 +133,7 @@ public class PredictiveCollisionAvoidance {
 
                 desiredVelocity = Vector.add(desiredVelocity, Vector.scalarMultiplication(evasiveForce, deltaT));
                 accumulatedEvasiveForce = Vector.add(accumulatedEvasiveForce, evasiveForce);
+                CollisionAvoidanceSimulation.collidedIds.add(crash.getParticle().getId());
                 processedCollisions++;
             }
         }
