@@ -3,6 +3,7 @@ package ar.edu.itba.ss.g9.tp5;
 import java.awt.geom.Point2D;
 
 import static ar.edu.itba.ss.g9.tp5.Configuration.HEIGHT;
+import static ar.edu.itba.ss.g9.tp5.Configuration.collidedIds;
 
 /**
  * Particle that represents an obstacle. This particles ONLY move on the Y axis. Vx = 0
@@ -24,6 +25,8 @@ public class ObstacleParticle extends Particle {
 
     @Override
     public String toString() {
-        return super.toString() + " 1 0 0";
+        if (collidedIds.contains(this.id))
+            return super.toString() + " 1 0 0";
+        return super.toString() + " 1 1 1";
     }
 }

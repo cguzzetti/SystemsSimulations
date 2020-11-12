@@ -1,5 +1,8 @@
 package ar.edu.itba.ss.g9.tp5;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Configuration {
     //Box size
     static double HEIGHT = 7, WIDTH = 25, XSHIFT = 2, YSHIFT = 0.2;
@@ -27,4 +30,5 @@ public class Configuration {
     static double       DMID                = 4;
     static final double DMAX                = 5;
     static final double MULTIPLIER          = 5;
+    public static List<Integer> collidedIds = new LinkedList<>();
 }

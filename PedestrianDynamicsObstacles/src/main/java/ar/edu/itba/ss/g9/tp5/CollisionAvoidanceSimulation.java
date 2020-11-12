@@ -2,6 +2,7 @@ package ar.edu.itba.ss.g9.tp5;
 
 import java.awt.geom.Point2D;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -63,7 +64,7 @@ public class CollisionAvoidanceSimulation {
                 System.out.println(String.format("%d 0.0001 1 %f %f 0 0 1 1 1", initCount+3, WIDTH, HEIGHT));
             }
 
-
+            collidedIds = new LinkedList<>();
             Point2D goalForce = getAutopropulsiveForce(this.pedestrian, goal);
             Point2D wallForce = getWallForce(this.pedestrian);
             Point2D evasiveForce = getElusiveForce(goalForce, wallForce, this.pedestrian, this.obstacles, deltaT);

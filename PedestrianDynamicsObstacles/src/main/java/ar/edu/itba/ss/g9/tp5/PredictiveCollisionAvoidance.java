@@ -125,6 +125,7 @@ public class PredictiveCollisionAvoidance {
 
                 desiredVelocity = Vector.add(desiredVelocity, Vector.scalarMultiplication(evasiveForce, deltaT/p.getMass()));
                 accumulatedEvasiveForce = Vector.add(accumulatedEvasiveForce, evasiveForce);
+                collidedIds.add(crash.getParticle().getId());
                 processedCollisions++;
             }
         }
