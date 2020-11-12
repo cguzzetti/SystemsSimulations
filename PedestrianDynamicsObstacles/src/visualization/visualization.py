@@ -10,8 +10,8 @@ def velocity_over_time(velocities: np.ndarray, t: float):
     step = 0.01
     times = np.arange(0, t/100, 0.01)
     fig, ax = plt.subplots()
-    ax.set_xlabel('tiempo [s]')
-    ax.set_ylabel('velocidad [m/s]')
+    ax.set_xlabel('Tiempo [s]')
+    ax.set_ylabel('Velocidad [m/s]')
 
     plt.plot(times, velocities)
     plt.savefig("velocities.png")
@@ -23,7 +23,7 @@ def plot_metric(velocities: dict, errors: dict, label: str):
     errs = errors.values()
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('radio')
+    ax.set_xlabel('Radio [m]')
     ax.set_ylabel(label)
     plt.plot(dmins, vels, 'bo')
     plt.errorbar(dmins, vels, yerr=errs, fmt='none', ecolor="red")
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         time_errs = dict()
         dmin = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         dmid = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
-        rad = [0.2, 0.3, 0.4,  0.5, 0.6]
+        rad = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
         chosen_observable = sys.argv[3]
         print("Observable:")
         print(chosen_observable)
@@ -125,9 +125,9 @@ if __name__ == '__main__':
             time_dict[observable] = times.mean()
             time_errs[observable] = times.std()
 
-        plot_metric(vel_dict, vel_errs, "velocity [m/s]")
-        plot_metric(dist_dict, dist_errs, "distance [m/s]")
-        plot_metric(time_dict, time_errs, "time [s]", )
+        plot_metric(vel_dict, vel_errs, "Velocidad media [m/s]")
+        plot_metric(dist_dict, dist_errs, "Longitud del recorrido [m/s]")
+        plot_metric(time_dict, time_errs, "Tiempo de tránsito [s]", )
 
         # print(" ----------- Velocities --------------")
         # print(velocities)
