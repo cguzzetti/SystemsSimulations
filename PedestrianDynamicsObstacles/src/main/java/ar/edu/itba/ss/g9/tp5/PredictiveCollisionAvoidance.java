@@ -10,15 +10,15 @@ import static java.lang.Math.*;
 
 public class PredictiveCollisionAvoidance {
 
-    private static final double TIME_LIMIT          = 1.5;
-    private static final double PERSONAL_SPACE      = 0.5;
+    private static final double TIME_LIMIT          = 5;
+    static final double PERSONAL_SPACE              = 1;
     // Take the first 5 as seen in class
     private static final int NUMBER_OF_CRASHES      = 5;
     // Velocity desired by pedestrian
-    private static final double DESIRED_VELOCITY    = 2;
+    private static final double DESIRED_VELOCITY    = 3;
     private static final double TAU                 = 0.5;
-    private static final double WALL_SAFE_DISTANCE  = 0.05;
-    private static final double DMAX                = 2;
+    private static final double WALL_SAFE_DISTANCE  = 0.5;
+    private static final double DMAX                = 5;
     private static final double MULTIPLIER          = 4;
 
     // Algorithm for pedestrian p
@@ -81,17 +81,19 @@ public class PredictiveCollisionAvoidance {
         double D = Vector.getNorm(Vector.subtract(c_i, particle.getPosition()))
                 + Vector.getNorm(Vector.subtract(c_i, c_j))
                 - particle.getRadius() - otherP.getRadius();
-        double d_min = CollisionAvoidanceSimulation.DMIN;//particle.getRadius(); // PERSONAL_SPACE - particle.getRadius();
-        double d_mid = CollisionAvoidanceSimulation.DMID;//1; //d_min * 1.5;
-        double d_max = DMAX;// d_min * 2;
+        double d_min = CollisionAvoidanceSimulation.DMIN;
+        double d_mid = CollisionAvoidanceSimulation.DMID;
+        double d_max = DMAX;
         double forceMagnitude = 0;
         double multiplier = MULTIPLIER;
         if(D < d_min) {
-            forceMagnitude = 1/(D*D) * multiplier;
+            forceMagnitude = d_min*d_min/(D*D) * multiplier;
         } else if(D < d_mid) {
-            forceMagnitude = 1/(d_min*d_min) * multiplier;
+            forceMagnitude = multiplier;
         } else if(D < d_max) {
-            forceMagnitude = (D - d_max) / (d_min*d_min * (d_mid - d_max)) * multiplier;
+            double slope = (-multiplier)/(d_max-d_mid);
+            double b = - slope * d_max;
+            forceMagnitude = slope * D + b;
         }
 
         return Vector.scalarMultiplication(forceDirection, forceMagnitude);
@@ -148,10 +150,10 @@ public class PredictiveCollisionAvoidance {
     private static Crash predictCrash(Particle particle, ObstacleParticle other, Point2D desiredVelocity) {
         Point2D vel = Vector.subtract(desiredVelocity, other.getVelocity());
 
-        Point2D diffPos = Vector.subtract(particle.getPosition(), other.getPosition());
+        Point2D diffPos = Vector.subtract(other.getPosition(), particle.getPosition());
 
         double a = pow(Vector.getNorm(vel), 2);
-        double b = 2 * Vector.getDotProduct(vel, diffPos);
+        double b = - 2 * Vector.getDotProduct(vel, diffPos);
         double c = pow(Vector.getNorm(diffPos), 2) - Math.pow(PERSONAL_SPACE + other.getRadius(), 2);
 
         double det = b*b - 4*a*c;
