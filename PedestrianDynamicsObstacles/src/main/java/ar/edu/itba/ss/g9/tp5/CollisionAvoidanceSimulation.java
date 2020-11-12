@@ -36,7 +36,7 @@ public class CollisionAvoidanceSimulation {
     }
 
     public void simulate() {
-        this.pedestrian = new PedestrianParticle(0, 0, HEIGHT/2,2,0, PED_MASS, PED_RADIUS); // TODO: check appropiate values
+        this.pedestrian = new PedestrianParticle(0, 0, HEIGHT/2,0,0, PED_MASS, PED_RADIUS); // TODO: check appropiate values
         this.obstacles = createObstacleParticles();
         startSimulation();
     }
