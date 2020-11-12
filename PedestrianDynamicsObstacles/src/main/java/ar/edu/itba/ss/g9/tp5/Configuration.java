@@ -14,7 +14,7 @@ public class Configuration {
 
 
     // Pedestrian
-    static double       PED_RADIUS          = 0.5;
+    static double       PED_RADIUS          = 0.3;
     final static double PED_MASS            = 60;
 
     // Epsilon
