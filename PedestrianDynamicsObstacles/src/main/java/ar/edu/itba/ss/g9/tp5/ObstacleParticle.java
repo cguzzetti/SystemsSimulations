@@ -2,6 +2,8 @@ package ar.edu.itba.ss.g9.tp5;
 
 import java.awt.geom.Point2D;
 
+import static ar.edu.itba.ss.g9.tp5.Configuration.HEIGHT;
+
 /**
  * Particle that represents an obstacle. This particles ONLY move on the Y axis. Vx = 0
  */
@@ -13,7 +15,7 @@ public class ObstacleParticle extends Particle {
     public void move(double dt) {
         double y = this.getPosY();
         double vy = this.getVy();
-        if(y>= CollisionAvoidanceSimulation.HEIGHT - this.getRadius() || y <= 0 + this.getRadius()){
+        if(y>= HEIGHT - this.getRadius() || y <= 0 + this.getRadius()){
             this.setVelocity(0, -1 * this.getVy()); // Bounce on the wall
             vy = -vy;
         }

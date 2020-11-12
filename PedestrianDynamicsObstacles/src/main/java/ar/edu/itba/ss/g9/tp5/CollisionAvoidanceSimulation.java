@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static ar.edu.itba.ss.g9.tp5.Configuration.*;
 import static ar.edu.itba.ss.g9.tp5.PredictiveCollisionAvoidance.*;
 
 public class CollisionAvoidanceSimulation {
@@ -13,17 +14,8 @@ public class CollisionAvoidanceSimulation {
     private int obstaclesAmount;
     private double deltaT;
     private double deltaT2;
-    static double HEIGHT = 7, WIDTH = 25, XSHIFT = 2, YSHIFT = 0.2;
     private Set<ObstacleParticle> obstacles;
     private PedestrianParticle pedestrian;
-    private static double OBS_RADIUS = 0.1;
-    private static double OBS_MASS = 1;
-    private static double OBS_SPEED = 1;
-    static double PED_RADIUS = 0.2;
-    private static double PED_MASS = 60;
-    final static double EPSILON = Math.pow(10, -6);
-    static double DMIN = 2;
-    static double DMID = 3;
 
     public CollisionAvoidanceSimulation(int obstaclesAmount, double deltaT, double deltaT2, Optional<Double> dmin, Optional<Double> dmid, Optional<Double> radius) {
         this.obstaclesAmount = obstaclesAmount;
