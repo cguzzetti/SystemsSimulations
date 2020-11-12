@@ -20,13 +20,13 @@ public class CollisionAvoidanceSimulation {
 
     public CollisionAvoidanceSimulation(int obstaclesAmount, double deltaT, double deltaT2, Optional<Double> dmin, Optional<Double> dmid, Optional<Double> radius) {
         this.obstaclesAmount = obstaclesAmount;
-        this.goal = new Point2D.Double(WIDTH-0.5, HEIGHT/2);
         this.deltaT = deltaT;
         this.deltaT2 = deltaT2;
         if (radius.isPresent()) {
             OBS_RADIUS = radius.get();
             PED_RADIUS = radius.get();
         }
+        this.goal = new Point2D.Double(WIDTH-XSHIFT, HEIGHT - YSHIFT);
         if (dmin.isPresent()) {
             DMIN = dmin.get();
         }
@@ -36,7 +36,7 @@ public class CollisionAvoidanceSimulation {
     }
 
     public void simulate() {
-        this.pedestrian = new PedestrianParticle(0, 0, HEIGHT/2,0,0, PED_MASS, PED_RADIUS); // TODO: check appropiate values
+        this.pedestrian = new PedestrianParticle(0, XSHIFT, YSHIFT,0,0, PED_MASS, PED_RADIUS); // TODO: check appropiate values
         this.obstacles = createObstacleParticles();
         startSimulation();
     }
@@ -93,7 +93,7 @@ public class CollisionAvoidanceSimulation {
         double distanceBeetwenObstacles = (WIDTH-XSHIFT*2)/obstaclesAmount;
         while(createdParticles < obstaclesAmount){
             ThreadLocalRandom rand = ThreadLocalRandom.current();
-            double x = XSHIFT + distanceBeetwenObstacles * createdParticles;
+            double x = XSHIFT*2 + distanceBeetwenObstacles * createdParticles;
             double y = rand.nextDouble(YSHIFT, HEIGHT-YSHIFT);
             double speed = rand.nextDouble(2,2.5);
             if (rand.nextInt() % 2 == 0 )

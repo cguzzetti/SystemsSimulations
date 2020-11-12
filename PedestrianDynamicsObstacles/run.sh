@@ -23,8 +23,7 @@ fi
 
 dmin=( "0.2" "0.3" "0.4" "0.5" "0.6" "0.7" "0.8" "0.9")
 dmid=( "1.0" "1.1" "1.2" "1.3" "1.4" "1.5" "1.6" "1.7" "1.8" "1.9")
-# rad=( "0.2" "0.3" "0.4" "0.5" "0.6" "0.7" "0.8" "0.9")
-rad=( "0.2" "0.3" "0.4")
+rad=( "0.2" "0.3" "0.4" "0.5" "0.6")
 
 if [ "$4" == "DMIN" ]; then
   echo "lel"
@@ -52,11 +51,12 @@ check_visualization_dir "$FILE_PATH"
 if [ "$iterations" -eq 1 ]; then
     FILE_NAME="pedestrian_output.xyz"
     java -jar target/PedestrianDynamicsObstacles-1.0-SNAPSHOT.jar "$1" "$2" "$3" > "$FILE_PATH/$FILE_NAME"
+	ovito "$FILE_PATH/$FILE_NAME"
 else
     if [ ! -d "$FILE_PATH/bulk" ]; then
         mkdir "$FILE_PATH/bulk"
     fi
-    repetitions=4
+    repetitions=10
     for i in $(seq "$iterations"); do
        for j in $(seq "$repetitions"); do
           FILE_NAME="pedestrian_output_${observable[i-1]}_$j.xyz"
@@ -65,5 +65,4 @@ else
        done
     done
 fi
-
 

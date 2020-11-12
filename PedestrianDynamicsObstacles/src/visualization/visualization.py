@@ -16,14 +16,17 @@ def velocity_over_time(velocities: np.ndarray, t: float):
     plt.plot(times, velocities)
     plt.savefig("velocities.png")
 
-def show_velocity(velocities: dict, label: str):
+
+def plot_metric(velocities: dict, errors: dict, label: str):
     dmins = velocities.keys()
     vels = velocities.values()
+    errs = errors.values()
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('dmins')
+    ax.set_xlabel('radio')
     ax.set_ylabel(label)
-    plt.plot(dmins, vels)
+    # plt.plot(dmins, vels)
+    plt.errorbar(dmins, vels, yerr=errs)
     plt.show()
 
 
@@ -41,7 +44,6 @@ def get_mean_velocity(parser: ParserXYZ):
     mean_velocity = tuple(np.mean(velocities, axis=0))
 
     return np.linalg.norm(mean_velocity)
-
 
 
 def get_distance(parser: ParserXYZ):
@@ -84,9 +86,13 @@ if __name__ == '__main__':
         vel_dict = dict()
         dist_dict = dict()
         time_dict = dict()
+
+        vel_errs = dict()
+        dist_errs = dict()
+        time_errs = dict()
         dmin = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         dmid = [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
-        rad = [0.2, 0.3, 0.4]  #, 0.5, 0.6, 0.7, 0.8, 0.9]
+        rad = [0.2, 0.3, 0.4, 0.5, 0.6]
         chosen_observable = sys.argv[3]
         print("Observable:")
         print(chosen_observable)
@@ -113,12 +119,15 @@ if __name__ == '__main__':
                 times[index] = len(_parser.blocks)/100
                 index += 1
             vel_dict[observable] = velocities.mean()
+            vel_errs[observable] = velocities.std()
             dist_dict[observable] = distances.mean()
+            dist_errs[observable] = distances.std()
             time_dict[observable] = times.mean()
+            time_errs[observable] = times.std()
 
-        show_velocity(vel_dict, "velocity [m/s]")
-        show_velocity(dist_dict, "distance [m/s]")
-        show_velocity(time_dict, "time [s]", )
+        plot_metric(vel_dict, vel_errs, "velocity [m/s]")
+        plot_metric(dist_dict, dist_errs, "distance [m/s]")
+        plot_metric(time_dict, time_errs, "time [s]", )
 
         # print(" ----------- Velocities --------------")
         # print(velocities)
