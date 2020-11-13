@@ -126,7 +126,7 @@ if __name__ == '__main__':
             time_errs[observable] = times.std()
 
         plot_metric(vel_dict, vel_errs, "Velocidad media [m/s]")
-        plot_metric(dist_dict, dist_errs, "Longitud del recorrido [m/s]")
+        plot_metric(dist_dict, dist_errs, "Longitud del recorrido [m]")
         plot_metric(time_dict, time_errs, "Tiempo de tránsito [s]", )
 
         # print(" ----------- Velocities --------------")

@@ -90,7 +90,7 @@ public class CollisionAvoidanceSimulation {
     private Set<ObstacleParticle> createObstacleParticles() {
         Set<ObstacleParticle> obstacles = new HashSet<>();
         int createdParticles = 0;
-        double distanceBeetwenObstacles = (WIDTH-XSHIFT*2)/obstaclesAmount;
+        double distanceBeetwenObstacles = (WIDTH-XSHIFT*3)/obstaclesAmount;
         while(createdParticles < obstaclesAmount){
             ThreadLocalRandom rand = ThreadLocalRandom.current();
             double x = XSHIFT*2 + distanceBeetwenObstacles * createdParticles;
