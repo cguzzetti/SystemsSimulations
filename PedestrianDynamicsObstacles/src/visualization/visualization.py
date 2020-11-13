@@ -23,7 +23,7 @@ def plot_metric(velocities: dict, errors: dict, label: str):
     errs = errors.values()
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('Radio [m]')
+    ax.set_xlabel('Dmid [m]')
     ax.set_ylabel(label)
     plt.plot(dmins, vels, 'bo')
     plt.errorbar(dmins, vels, yerr=errs, fmt='none', ecolor="red")
@@ -90,8 +90,8 @@ if __name__ == '__main__':
         vel_errs = dict()
         dist_errs = dict()
         time_errs = dict()
-        dmin = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        dmid = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
+        dmin = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        dmid = [0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
         rad = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
         chosen_observable = sys.argv[3]
         print("Observable:")

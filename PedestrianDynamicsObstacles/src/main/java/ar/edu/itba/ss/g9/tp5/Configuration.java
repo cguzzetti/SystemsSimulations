@@ -10,8 +10,7 @@ public class Configuration {
     final static double OBS_MASS            = 60;
 
     //Box size
-    static double HEIGHT = 20, WIDTH = 60, XSHIFT = OBS_RADIUS * 3, YSHIFT = OBS_RADIUS * 3;
-
+    static double HEIGHT = 10, WIDTH = 30, XSHIFT = OBS_RADIUS * 3, YSHIFT = OBS_RADIUS * 3;
 
     // Pedestrian
     static double       PED_RADIUS          = 0.3;

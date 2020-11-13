@@ -77,7 +77,7 @@ public class PredictiveCollisionAvoidance {
         double forceMagnitude = 0;
         double multiplier = MULTIPLIER;
         if(D < d_min) {
-            forceMagnitude = multiplier * pow(2,(-(D-d_min)));//d_min/(D*D) * multiplier;
+            forceMagnitude = multiplier * pow(2,(-(D-d_min)));
         } else if(D < d_mid) {
             forceMagnitude = multiplier;
         } else if(D < d_max) {
@@ -123,7 +123,6 @@ public class PredictiveCollisionAvoidance {
                 Point2D evasiveForce = getEvasiveForce(p, crash.getParticle(),
                         crash.getTime(), desiredVelocity);
 
-                //desiredVelocity = Vector.add(desiredVelocity, Vector.scalarMultiplication(evasiveForce, deltaT/p.getMass()));
                 accumulatedEvasiveForce = Vector.add(accumulatedEvasiveForce, Vector.scalarMultiplication(evasiveForce, 5-crashes.indexOf(crash)));
                 collidedIds.add(crash.getParticle().getId());
                 processedCollisions++;
