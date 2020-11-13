@@ -48,6 +48,10 @@ echo -e "\n\n${GREEN}Running Pedestrian Dynamics with arguments: $* ${NORMAL}\n\
 mvn clean package
 FILE_PATH="src/visualization"
 check_visualization_dir "$FILE_PATH"
+
+start=$(date +%s)
+echo TIME START: $start 
+
 if [ "$iterations" -eq 1 ]; then
     FILE_NAME="pedestrian_output.xyz"
     java -jar target/PedestrianDynamicsObstacles-1.0-SNAPSHOT.jar "$1" "$2" "$3" > "$FILE_PATH/$FILE_NAME"
@@ -56,7 +60,7 @@ else
     if [ ! -d "$FILE_PATH/bulk" ]; then
         mkdir "$FILE_PATH/bulk"
     fi
-    repetitions=5
+    repetitions=10
     for i in $(seq "$iterations"); do
        for j in $(seq "$repetitions"); do
           FILE_NAME="pedestrian_output_${observable[i-1]}_$j.xyz"
@@ -66,3 +70,7 @@ else
     done
 fi
 
+end=$(date +%s)
+echo "TIME END $end"
+
+echo "DELTA: $((end - start))"
