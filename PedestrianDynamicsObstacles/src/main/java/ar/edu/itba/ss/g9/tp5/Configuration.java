@@ -10,7 +10,7 @@ public class Configuration {
     final static double OBS_MASS            = 60;
 
     //Box size
-    static double HEIGHT = 20, WIDTH = 60, XSHIFT = OBS_RADIUS * 3, YSHIFT = OBS_RADIUS * 3;
+    static double HEIGHT = 10, WIDTH = 30, XSHIFT = OBS_RADIUS * 3, YSHIFT = OBS_RADIUS * 3;
 
 
     // Pedestrian
@@ -23,14 +23,14 @@ public class Configuration {
     // Avoidance
     final static double UMAX                = 3;
     final static double TIME_LIMIT          = 10;
-    static final double PERSONAL_SPACE      = 2*PED_RADIUS;
+    static double PERSONAL_SPACE      = 0.5;
     static final int    NUMBER_OF_CRASHES   = 5;
     static final double DESIRED_VELOCITY    = 2.5;
     static final double TAU                 = 0.2;
     static final double WALL_SAFE_DISTANCE  = 1;
-    static double       DMIN                = PED_RADIUS;
-    static double       DMID                = 3*PED_RADIUS;
-    static final double DMAX                = 5*PED_RADIUS;
-    static final double MULTIPLIER          = 8;
+    static double       DMIN                = 2; // PED_RADIUS;
+    static double       DMID                = 3;
+    static final double DMAX                = 7;
+    static final double MULTIPLIER          = 4;
     public static List<Integer> collidedIds = new LinkedList<>();
 }

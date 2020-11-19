@@ -23,8 +23,7 @@ public class CollisionAvoidanceSimulation {
         this.deltaT = deltaT;
         this.deltaT2 = deltaT2;
         if (radius.isPresent()) {
-            OBS_RADIUS = radius.get();
-            PED_RADIUS = radius.get();
+            PERSONAL_SPACE = radius.get();
         }
         this.goal = new Point2D.Double(WIDTH-XSHIFT, HEIGHT - YSHIFT);
         if (dmin.isPresent()) {

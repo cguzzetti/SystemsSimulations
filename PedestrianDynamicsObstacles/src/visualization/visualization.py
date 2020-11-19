@@ -14,20 +14,22 @@ def velocity_over_time(velocities: np.ndarray, t: float):
     ax.set_ylabel('Velocidad [m/s]')
 
     plt.plot(times, velocities)
-    plt.savefig("velocities.png")
+    #plt.savefig("velocities.png")
+    plt.show()
 
 
-def plot_metric(velocities: dict, errors: dict, label: str):
+def plot_metric(velocities: dict, errors: dict, label: str, filename: str):
     dmins = velocities.keys()
     vels = velocities.values()
     errs = errors.values()
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('Radio [m]')
+    ax.set_xlabel('dmin [m]')
     ax.set_ylabel(label)
     plt.plot(dmins, vels, 'bo')
     plt.errorbar(dmins, vels, yerr=errs, fmt='none', ecolor="red")
-    plt.show()
+    plt.savefig(filename)
+    #plt.show()
 
 
 def get_mean_velocity(parser: ParserXYZ):
@@ -90,9 +92,11 @@ if __name__ == '__main__':
         vel_errs = dict()
         dist_errs = dict()
         time_errs = dict()
-        dmin = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        dmid = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
-        rad = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
+        dmin = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+        #dmid = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
+        dmid = [1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5]
+        #rad = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
+        rad = [0.35, 0.40, 0.5, 0.60, 0.7, 0.80, 0.9, 1.0, 1.1, 1.2]
         chosen_observable = sys.argv[3]
         print("Observable:")
         print(chosen_observable)
@@ -125,9 +129,9 @@ if __name__ == '__main__':
             time_dict[observable] = times.mean()
             time_errs[observable] = times.std()
 
-        plot_metric(vel_dict, vel_errs, "Velocidad media [m/s]")
-        plot_metric(dist_dict, dist_errs, "Longitud del recorrido [m]")
-        plot_metric(time_dict, time_errs, "Tiempo de tránsito [s]", )
+        plot_metric(vel_dict, vel_errs, "Velocidad media [m/s]", "vmedia_dmin.png")
+        plot_metric(dist_dict, dist_errs, "Longitud del recorrido [m]", "dist_dmin.png")
+        plot_metric(time_dict, time_errs, "Tiempo de tránsito [s]", "tiempo_dmin.png")
 
         # print(" ----------- Velocities --------------")
         # print(velocities)
