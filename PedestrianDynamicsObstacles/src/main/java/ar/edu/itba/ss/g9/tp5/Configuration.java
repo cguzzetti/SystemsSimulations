@@ -12,7 +12,6 @@ public class Configuration {
     //Box size
     static double HEIGHT = 10, WIDTH = 30, XSHIFT = OBS_RADIUS * 3, YSHIFT = OBS_RADIUS * 3;
 
-
     // Pedestrian
     static double       PED_RADIUS          = 0.3;
     final static double PED_MASS            = 60;
@@ -28,7 +27,7 @@ public class Configuration {
     static final double DESIRED_VELOCITY    = 2.5;
     static final double TAU                 = 0.2;
     static final double WALL_SAFE_DISTANCE  = 1;
-    static double       DMIN                = 2; // PED_RADIUS;
+    static double       DMIN                = 0.5; // PED_RADIUS;
     static double       DMID                = 3;
     static final double DMAX                = 7;
     static final double MULTIPLIER          = 4;

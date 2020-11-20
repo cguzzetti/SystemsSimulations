@@ -35,7 +35,7 @@ public class CollisionAvoidanceSimulation {
     }
 
     public void simulate() {
-        this.pedestrian = new PedestrianParticle(0, XSHIFT, YSHIFT,0,0, PED_MASS, PED_RADIUS); // TODO: check appropiate values
+        this.pedestrian = new PedestrianParticle(0, XSHIFT, YSHIFT,0,0, PED_MASS, PED_RADIUS);
         this.obstacles = createObstacleParticles();
         startSimulation();
     }
@@ -67,9 +67,6 @@ public class CollisionAvoidanceSimulation {
             Point2D goalForce = getAutopropulsiveForce(this.pedestrian, goal);
             Point2D wallForce = getWallForce(this.pedestrian);
             Point2D evasiveForce = getElusiveForce(goalForce, wallForce, this.pedestrian, this.obstacles, deltaT);
-
-//            if(Vector.getNorm(wallForce)>0 && Vector.getNorm(evasiveForce)>0)
-//                System.out.println(Vector.getNorm(goalForce) +"\t\t"+ Vector.getNorm(wallForce)+"\t\t"+Vector.getNorm(evasiveForce));
 
             Point2D totalForce = Vector.add(goalForce, Vector.add(wallForce, evasiveForce));
 

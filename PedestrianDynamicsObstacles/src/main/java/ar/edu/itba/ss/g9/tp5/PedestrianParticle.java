@@ -14,8 +14,8 @@ public class PedestrianParticle extends Particle {
     }
 
     public void move(Point2D finalForce, double dt) {
-        double vx = this.getVx() + finalForce.getX() * dt;// this.getMass();
-        double vy = this.getVy() + finalForce.getY() * dt;// this.getMass();
+        double vx = this.getVx() + finalForce.getX() * dt;
+        double vy = this.getVy() + finalForce.getY() * dt;
         double speed = Vector.getNorm(new Point2D.Double(vx, vy));
         if(speed > UMAX){
             this.setVelocity(vx * UMAX/speed, vy * UMAX/speed);
@@ -23,8 +23,8 @@ public class PedestrianParticle extends Particle {
             this.setVelocity(vx, vy);
         }
 
-        double x = this.getPosX() + this.getVx() * dt; //+ finalForce.getX() * dt * dt / (2 * this.getMass());
-        double y = this.getPosY() + this.getVy() * dt; //+ finalForce.getY() * dt * dt / (2 * this.getMass());
+        double x = this.getPosX() + this.getVx() * dt;
+        double y = this.getPosY() + this.getVy() * dt;
         this.setPosition(x, y);
     }
 

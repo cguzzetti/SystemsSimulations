@@ -28,8 +28,8 @@ def plot_metric(velocities: dict, errors: dict, label: str, filename: str):
     ax.set_ylabel(label)
     plt.plot(dmins, vels, 'bo')
     plt.errorbar(dmins, vels, yerr=errs, fmt='none', ecolor="red")
-    plt.savefig(filename)
-    #plt.show()
+    #plt.savefig(filename)
+    plt.show()
 
 
 def get_mean_velocity(parser: ParserXYZ):
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         #dmid = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
         dmid = [1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5]
         #rad = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
-        rad = [0.35, 0.40, 0.5, 0.60, 0.7, 0.80, 0.9, 1.0, 1.1, 1.2]
+        rad = [0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.0, 1.1, 1.2]
         chosen_observable = sys.argv[3]
         print("Observable:")
         print(chosen_observable)
