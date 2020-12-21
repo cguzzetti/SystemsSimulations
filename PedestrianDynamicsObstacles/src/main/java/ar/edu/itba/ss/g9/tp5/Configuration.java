@@ -21,9 +21,9 @@ public class Configuration {
 
     // Avoidance
     final static double UMAX                = 3;
-    final static double TIME_LIMIT          = 10;
+    static double TIME_LIMIT          = 10;
     static double PERSONAL_SPACE      = 0.5;
-    static final int    NUMBER_OF_CRASHES   = 5;
+    static int    NUMBER_OF_CRASHES   = 5;
     static final double DESIRED_VELOCITY    = 2.5;
     static final double TAU                 = 0.2;
     static final double WALL_SAFE_DISTANCE  = 1;

@@ -24,17 +24,23 @@ fi
 
 dmin=( "0.5" "0.6" "0.7" "0.8" "0.9" "1.0" "1.1" "1.2" "1.3" "1.4" "1.5" "1.6" "1.7" "1.8" "1.9" "2.0")
 dmid=( "1.5" "1.6" "1.7" "1.8" "1.9" "2.0" "2.1" "2.2" "2.3" "2.4" "2.5")
-rad=( "0.35" "0.4" "0.5" "0.6" "0.7" "0.8" "0.9" "1.0" "1.1" "1.2")
+talpha=( "5" "10" "15" "20" "25" "30")
+cols=( "1" "2" "3" "4" "5")
+#rad=( "0.35" "0.4" "0.5" "0.6" "0.7" "0.8" "0.9" "1.0" "1.1" "1.2")
+rad=( "0.5" "1" )
 
 if [ "$4" == "DMIN" ]; then
   echo "lel"
   observable=(${dmin[@]})
   iterations=${#observable[@]}
-elif [ "$4" == "DMID" ]; then
-  observable=(${dmid[@]})
+elif [ "$4" == "TALPHA" ]; then
+  observable=(${talpha[@]})
   iterations=${#observable[@]}
 elif [ "$4" == "RAD" ]; then
   observable=(${rad[@]})
+  iterations=2 # ${#observable[@]}
+elif [ "$4" == "COLS" ]; then
+  observable=(${cols[@]})
   iterations=${#observable[@]}
 else
   observable=-1
@@ -51,7 +57,7 @@ FILE_PATH="src/visualization"
 check_visualization_dir "$FILE_PATH"
 
 start=$(date +%s)
-echo TIME START: $start 
+echo TIME START: $start
 
 if [ "$iterations" -eq 1 ]; then
     FILE_NAME="pedestrian_output.xyz"

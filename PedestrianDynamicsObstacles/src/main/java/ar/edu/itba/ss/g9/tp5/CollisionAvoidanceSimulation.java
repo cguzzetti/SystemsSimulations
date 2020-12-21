@@ -1,5 +1,6 @@
 package ar.edu.itba.ss.g9.tp5;
 
+import javax.swing.text.html.Option;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,7 +19,7 @@ public class CollisionAvoidanceSimulation {
     private Set<ObstacleParticle> obstacles;
     private PedestrianParticle pedestrian;
 
-    public CollisionAvoidanceSimulation(int obstaclesAmount, double deltaT, double deltaT2, Optional<Double> dmin, Optional<Double> dmid, Optional<Double> radius) {
+    public CollisionAvoidanceSimulation(int obstaclesAmount, double deltaT, double deltaT2, Optional<Double> dmin, Optional<Double> talpha, Optional<Double> radius, Optional<Integer> col_num) {
         this.obstaclesAmount = obstaclesAmount;
         this.deltaT = deltaT;
         this.deltaT2 = deltaT2;
@@ -29,8 +30,12 @@ public class CollisionAvoidanceSimulation {
         if (dmin.isPresent()) {
             DMIN = dmin.get();
         }
-        if (dmid.isPresent()) {
-            DMID = dmid.get();
+        if (talpha.isPresent()) {
+            TIME_LIMIT = talpha.get();
+        }
+
+        if(col_num.isPresent()){
+            NUMBER_OF_CRASHES = col_num.get();
         }
     }
 

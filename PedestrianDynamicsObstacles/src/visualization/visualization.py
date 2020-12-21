@@ -24,11 +24,12 @@ def plot_metric(velocities: dict, errors: dict, label: str, filename: str):
     errs = errors.values()
 
     fig, ax = plt.subplots()
-    ax.set_xlabel('dmin [m]')
+    # ax.set_xlabel("$t_α$ [s]")
+    ax.set_xlabel("dmin [m]")
     ax.set_ylabel(label)
     plt.plot(dmins, vels, 'bo')
     plt.errorbar(dmins, vels, yerr=errs, fmt='none', ecolor="red")
-    #plt.savefig(filename)
+    plt.savefig(filename)
     plt.show()
 
 
@@ -93,9 +94,10 @@ if __name__ == '__main__':
         dist_errs = dict()
         time_errs = dict()
         dmin = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
-        #dmid = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
         dmid = [1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5]
-        #rad = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
+        # talpha = [6, 7, 8, 9, 10, 11, 12, 13, 14]
+        talpha = [5, 10, 15, 20, 25, 30]
+        cols = [1, 2, 3, 4, 5]
         rad = [0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.0, 1.1, 1.2]
         chosen_observable = sys.argv[3]
         print("Observable:")
@@ -104,6 +106,10 @@ if __name__ == '__main__':
             observables = dmin
         elif chosen_observable == "dmid":
             observables = dmid
+        elif chosen_observable == "talpha":
+            observables = talpha
+        elif chosen_observable == "cols":
+            observables = cols
         else:
             observables = rad
 
@@ -129,9 +135,9 @@ if __name__ == '__main__':
             time_dict[observable] = times.mean()
             time_errs[observable] = times.std()
 
-        plot_metric(vel_dict, vel_errs, "Velocidad media [m/s]", "vmedia_dmin.png")
-        plot_metric(dist_dict, dist_errs, "Longitud del recorrido [m]", "dist_dmin.png")
-        plot_metric(time_dict, time_errs, "Tiempo de tránsito [s]", "tiempo_dmin.png")
+        plot_metric(vel_dict, vel_errs, "Velocidad media [m/s]", f"vmedia_{chosen_observable}.png")
+        plot_metric(dist_dict, dist_errs, "Longitud del recorrido [m]", f"dist_{chosen_observable}.png")
+        plot_metric(time_dict, time_errs, "Tiempo de tránsito [s]", f"tiempo_{chosen_observable}")
 
         # print(" ----------- Velocities --------------")
         # print(velocities)

@@ -15,24 +15,29 @@ public class Main
         final double deltaT     = Double.parseDouble(args[1]);
         final double deltaT2    = Double.parseDouble(args[2]);
         Optional<Double> dmin = Optional.empty();
-        Optional<Double> dmid = Optional.empty();
+        Optional<Double> talpha = Optional.empty();
         Optional<Double> radius = Optional.empty();
+        Optional<Integer> col_num = Optional.empty();
         if(args.length == 5) {
             final String observable = args[3];
             switch (observable) {
                 case "DMIN":
                     dmin = Optional.of(Double.parseDouble(args[4]));
                     break;
-                case "DMID":
-                    dmid = Optional.of(Double.parseDouble(args[4]));
+                case "TALPHA":
+                    talpha = Optional.of(Double.parseDouble(args[4]));
                     break;
                 case "RAD":
                     radius = Optional.of(Double.parseDouble(args[4]));
                     break;
+                case "COL":
+                    col_num = Optional.of(Integer.parseInt(args[4]));
+                    break;
+
             }
         }
 
-        CollisionAvoidanceSimulation simulation = new CollisionAvoidanceSimulation(obstaclesNum, deltaT, deltaT2, dmin, dmid, radius);
+        CollisionAvoidanceSimulation simulation = new CollisionAvoidanceSimulation(obstaclesNum, deltaT, deltaT2, dmin, talpha, radius, col_num);
         simulation.simulate();
 
     }
